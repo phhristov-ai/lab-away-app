@@ -1,0 +1,51 @@
+name: Deploy to Elastic Beanstalk
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Build frontend
+        working-directory: ./frontend
+        run: |
+          npm install
+          npm run build
+
+      - name: Copy frontend build to backend resources
+        run: |
+          rm -rf backend/src/main/resources/static/*
+          cp -r frontend/build/* backend/src/main/resources/static/
+
+      - name: Build backend jar
+        working-directory: ./backend
+        run: ./mvnw clean package -DskipTests
+
+      - name: Deploy to Elastic Beanstalk
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+          # Install EB CLI
+          pip install --user awsebcli
+          export PATH=$PATH:~/.local/bin
+
+          # Initialize EB CLI config (only first time)
+          eb init -p java-17 lab-away-backend --region $AWS_REGION --no-verify-ssl
+
+          # Deploy the built jar to EB environment
+          eb deploy lab-away-env
