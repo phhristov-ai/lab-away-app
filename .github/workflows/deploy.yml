@@ -22,7 +22,7 @@ jobs:
       - name: Build frontend
         working-directory: ./frontend
         run: |
-          npm install
+          npm install --legacy-peer-deps
           npm run build
 
       - name: Copy frontend build to backend resources
@@ -48,4 +48,4 @@ jobs:
           eb init -p java-17 lab-away-backend --region $AWS_REGION --no-verify-ssl
 
           # Deploy the built jar to EB environment
-          eb deploy lab-away-env
+          eb deploy Lab-Away-env
