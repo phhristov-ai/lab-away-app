@@ -2,7 +2,6 @@
 /backend/target/
 /backend/.idea/
 /backend/*.iml
-/backend/.mvn/
 
 # === Frontend ===
 /frontend/node_modules/
