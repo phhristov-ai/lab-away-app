@@ -1,0 +1,13 @@
+.email-input {
+    background-color: transparent;
+    border: none;
+    padding: 10px;
+    outline: none; 
+}
+
+.sign-up-btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+}

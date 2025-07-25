@@ -1,0 +1,161 @@
+/* Container setup remains same */
+
+.three-column-container {
+  display: flex;
+  align-items: flex-start;
+  padding: 40px;
+  gap: 40px;
+  height: 100%;
+}
+
+.three-column-container.equal-width .column {
+  flex: 1;
+}
+
+.left-column {
+  height: calc(4 * 180px + 3 * 100px);
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.scroll-title {
+  font-size: 55px;
+  font-weight: 600;
+}
+
+.middle-column {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: calc(4 * 180px + 3 * 100px);
+  box-sizing: border-box;
+}
+
+.arrow-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  margin-bottom: 20px;
+  z-index: 5;
+}
+
+.right-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.feature-block {
+  padding: 0;
+  margin-bottom: 100px;
+  border-radius: 8px;
+  height: 180px; /* match arrow height */
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.feature-block:last-child {
+  margin-bottom: 0;
+}
+
+.animated-button {
+  margin-top: 20px;
+  padding: 12px 20px;
+  background: #ddd;
+  border: none;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+/* Arrows container */
+.arrows-container {
+  position: relative;
+  width: 40px;
+  text-align: center;
+}
+
+/* Grey arrows stack */
+.arrows-stack.arrows-grey {
+  display: flex;
+  flex-direction: column;
+  gap: 100px; /* gap matches margin-bottom of feature-block */
+  align-items: center; /* Center horizontally */
+}
+
+.arrows-grey .arrow-vertical {
+  width: 10px;
+  height: 180px;
+  background-color: rgba(0,0,0,0.1);
+  border-radius: 4px;
+}
+
+/* Blue arrows stack */
+.arrows-stack.arrows-blue {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Blue arrows styling */
+.arrows-blue .arrow-vertical {
+  position: absolute;
+  width: 10px;
+  background-color: #3498db;
+  border-radius: 4px;
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%);
+  transition: height 0.4s ease;
+  height: 0; /* default height */
+}
+
+/* Vertical positions for blue arrows */
+.arrows-blue .arrow-vertical:nth-child(1) {
+  top: 0;
+}
+
+.arrows-blue .arrow-vertical:nth-child(2) {
+  top: 280px; /* 180 (arrow) + 100 (gap) */
+}
+
+.arrows-blue .arrow-vertical:nth-child(3) {
+  top: 560px; /* 2 * (180 + 100) */
+}
+
+.arrows-blue .arrow-vertical:nth-child(4) {
+  top: 840px; /* 3 * (180 + 100) */
+}
+
+/* Remove margin after last arrow if needed */
+.arrow-vertical:last-child {
+  margin-bottom: 0;
+}
+
+/* Gap icons positioned absolutely between arrows */
+.gap-icon {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  z-index: 20;
+}
+
+/* Vertical positions for gap icons */
+.gap-icon-1 {
+  top: 180px; /* bottom of 1st arrow */
+}
+
+.gap-icon-2 {
+  top: 480px; /* 180 + 100 + 180 */
+}
+
+.gap-icon-3 {
+  top: 780px; /* 2 * (180 + 100) + 180 */
+}

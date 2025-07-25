@@ -1,0 +1,49 @@
+.product-page {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.product-gallery {
+  flex: 0 0 50%;
+  min-width: 0;
+}
+
+.product-info {
+  flex: 0 0 40%;
+  min-width: 0;
+}
+
+.three-column-container {
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .product-page {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .product-gallery,
+  .product-info,
+  .accordion-section {
+    flex: none;
+    width: 100%;
+  }
+}
+
+.accordion-section {
+  width: 100%;
+}
+
+.faq-title {
+  text-align: center;
+}
+
+.product-long-desc {
+  font-size: 1rem;
+}

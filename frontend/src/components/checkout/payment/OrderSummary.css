@@ -1,0 +1,51 @@
+.order-summary {
+    padding: 24px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+  }
+  
+  .order-summary-title {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+  
+  .edit-link {
+    font-size: 14px;
+    color: var(--secondary-color);
+    cursor: pointer;
+  }
+  
+  .order-summary-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .order-summary-table td {
+    padding: 12px;
+    vertical-align: top;
+  }
+  
+  .order-summary-price {
+    text-align: right;
+    white-space: nowrap;
+  }
+  
+  .order-summary-item td {
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .order-summary-section td {
+    padding-top: 16px;
+    font-weight: bold;
+  }
+  
+  .order-summary-totals td {
+    padding-top: 10px;
+  }
+  
+  .order-summary-total td {
+    font-size: 18px;
+    font-weight: bold;
+    padding-top: 12px;
+  }
+  

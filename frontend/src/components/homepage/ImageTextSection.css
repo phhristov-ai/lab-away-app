@@ -1,0 +1,85 @@
+.image-text-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+.image-text-section.reverse {
+  flex-direction: row-reverse;
+}
+
+.image-column,
+.text-column {
+  flex: 1 1 50%;
+  box-sizing: border-box;
+  padding: 20px;
+}
+
+.image-column img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.text-column h2 {
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+.text-column p {
+  font-size: 18px;
+  line-height: 1.6;
+  color: #444;
+}
+
+.hideButton {
+  display: none;
+}
+
+
+@media (max-width: 768px) {
+  .image-text-section {
+    flex-direction: column;
+    padding: 40px 16px;
+  }
+
+  .image-text-section.reverse {
+    flex-direction: column; /* Override reverse layout on mobile */
+  }
+
+  .image-column,
+  .text-column {
+    flex: 1 1 100%;
+    padding: 12px 0;
+    text-align: center;
+  }
+
+  .image-column img {
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 12px;
+  }
+
+  .text-column h2 {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+
+  .text-column p {
+    font-size: 16px;
+    padding: 0 12px;
+    line-height: 1.6;
+  }
+
+  .text-column a {
+    display: inline-block;
+    margin-top: 16px;
+  }
+}

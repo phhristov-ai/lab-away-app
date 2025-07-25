@@ -1,0 +1,146 @@
+.gallery-main {
+  position: relative;
+}
+
+.main-image {
+  width: 100%;
+  object-fit: contain; 
+  border-radius: 8px;
+  background-color: #f8f8f8;
+}
+
+.slick-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 8px;
+  border-radius: 50%;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid black;
+}
+
+.prev-arrow {
+  left: 10px;
+}
+
+.next-arrow {
+  right: 10px;
+}
+
+.gallery-thumbnails {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.thumbnail {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border: 2px solid transparent;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.thumbnail.active {
+  border-color: var(--secondary-color);
+}
+ 
+@media (max-width: 768px) {
+  .main-image {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .prev-arrow {
+    left: calc(-1 * var(--spacing-sm));
+  }
+
+  .next-arrow {
+    right: calc(-1 * var(--spacing-sm));
+  }
+}
+
+.gallery-image-wrapper {
+  cursor: pointer;
+  width: 675px;
+  height: 450px;
+  background-color: #eee;
+  border-radius: 8px;
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.gallery-image-wrapper.dragging {
+  background-color: #d3eaff;
+}
+
+.gallery-image {
+  width: 675px;
+  height: 450px;
+  border-radius: 8px;
+}
+
+.gallery-placeholder {
+  color: #999;
+  font-size: 1.25rem;
+}
+
+.gallery-delete-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thumbnail-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.thumbnail-image {
+  width: 80px;
+  height: 80px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 4px;
+}
+
+.thumbnail-wrapper.main-image .thumbnail-image {
+  border-color: gold;
+}
+
+.set-main-button {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: gold;
+  text-shadow: 0 0 2px black;
+}

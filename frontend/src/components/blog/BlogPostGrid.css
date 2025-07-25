@@ -1,0 +1,117 @@
+
+.blog-post-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+
+  @media (max-width: 800px) {
+    .blog-post-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .blog-post-grid {
+      grid-template-columns: 1fr; 
+    }
+  }
+  
+.blog-post-item {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+  
+  .blog-post-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .blog-post-item h2 {
+    font-size: 1.25rem;
+  }
+  
+  .blog-post-item p {
+    font-size: 0.875rem;
+    color: #555;
+    margin: 0 15px 15px 15px;
+  }
+  
+  .blog-post-item .read-more-link {
+    display: block;
+    text-align: right;
+    padding: 0 15px 10px 15px;
+    font-size: 1rem;
+    color: #0073e6;
+    text-decoration: none;
+  }
+  
+  .blog-post-item .read-more-link:hover {
+    text-decoration: underline;
+  }
+  
+ .new-post-item {
+  border: 2px dashed #61dafb;
+  border-radius: 8px;
+  background-color: #f0fbff;
+  transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.new-blog-post-link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.new-blog-post-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  flex-grow: 1;
+  justify-content: center;
+}
+
+.new-post-image-placeholder {
+  width: 100%;
+  height: 180px;
+  background-color: #e8faff; /* lighter, themed background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.5rem;
+  color: #61dafb;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  transition: background-color 0.2s;
+}
+
+.new-post-item:hover {
+  border-color: #4cc9f0;
+  background-color: #e2f7ff;
+  box-shadow: 0 4px 10px rgba(97, 218, 251, 0.15);
+}
+
+.new-post-item h2 {
+  font-size: 1.2rem;
+  margin: 0 0 0.5rem 0;
+  text-align: center;
+  color: #007ea7; /* darker version for text contrast */
+}
+
+.new-post-item p {
+  font-size: 0.875rem;
+  color: #555;
+  text-align: center;
+  margin: 0;
+}

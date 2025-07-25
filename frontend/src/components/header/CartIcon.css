@@ -1,0 +1,25 @@
+.cart-icon {
+    display: flex;
+    align-items: center;
+    gap: 8px; 
+  }
+  
+  .thb-item-text {
+    display: flex;
+    align-items: center;
+  }
+  
+  .thb-item-icon-wrapper {
+    font-weight: bold;
+    color: #000;
+  }
+  
+  .thb-cart-count {
+    font-size: 16px;
+  }
+
+  .cart-img {
+    width: 40px;
+    height: 40px;
+  }
+  

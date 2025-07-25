@@ -1,0 +1,246 @@
+{
+  "header": {
+    "navigation": {
+      "home": "Startseite",
+      "shop": "Shop",
+      "howItWorks": "Wie es funktioniert",
+      "blog": "Blog"
+    },
+    "cart": {
+      "altText": "Einkaufswagen"
+    }
+  },
+  "homepage": {
+    "hero": {
+      "mainTitle": "HEIMTEST-KITS",
+      "subtitle": "Laborqualität bei der Genauigkeit. Sicher zu Hause.",
+      "shopButton": "Kaufen Sie Ihren Heimtest"
+    },
+    "firstParagraph": {
+      "title": "Wir werden Sie niemals bitten, Proben einzusenden",
+      "text": "Tage auf die Ergebnisse zu warten, ist bestenfalls frustrierend und schlimmstenfalls gefährlich. Lab-Away nimmt Ihnen diese Last ab. Sie können die Tests durchführen und die Ergebnisse zu Hause sehen. Kein Einsenden von Proben.",
+      "alt": "Keine Probe"
+    },
+    "secondParagraph": {
+      "title": "Diskrete Tests mit zuverlässigen Ergebnissen in wenigen Minuten",
+      "text": "Unsere Heimtest-Kits liefern Ergebnisse mit außergewöhnlicher Genauigkeit. Lab-Away bietet Laborqualität zu Hause und vor allem: Ihre Ergebnisse bleiben bei Ihnen. Ihr Gesundheitsstatus und Ihre Daten sind unter Ihrer Kontrolle."
+    },
+    "featuredButtons": {
+      "sti": "STI/STD Tests",
+      "drug": "Drogentests",
+      "fertility": "Fruchtbarkeitstests"
+    }
+  },
+  "footer": {
+    "titles": {
+      "shop": "Shop",
+      "quickLinks": "Schnellzugriffe",
+      "support": "Support"
+    },
+    "about": {
+      "text": "Lab Away ist ein in der EU lizenzierter und zertifizierter Händler für medizinisch relevante Heimtest-Kits. Unsere Tests vereinen außergewöhnliche Genauigkeit und Zuverlässigkeit mit einem bisher unerreichten Maß an Privatsphäre und Sicherheit. Kein Einsenden von Proben. Wir glauben fest daran, dass der Zugang zu bezahlbaren und zuverlässigen Tests Menschen dabei hilft, ihren Gesundheitszustand richtig einzuschätzen und sie frühzeitig zur Behandlung ermutigt."
+    },
+    "links": {
+      "main": {
+        "home": "Startseite",
+        "shop": "Shop",
+        "howItWorks": "Wie es funktioniert",
+        "blog": "Blog"
+      },
+      "legal": {
+        "delivery": "Lieferung und Versand",
+        "privacy": "Datenschutzrichtlinie",
+        "terms": "Geschäftsbedingungen",
+        "imprint": "Impressum"
+      },
+      "contact": {
+        "contact": "Kontakt"
+      }
+    },
+    "payments": {
+      "methods": {
+        "visa": "Visa",
+        "mastercard": "Mastercard",
+        "paypal": "PayPal",
+        "amex": "American Express",
+        "sepa": "SEPA",
+        "giropay": "Giropay",
+        "sofort": "Sofort",
+        "dhl": "DHL"
+      }
+    },
+    "subscribe": {
+      "title": "Abonnieren Sie unseren Newsletter",
+      "description": "Erhalten Sie die neuesten Produkt- und Firmenupdates",
+      "form": {
+        "placeholder": "Geben Sie Ihre E-Mail-Adresse ein",
+        "button": "Anmelden",
+        "alert": "Abonniert mit der E-Mail: {{email}}"
+      }
+    },
+    "copyright": "© 2025 Lab Away - Heimtest-Kits für STI/STDs und Drogentests"
+  },
+  "checkout": {
+    "steps": {
+      "orderSummary": "Bestellübersicht",
+      "billingShipping": "Rechnungs- & Versandadresse",
+      "orderPayment": "Bestellung & Zahlung"
+    },
+    "billing": {
+      "title": "Rechnungsdetails",
+      "fields": {
+        "firstName": "Vorname",
+        "lastName": "Nachname",
+        "email": "E-Mail-Adresse",
+        "phone": "Telefon",
+        "country": "Land / Region *",
+        "address": "Straßenadresse",
+        "city": "Stadt",
+        "postcode": "Postleitzahl"
+      },
+      "shipToDifferent": "An eine andere Adresse senden?"
+    },
+    "shipping": {
+      "title": "Versanddetails",
+      "fields": {
+        "firstName": "Vorname",
+        "lastName": "Nachname",
+        "country": "Land / Region *",
+        "address": "Straßenadresse",
+        "city": "Stadt",
+        "postcode": "Postleitzahl"
+      }
+    },
+    "cart": {
+      "title": "Ihre Tests",
+      "columns": {
+        "product": "PRODUKT",
+        "title": "TITEL",
+        "price": "Preis",
+        "quantity": "Menge",
+        "subtotal": "Zwischensumme",
+        "immediateResults": "Sofortige Ergebnisse sicher zu Hause"
+      }
+    },
+    "cartTotals": {
+      "title": "Warenkorb Gesamtsumme",
+      "description": "Beschreibung",
+      "amount": "Betrag",
+      "vatNotePrefix": "(inklusive MwSt. geschätzt)"
+    },
+    "payment": {
+      "title": "Zahlung",
+      "subtotal": "Zwischensumme",
+      "shipping": "Versand",
+      "total": "Gesamt",
+      "creditCard": {
+        "methodLabel": "Debit- oder Kreditkarte",
+        "cardNumber": "Kartennummer",
+        "expiryDate": "Ablaufdatum",
+        "cvc": "CVC",
+        "placeOrder": "Bestellung abschicken"
+      },
+      "paypal": {
+        "methodLabel": "PayPal"
+      }
+    },
+    "summary": {
+      "title": "Ihre Bestellung",
+      "edit": "Einkaufswagen bearbeiten",
+      "subtotal": "Zwischensumme",
+      "vat": "MwSt.",
+      "shipping": "Versand",
+      "total": "Gesamt"
+    },
+    "actions": {
+      "next": "Weiter",
+      "back": "Zurück",
+      "placeOrder": "Bestellung abschicken",
+      "continue": "Fortfahren"
+    }
+  },
+  "delivery": {
+    "title": "Lieferung und Versand",
+    "paragraph": "Wir bieten schnelle und zuverlässige Lieferoptionen, damit Ihre Bestellung sicher und pünktlich ankommt."
+  },
+  "privacy": {
+    "title": "Datenschutzrichtlinie",
+    "paragraph": "Ihre Privatsphäre ist uns wichtig. Wir verpflichten uns, Ihre persönlichen Daten zu schützen."
+  },
+  "terms": {
+    "title": "Geschäftsbedingungen",
+    "paragraph": "Bitte lesen Sie unsere Geschäftsbedingungen sorgfältig, bevor Sie unsere Dienste nutzen."
+  },
+  "contact": {
+    "title": "Kontakt",
+    "paragraph": "Haben Sie Fragen? Kontaktieren Sie unser Support-Team per E-Mail oder Telefon."
+  },
+  "imprint": {
+    "title": "Impressum",
+    "paragraph": "Diese Seite enthält die rechtlichen Details und Unternehmensinformationen."
+  },
+  "newsletter": {
+    "title": "Newsletter Anmeldung"
+  },
+  "blog": {
+    "title": "Blog"
+  },
+  "shop": {
+    "title": "ZERTIFIZIERTE HEIMTESTS",
+    "subtitle": "Durchsuchen Sie unsere Labortests für zu Hause für zuverlässige und genaue Ergebnisse",
+    "breadcrumb": {
+      "home": "Startseite",
+      "certifiedTests": "ZERTIFIZIERTE HEIMTESTS"
+    },
+    "filters": {
+      "all": "Alle"
+    }
+  },
+  "productPage": {
+    "sections": {
+      "order": {
+        "title": "BESTELLEN SIE IHR TESTKIT",
+        "description": "Lab-Away bietet zahlreiche Zahlungsmethoden, die alle sicher und geschützt sind. Wir versenden am selben Tag. Tests kommen schnell und diskret an."
+      },
+      "test": {
+        "title": "FÜHREN SIE DEN TEST SICHER ZU HAUSE DURCH",
+        "description": "Folgen Sie sorgfältig den Anweisungen, um Ihren Test sicher in der Privatsphäre Ihres Zuhauses durchzuführen. Denken Sie daran, dass Sie keine Proben einsenden müssen. Ihre Daten bleiben bei Ihnen."
+      },
+      "results": {
+        "title": "LESEN SIE DIE ERGEBNISSE IN MINUTEN",
+        "description": "Sobald Sie den Test abgeschlossen haben, verwenden Sie die bereitgestellten Anleitungen, um die Ergebnisse abzulesen und zu interpretieren. Normalerweise sind die Ergebnisse 5-10 Minuten nach der Probenahme verfügbar."
+      }
+    },
+    "faq": {
+      "title": "Häufig gestellte Fragen",
+      "return": {
+        "title": "Wie ist Ihre Rückgabepolitik?",
+        "content": "Wir akzeptieren Rückgaben innerhalb von 30 Tagen nach dem Kauf mit gültigem Kaufbeleg."
+      },
+      "shipping": {
+        "title": "Bieten Sie internationalen Versand an?",
+        "content": "Ja, wir liefern in die meisten Länder weltweit."
+      },
+      "tracking": {
+        "title": "Wie kann ich meine Bestellung verfolgen?",
+        "content": "Sie erhalten eine E-Mail mit den Sendungsverfolgungsdetails, sobald Ihre Bestellung versendet wurde."
+      }
+    },
+    "features": {
+      "clock": "Sofortige Ergebnisse sicher zu Hause",
+      "hand": "Keine Einsendung von Proben nötig",
+      "finger": "Fingerstich (Blut-) Probe",
+      "swab": "Abstrichprobe",
+      "urine": "Urinprobe",
+      "saliva": "Speichelprobe"
+    },
+    "buttons": {
+      "addToCart": "In den Warenkorb",
+      "shopAll": "Alle ansehen"
+    },
+    "banner": {
+      "title": "Revolutionierung der Heimtests: Sofortergebnisse ohne Probenversand – Unser Vorteil gegenüber EverlyWell",
+      "subtitle": "Neue Wege zu optimaler Gesundheit eröffnen"
+    }
+  }
+}

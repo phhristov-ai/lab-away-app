@@ -1,0 +1,55 @@
+.success-page {
+  text-align: center;
+  padding: 1rem 2rem;
+  background-color: var(--background-color);
+}
+
+.order-details {
+  max-width: 100%;
+  margin: 2rem auto;
+  width: 100%;
+}
+
+.info-row {
+  list-style: none;
+  padding: 2rem 0;
+  border: 1px solid var(--primary-color);
+  border-radius: 40px;
+  background-color: #fff;
+  margin-bottom: 1.5rem;
+}
+
+.info-row li {
+  align-items: center;
+  display: inline-block;
+  font-weight: 400;
+  padding: 0 10px;
+  border-right: 2px solid #aaa;
+  font-size: 18px;
+}
+
+.info-row li:last-child {
+  border-right: none;
+}
+
+.label {
+  font-weight: 400;
+}
+
+.pacifico-title {
+  font-family: 'Pacifico', cursive;
+  color: #3AB1CE;
+  font-size: 72px;
+}
+
+.follow-text {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}

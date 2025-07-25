@@ -1,0 +1,13 @@
+.footer-about {
+  width: 100%;
+  padding: 40px 20px;
+}
+
+.footer-about p {
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  color: #555;
+  line-height: 1.6;
+  margin: 0;
+  text-align: left;
+}

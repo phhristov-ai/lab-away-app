@@ -1,0 +1,111 @@
+import React, { useState } from 'react';
+import { ProductFullType } from '../../types/ProductFullType';
+import { ProductImage } from '../../types/ProductImage';
+
+
+type AdminProductEditorProps = {
+  product: ProductFullType;
+  onProductUpdate: (updatedProduct: ProductFullType) => void;
+};
+
+const AdminProductEditor: React.FC<AdminProductEditorProps> = ({
+  product,
+  onProductUpdate,
+}) => {
+  const [name, setName] = useState(product.name);
+  const [price, setPrice] = useState(product.price);
+  const [description, setDescription] = useState(product.description);
+  const [images, setImages] = useState<ProductImage[]>(product.images || []);
+
+  const handleSave = () => {
+    const updatedProduct: ProductFullType = {
+      ...product,
+      name,
+      price,
+      description,
+      images,
+    };
+
+    onProductUpdate(updatedProduct);
+  };
+
+  return (
+    <div className="admin-editor">
+      <h3>Admin Editor</h3>
+
+      <label>
+        Product Name
+        <input value={name} onChange={(e) => setName(e.target.value)} />
+      </label>
+
+      <label>
+        Price
+        <input
+          type="number"
+          value={price}
+          onChange={(e) => setPrice(parseFloat(e.target.value))}
+        />
+      </label>
+
+      <label>
+        Description
+        <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
+      </label>
+
+      <div className="image-management">
+        <h4>Images</h4>
+        {images.map((img, idx) => (
+          <div key={img.imageUrl + idx} style={{ marginBottom: '1rem' }}>
+            <input
+              value={img.imageUrl}
+              onChange={(e) => {
+                const newImages = [...images];
+                newImages[idx] = { ...newImages[idx], imageUrl: e.target.value };
+                setImages(newImages);
+              }}
+              placeholder="Image URL"
+            />
+            <label style={{ marginLeft: '1rem' }}>
+              <input
+                type="radio"
+                name="mainImage"
+                checked={img.main}
+                onChange={() => {
+                  const newImages = images.map((image, i) => ({
+                    ...image,
+                    main: i === idx,
+                  }));
+                  setImages(newImages);
+                }}
+              />
+              Main
+            </label>
+            <button
+              onClick={() => setImages(images.filter((_, i) => i !== idx))}
+              style={{ marginLeft: '1rem' }}
+            >
+              Remove
+            </button>
+          </div>
+        ))}
+        <button
+          onClick={() =>
+            setImages([
+              ...images,
+              {
+                imageUrl: '',
+                main: images.length === 0,
+              },
+            ])
+          }
+        >
+          Add Image
+        </button>
+      </div>
+
+      <button onClick={handleSave}>Save Changes</button>
+    </div>
+  );
+};
+
+export default AdminProductEditor;

@@ -1,0 +1,26 @@
+.product-details {
+    background-color: #f9f9f9;
+    padding: 1rem;
+    text-align: center;
+    
+  }
+
+  .product-details:hover{
+    background-color: rgba(42,116,237,0.1);
+  }
+  
+  .add-to-cart-button {
+    margin-top: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: #fff;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  
+  .add-to-cart-button:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+  }
+  

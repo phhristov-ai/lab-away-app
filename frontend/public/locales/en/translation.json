@@ -1,0 +1,333 @@
+{
+  "header": {
+    "topHeader": "Lab-Away is a licensed seller of medical products. All our products are EU-certified.",
+    "navigation": {
+      "home": "Home",
+      "shop": "Shop",
+      "howItWorks": "How it works",
+      "blog": "Blog"
+    },
+    "cart": {
+      "altText": "Shopping cart"
+    }
+  },
+  "homepage": {
+    "hero": {
+      "mainTitle": "HOME TEST KITS",
+      "subtitle": "Laboratory-like level of accuracy. Safely at home.",
+      "shopButton": "Buy Your Home Test"
+    },
+    "firstParagraph": {
+      "title": "We will never ask you to send samples",
+      "text": "Waiting for days to know your results is frustrating at best and plain dangerous at worst. Lab-Away is taking that burden away from you. You can take the tests and see the results at home. No sending back of samples.",
+      "alt": "No sample"
+    },
+    "randomProductRow": {
+      "title": "Lab-grade Bestsellers"
+    },
+    "secondParagraph": {
+      "title": "Discrete testing with reliable results in a few minutes",
+      "text": "Our home test kits provide results with exceptional level of accuracy. Lab-Away delivers lab-quality results at home and most importantly: your results remain at home. Your health status and your data are under your control."
+    },
+    "featuredButtons": {
+      "sti": "STI/STD Tests",
+      "drug": "Drug Tests",
+      "fertility": "Fertility Tests"
+    },
+    "homeTestFeature": {
+      "mainTitle": "How it works",
+      "sections": [
+        {
+          "title": "Order your Home Test Kit",
+          "text": "All Lab Away Tests Kits are EU certified and offer absolute reliability, accuracy, and privacy."
+        },
+        {
+          "title": "Take your tests",
+          "text": "Once you receive your test kit, make sure to carefully read the instructions and follow all steps."
+        },
+        {
+          "title": "Accurate and fast test results",
+          "text": "Test results appear within 15-25 minutes. We are proud to say that our Lab Away Test Kits offer +99.9% accuracy."
+        },
+        {
+          "title": "All while being at home",
+          "text": "We’ll never ask you to send a test sample to us. All of our tests are designed to bring results – away from the lab – back to your home. Because your health is your private matter."
+        }
+      ]
+    }
+  },
+  "footer": {
+    "titles": {
+      "shop": "Shop",
+      "quickLinks": "Quick Links",
+      "support": "Support"
+    },
+    "about": {
+      "text": "Lab Away is a EU licensed and certified retailer of medically related home test kits. Our tests combine exceptional accuracy and reliability with an unprecedented level of privacy and safety. No sending back of samples. We deeply believe that access to affordable and reliable testing will greatly help people correctly assess their health status and nudge them into seeking help as early as possible."
+    },
+    "links": {
+      "main": {
+        "home": "Home",
+        "shop": "Shop",
+        "howItWorks": "How it works",
+        "blog": "Blog"
+      },
+      "legal": {
+        "delivery": "Delivery and shipment",
+        "privacy": "Privacy policy",
+        "terms": "Terms and Conditions",
+        "imprint": "Imprint"
+      },
+      "contact": {
+        "contact": "Contact"
+      }
+    },
+    "payments": {
+      "methods": {
+        "visa": "Visa",
+        "mastercard": "Mastercard",
+        "paypal": "PayPal",
+        "amex": "American Express",
+        "sepa": "SEPA",
+        "giropay": "Giropay",
+        "sofort": "Sofort",
+        "dhl": "DHL"
+      }
+    },
+    "subscribe": {
+      "title": "Subscribe to our newsletter",
+      "description": "Get the latest updates of products and company updates",
+      "form": {
+        "placeholder": "Email address",
+        "button": "Sign Up",
+        "alert": "Subscribed with email: {{email}}"
+      }
+    },
+    "copyright": "© 2025 Lab Away - Home test kits for STI/STDs and Drugs Test"
+  },
+  "checkout": {
+    "steps": {
+      "orderSummary": "Order Summary",
+      "billingShipping": "Billing & Shipping",
+      "orderPayment": "Order & Payment"
+    },
+    "billing": {
+      "title": "Billing Details",
+      "fields": {
+        "firstName": "First name",
+        "lastName": "Last name",
+        "email": "Email address",
+        "phone": "Phone",
+        "country": "Country / Region *",
+        "address": "Street address",
+        "city": "Town / City",
+        "postcode": "Postcode / ZIP"
+      },
+      "shipToDifferent": "Ship to a different address?"
+    },
+    "shipping": {
+      "title": "Shipping Details",
+      "fields": {
+        "firstName": "First name",
+        "lastName": "Last name",
+        "country": "Country / Region *",
+        "address": "Street address",
+        "city": "Town / City",
+        "postcode": "Postcode / ZIP"
+      }
+    },
+    "cart": {
+      "title": "Your Tests",
+      "inclVat": "(incl. VAT)",
+      "columns": {
+        "product": "PRODUCT",
+        "title": "TITLE",
+        "price": "Price",
+        "quantity": "Quantity",
+        "subtotal": "Subtotal",
+        "immediateResults": "Immediate results safely at home"
+      }
+    },
+    "cartTotals": {
+      "title": "Cart Totals",
+      "description": "Description",
+      "amount": "Amount",
+      "vatNotePrefix": "(includes VAT)"
+    },
+    "payment": {
+      "title": "Payment",
+      "subtotal": "Subtotal",
+      "shipping": "Shipping",
+      "total": "Total",
+      "creditCard": {
+        "methodLabel": "Debit or Credit Card",
+        "cardNumber": "Card Number",
+        "expiryDate": "Expiry Date",
+        "cvc": "CVC",
+        "placeOrder": "Place Order"
+      },
+      "paypal": {
+        "methodLabel": "PayPal"
+      }
+    },
+    "summary": {
+      "title": "Your order",
+      "edit": "Edit shopping bag",
+      "subtotal": "Subtotal",
+      "vat": "VAT",
+      "shipping": "Shipping",
+      "total": "Total"
+    },
+    "actions": {
+      "next": "Next",
+      "back": "Back",
+      "placeOrder": "Place Order",
+      "continue": "Continue"
+    }
+  },
+  "delivery": {
+    "title": "Delivery and Shipment",
+    "deliveryInfo": "Delivery and shipping costs\n\nWe are happy to deliver to countries other than those available under individually adjusted shipping costs – international shipping is also possible on request.\n\nShipping costs\n\nAll orders within Germany are shipped with DHL and carry an additional EUR 5 shipping fee.\n\nFor orders outside of Germany, please contact us at <email>sales@lab-away.com</email> and we’ll prepare a custom offer for you.\n\nDelivery times\n\nOur home tests kits usually arrive within 1 – 2 days after order confirmation. Please note that there is no delivery on Sundays and public holidays.\n\nIf you have ordered items with different delivery times, we will send the goods in one shipment, unless we have made other agreements with you. In this case, the delivery time is determined by the article with the longest delivery time that you have ordered."
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "privacyPolicy": "General notice and mandatory information\n\nDesignation of the responsible entity\n\nAs operator and owner of Lab-Away, Gryphone Health Solutions EOOD is the responsible entity. The responsible body decides alone or jointly with others on the purposes and means of the processing of personal data (e.g. names, contact details or similar).\n\nWithdrawal of your consent to data processing\n\nSome data processing operations are only possible with your express consent. A revocation of your already given consent is possible at any time. An informal communication by e-mail is sufficient for the revocation. The legality of the data processing carried out until the revocation remains unaffected by the revocation.\n\nRight to complain to the competent supervisory authority\n\nAs a data subject, you have the right to complain to the competent supervisory authority in the event of a data protection violation. The competent supervisory authority with regard to data protection issues is the state data protection commissioner of the federal state in which the registered office of our company is located. The following link provides a list of data protection officers and their contact details: https://www.bfdi.bund.de/DE/Infothek/Anschriften_Links/anschriften_links-node.html.\n\nRight to data portability\n\nYou have the right to have data that we process automatically on the basis of your consent or in fulfillment of a contract handed over to you or to third parties. The data will be provided in a machine-readable format. If you request the direct transfer of the data to another responsible party, this will only be done insofar as it is technically feasible.\n\nRight to information, correction, blocking, deletion\n\nWithin the framework of the applicable legal provisions, you have the right at any time to free information about your stored personal data, the origin of the data, their recipients and the purpose of the data processing and, if applicable, a right to correction, blocking or deletion of this data. In this regard, and also for further questions on the subject of personal data, you can contact us at any time via the contact options listed in the imprint.\n\nSSL or TLS encryption\n\nFor security reasons and to protect the transmission of confidential content that you send to us as site operator, our website uses SSL or TLS encryption. This means that data you transmit via this website cannot be read by third parties. You can recognize an encrypted connection by the “https://” address line of your browser and the lock symbol in the browser line.\n\nServer log files\n\nIn server log files, the provider of the website automatically collects and stores information that your browser automatically transmits to us. These are:\n\nVisited page on our domain\nDate and time of the server request\nBrowser type and browser version\nOperating system used\nReferrer URL\nHost name of the accessing computer\nIP address\nThere is no merging of this data with other data sources. The data processing is based on Art. 6 (1) lit. b DSGVO, which permits the processing of data for the fulfillment of a contract or pre-contractual measures.\n\nData transfer upon conclusion of a contract for the purchase and shipment of goods\n\nPersonal data will only be transmitted to third parties if there is a necessity in the context of the execution of the contract. Third parties can be, for example, payment service providers or logistics companies. A further transmission of data does not take place or only if you have expressly agreed to it.\n\nThe basis for data processing is Art. 6 (1) lit. b DSGVO, which permits the processing of data for the fulfillment of a contract or pre-contractual measures.\n\nRegistration on this website\n\nTo use certain functions, you can register on our website. The transmitted data is used exclusively for the purpose of using the respective offer or service. Mandatory information requested during registration must be provided in full. Otherwise, we will reject the registration.\n\nIn the event of important changes, for example for technical reasons, we will inform you by e-mail. The e-mail will be sent to the address given during registration.\n\nThe processing of the data entered during registration is based on your consent (Art. 6 para. 1 lit. a DSGVO). A revocation of your already given consent is possible at any time. An informal communication by e-mail is sufficient for the revocation. The legality of the data processing already carried out remains unaffected by the revocation.\n\nWe store the data collected during registration for the period that you are registered on our website. Your data will be deleted if you cancel your registration. Legal retention periods remain unaffected.\n\nContact form\n\nData transmitted via the contact form, including your contact details, will be stored in order to process your inquiry or to be available for follow-up questions. This data will not be passed on without your consent.\n\nThe processing of the data entered in the contact form is based exclusively on your consent (Art. 6 para. 1 lit. a DSGVO). A revocation of your already given consent is possible at any time. An informal communication by e-mail is sufficient for the revocation. The legality of the data processing operations carried out until the revocation remains unaffected by the revocation.\n\nData transmitted via the contact form will remain with us until you request us to delete it, revoke your consent to store it or there is no longer any need to store it. Mandatory legal provisions – in particular retention periods – remain unaffected.\n\nStorage period of contributions and comments\n\nContributions and comments as well as related data, such as IP addresses, are stored. The content remains on our website until it has been completely deleted or had to be deleted for legal reasons.\n\nThe storage of contributions and comments is based on your consent (Art. 6 para. 1 lit. a DSGVO). A revocation of your already given consent is possible at any time. An informal communication by e-mail is sufficient for the revocation. The\nlawfulness of data processing operations that have already taken place remains unaffected by the revocation.\n\nSubscribing to comments\n\nAs a user of our website, you can subscribe to comments after registration. With a confirmation e-mail, we check whether you are the owner of the specified e-mail address. You can cancel the subscription function for comments at any time via a link,\nlink in the subscription e-mail. Data entered to set up the subscription will be deleted in the event of unsubscription. Should this data have been transmitted to us for other purposes and elsewhere, it will remain\nremain with us.\n\nNewsletter data\n\nTo send our newsletter we need an e-mail address from you. A verification of the given e-mail address is necessary and the receipt of the newsletter must be consented to. Supplementary data is not collected or is voluntary.\nThe data is used exclusively for sending the newsletter.\n\nThe data provided during the newsletter registration will be processed exclusively on the basis of your consent (Art. 6 para. 1 lit. a DSGVO). A revocation of your already given consent is possible at any time. For the revocation is sufficient an informal\nmessage by e-mail or you unsubscribe via the “unsubscribe” link in the newsletter. The legality of the data processing operations already carried out remains unaffected by the revocation.\n\nData entered to set up the subscription will be deleted in the event of unsubscription. If this data has been transmitted to us for other purposes and elsewhere, it will still remain with us.\n\nCookies\n\nOur website uses cookies. These are small text files that your web browser stores on your terminal device. Cookies help us to make our offer more user-friendly, effective and secure.\n\nSome cookies are “session cookies.” Such cookies are deleted by themselves after the end of your browser session. In contrast, other cookies remain on your terminal device until you delete them yourself. Such cookies help us to recognize you when you return\nrecognize you when you return to our website.\n\nWith a modern web browser, you can monitor, restrict or prevent the setting of cookies. Many web browsers can be configured to automatically delete cookies when you close the program. The deactivation of cookies\nmay result in limited functionality of our website.\n\nThe setting of cookies, which are necessary for the exercise of electronic communication processes or the provision of certain functions desired by you (e.g. shopping cart), is based on Art. 6 para. 1 lit. f DSGVO. As the operator of this\nwebsite, we have a legitimate interest in storing cookies for the technically error-free and smooth provision of our services. Insofar as the setting of other cookies (e.g. for analysis functions) takes place, these are treated separately in this\nprivacy policy separately.\n\nGoogle Analytics\n\nOur website uses functions of the web analysis service Google Analytics. The provider of the web analytics service is Google Inc, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA.\n\nGoogle Analytics uses “cookies.” These are small text files that your web browser stores on your terminal device and enable an analysis of website usage. Information generated by means of cookies about your use of our website\nis transmitted to a Google server and stored there. The server is usually located in the USA.\n\nThe setting of Google Analytics cookies is based on Art. 6 (1) lit. f DSGVO. As the operator of this website, we have a legitimate interest in analyzing user behavior in order to optimize our website and, if necessary, advertising.\n\nIP anonymization\n\nWe use Google Analytics in conjunction with the IP anonymization function. It ensures that Google truncates your IP address within member states of the European Union or in other contracting states of the Agreement on the European Economic Area\nbefore it is transmitted to the USA. There may be exceptional cases in which Google transfers the full IP address to a server in the USA and shortens it there. On our behalf, Google will use this information to evaluate your use of the website\nto evaluate your use of the website, to create reports about website activities and to provide us with further services related to website and internet use. The IP address transmitted by Google Analytics will not be merged with any other\nIP address with other data from Google.\n\nBrowser Plugin\n\nThe setting of cookies by your web browser can be prevented. However, some functions of our website could be restricted as a result. You can also prevent the collection of data relating to your use of the website, including your IP address and subsequent processing by Google. This is possible by downloading and installing the browser plugin accessible via the following link: https://tools.google.com/dlpage/gaoptout?hl=de.\n\nObjection to data collection\n\nYou can prevent the collection of your data by Google Analytics by clicking on the following link. An opt-out cookie will be set that will prevent the collection of your data during future visits to our website: Disable Google Analytics.\n\nFor details on how Google Analytics handles user data, please refer to Google’s privacy policy: https://support.google.com/analytics/answer/6004245?hl=de.\n\nOrder processing\n\nTo fully comply with the legal data protection requirements, we have concluded an order processing agreement with Google.\n\nDemographic characteristics with Google Analytics\n\nOur website uses the “demographic characteristics” function of Google Analytics. It can be used to create reports that contain statements about the age, gender and interests of site visitors. This data comes from interest-based advertising\nfrom Google as well as from visitor data from third-party providers. It is not possible to assign the data to a specific person. You can deactivate this function at any time. This is possible via the ad settings in your Google account or\nby generally prohibiting the collection of your data by Google Analytics, as explained in the section “Objection to data collection”.\n\nPayPal\n\nOur website enables payment via PayPal. The provider of the payment service is PayPal (Europe) S.à.r.l. et Cie, S.C.A., 22-24 Boulevard Royal, L-2449 Luxembourg.\n\nWhen you pay with PayPal, the payment data you enter is transmitted to PayPal.\n\nThe transmission of your data to PayPal is based on Art. 6 para. 1 lit. a DSGVO (consent) and Art. 6 para. 1 lit. b DSGVO (processing for the performance of a contract). A revocation of your already given consent is possible at any time.\nData processing operations in the past remain effective in the event of a revocation.\n\nGoogle AdSense\n\nOur website uses Google AdSense. The provider is Google Inc, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA.\n\nGoogle AdSense is used to integrate advertisements and sets cookies. Cookies are small text files that your web browser stores on your terminal device in order to analyze the use of the website. Google AdSense also uses web beacons. Web beacons are invisible graphics that enable an analysis of visitor traffic on our website. Information generated by cookies and web beacons is transferred to Google servers and stored there. The server is located in the USA. Google may pass this information on to contractual partners. However, Google will not combine your IP address with other data stored by you.\nThe storage of AdSense cookies is based on Art. 6 (1) lit. f DSGVO. We, as the website operator, have a legitimate interest in analyzing user behavior in order to optimize our website and our advertising.\nWith a modern web browser, you can monitor, restrict and disable the setting of cookies. Disabling cookies may result in limited functionality of our website. By using our website, you agree to the\nBy using our website, you consent to the processing of data about you by Google in the manner and for the purposes set out above.\n\n\nGoogle AdWords and Google Conversion Tracking\n\nOur website uses Google AdWords. The provider is Google Inc, 1600 Amphitheatre Parkway, Mountain View, CA 94043, United States.\nAdWords is an online advertising program. As part of the online advertising program, we work with conversion tracking. After a click on an ad placed by Google, a cookie is set for conversion tracking. Cookies are small text files that your web browser stores on your terminal device. Google AdWords cookies lose their validity after 30 days and are not used to personally identify users. The cookie allows Google and us to recognize that you have clicked on an ad and were redirected to our website.\nEach Google AdWords customer receives a different cookie. The cookies are not traceable through websites of AdWords customers. Conversion cookies are used to create conversion statistics for AdWords customers who use conversion tracking. Adwords customers learn how many users clicked on their ad and were redirected to pages with a conversion tracking tag. However, AdWords customers do not receive any information that allows personal identification of users. If you do not want to participate in tracking, you can object to its use. In this case, the conversion cookie must be deactivated in the user settings of the browser. In this way, there will also be no inclusion in the conversion tracking statistics.\n\nThe storage of “conversion cookies” is based on Art. 6 (1) lit. f DSGVO. As the website operator, we have a legitimate interest in analyzing user behavior in order to optimize our website and our advertising.\nDetails on Google AdWords and Google Conversion Tracking can be found in Google’s privacy policy: https://www.google.de/policies/privacy/.\nWith a modern web browser, you can monitor, restrict or disable the setting of cookies. Disabling cookies may result in limited functionality of our website.\n\nGoogle Web Fonts\n\nOur website uses web fonts from Google. The provider is Google Inc, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA.\nBy using these web fonts, it is possible to present you with the presentation of our website that we desire, regardless of which fonts are available to you locally. This is done by retrieving the Google Web Fonts from a Google server in the USA and the associated transfer of your data to Google. This is your IP address and which of our pages you have visited. The use of Google Web Fonts is based on Art. 6 para. 1 lit. f DSGVO. As the operator of this website, we have a legitimate interest in the optimal presentation and transmission of our website.\nThe company Google is certified for the US-European data protection agreement “Privacy Shield”. This data protection agreement is intended to ensure compliance with the level of data protection applicable in the EU.\nDetails about Google Web Fonts can be found at: https://www.google.com/fonts#AboutPlace:about and further information in Google’s privacy policy: https://policies.google.com/privacy/partners?hl=de"
+  },
+  "terms": {
+    "title": "Terms and Conditions",
+    "generalTermsAndConditions": "General Terms and Conditions of the Gryphone Health Solutions EOOD\n\n§1 Applicability and definition of terms\n\n(1) The following General Terms and Conditions shall apply to all deliveries between us and a consumer in the version valid at the time of the order.\nA consumer is any natural person who enters into a legal transaction for purposes that are predominantly neither their commercial or independent professional activity (§ 13 BGB).\n\n§2 Retention of title\nWe retain title to the goods until full payment of the purchase price.\n\n§3 Prices, shipping costs, payment, due date\n(1) The stated prices include the statutory sales tax and other price components. In addition, there are any shipping costs.\n(2) The consumer has the option of payment in advance by\nSOFORT banking\nPayPal\nCredit card with Paypal (Visa, Mastercard, AMEX)\niDeal\nKBC/CBC\nBank Transfer\nING Home’Pay\nBancontact\n(3) If the consumer has chosen payment in advance, he undertakes to pay the purchase price immediately after the conclusion of the contract.\n\n§4 Delivery\n(1) Unless we have clearly stated otherwise in the product description, all items offered by us are ready for immediate shipment. In this case, delivery will be made within 5 working days at the latest.\nIn the case of payment in advance, the delivery period begins on the day after the payment order to the bank responsible for the transfer and for all other payment methods on the day after the conclusion of the contract.\nIf the deadline falls on a Saturday, Sunday or public holiday at the place of delivery, the deadline ends on the next working day.\n(2) The risk of accidental loss and accidental deterioration of the sold item shall not pass to the Buyer until the item is handed over to the Buyer, even in the case of a mail order purchase.\n\n§5 Conclusion of a contract, storage of the contract text\n(1) The following regulations concerning the conclusion of the contract apply to orders placed via our Internet store https://www.localhost/lab-away .\n(2) In case of conclusion of the contract, the contract is concluded with\nXXXX\nRegistration number XXX\n3) The presentation of the goods in our Internet store do not constitute a legally binding contract offer on our part,\nbut are only a non-binding invitation to the consumer to order goods. With the order of the desired goods, the consumer makes a binding\nbinding offer to conclude a purchase contract.\n(4) Upon receipt of an order in our Internet store, the following provisions shall apply:\nThe consumer makes a binding offer to enter into a contract by successfully completing the order procedure provided in our Internet store.\n\nThe order is placed in the following steps:\n1) Selection of the desired goods\n2) Confirmation by clicking the “Order” button\n3) Checking the data in the shopping cart\n4) Pressing the “checkout” button\n5) Login to the Internet store after registration and entering the login data (e-mail address and password). You can shop completely anonymously without registration.\n6) Enter the required information to complete your order.\n7) Proceed to the fully secure payment page where you can complete the purchase.\nBefore bindingly submitting the order, the consumer can return to the website by pressing the “back” button included in the internet browser he/she uses after\nthe Internet browser used, after checking his details, return to the Internet page on which the customer’s details are recorded and correct input errors or cancel the order process by closing the by closing the Internet browser.\nWe confirm the receipt of the order immediately by an automatically generated e-mail (“order confirmation”). With this we accept your offer.\n(5) Storage of the contract text for orders via our Internet store: We will send you the order data and our terms and conditions by e-mail. You can also view the terms and conditions at any time on our website. For security reasons, your order data is no longer accessible via the Internet.\n\n§6 Right of withdrawal of the customer as a consumer:\n\nReturn guarantee\nYou can return your goods within 14 days after receipt. If the package is opened (seal broken or there are signs of damage to the goods), we are entitled to refuse your refund and return request.\n\nRight of withdrawal for consumers\nConsumers shall have a right of revocation in accordance with the following provisions, whereby a consumer shall be any natural person who concludes a legal transaction for purposes which can be attributed predominantly neither to their commercial nor their independent professional activity:\n\nCancellation policy\nYou have the right to cancel this contract within fourteen days without giving any reason.\nThe revocation period is fourteen days from the day on which you or a third party named by you, who is not the carrier, has taken possession of the goods.\nTo exercise your right of withdrawal, you must send us\nXXX Name address mail\nby means of an unequivocal statement (e.g. a letter sent by post, fax or e-mail) about your decision to to revoke this contract. You can use the attached model withdrawal form for this purpose, but it is not mandatory.\n\nConsequences of revocation\nIf you revoke this contract, we shall return to you all payments that we have received from you, including the delivery costs (with the exception of the additional costs resulting from the fact that you have chosen a type of delivery other than the than the cheapest standard delivery offered by us) without undue delay and no later than fourteen days from the day on which we received the notification of your revocation of this contract.\nFor this repayment, we will use the same means of payment that you used for the original transaction, unless expressly agreed otherwise with you; in no case will you be charged for this repayment.\nWe may refuse repayment until we have received the goods back or until you have provided proof that you have returned the goods, whichever is the earlier.\nYou must return or hand over the goods to us without undue delay and in any case no later than within fourteen days from the day on which you notify us of the revocation of this contract. The deadline is met if you send the goods before the expiry of the period of fourteen days. You shall bear the direct costs of returning the goods.\n\n§7 Cancellation form\nSample revocation form\n(If you want to revoke the contract, please fill out this form and send it back).\nTo :\nXXXX\nE-mail XXXX\nI/We () hereby cancel the contract concluded by me/us () for the purchase of the following goods ()/provision of the following service ()_______________________________________________Ordered on ()/received on ()__________________Name of consumer(s)_____________________________________________________Address of consumer(s)_____________________________________________________Signature of consumer(s) (only in case of paper communication)__________________Date____________\n(*) Delete where inapplicable.\n\n§8 Warranty\nThe legal warranty regulations apply.\n\n§9 Contract language\nThe contract language is English."
+  },
+  "contact": {
+    "title": "Contact",
+    "hospital": {
+      "label": "Hospital",
+      "name": "Gryphone Health Solutions EOOD",
+      "address": {
+        "street": "30-34, Evlogi Georgiev str.",
+        "city": "Varna",
+        "postalCode": "9000",
+        "country": "Bulgaria"
+      },
+      "phone": "Phone: +359895985973"
+    },
+    "mail": {
+      "label": "Mail",
+      "description": "In case of queries regarding our services, shipping, and delivery issues, please contact us at:",
+      "email": "support@lab-away.com"
+    },
+    "corporateBuilding": {
+      "label": "Corporate Building",
+      "description": "If you are a business client interested in receiving custom offers for larger quantities, please contact us at:"
+    }
+  },
+  "imprint": {
+    "title": "Imprint",
+    "description": "lab-away.com is a product of:",
+    "company": {
+      "name": "Gryphone Health Solutions EOOD",
+      "address": {
+        "street": "34, Evlogi Georgiev str.",
+        "postalCode": "9000",
+        "city": "Varna",
+        "country": "Republic of Bulgaria"
+      },
+      "taxId": "Tax ID: BG206711488",
+      "email": "E-Mail: impressum@lab-away.com",
+      "manager": {
+        "name": "Manager: Snezhanka Ivanova",
+        "email": "(snezhanka@lab-away.com)"
+      }
+    },
+    "legalNotice": {
+      "title": "Legal Notice",
+      "text1": "Link to the platform of the European Commission according to the Regulation on Online Dispute Resolution in Consumer Matters",
+      "text2": "The EU Commission provides the possibility of online dispute resolution on an online platform operated by it. This platform can be accessed via the external link http://ec.europa.eu/consumers/odr/.",
+      "text3": "tink is not obliged to participate in a dispute resolution procedure and unfortunately cannot offer participation in such a procedure."
+    }
+  },
+  "newsletter": {
+    "title": "Newsletter Subscription"
+  },
+  "blog": {
+    "title": "Blog"
+  },
+  "shop": {
+    "title": "CERTIFIED HOME TESTS",
+    "subtitle": "Browse our lab-grade home tests for reliable and accurate results at home",
+    "breadcrumb": {
+      "home": "Home",
+      "certifiedTests": "CERTIFIED HOME TESTS"
+    },
+    "filters": {
+      "all": "All"
+    }
+  },
+  "productPage": {
+    "sections": {
+      "order": {
+        "title": "ORDER YOUR TEST KIT",
+        "description": "Lab-Away offers numerous payment methods and they are all safe and secure. We are doing same day shipping. Tests arrive quickly and discreetly."
+      },
+      "test": {
+        "title": "DO THE TEST SAFELY AT HOME",
+        "description": "Carefully follow the instructions to safely do your test at the privacy of your home. Remember, there’s no need to send us any samples. Your data stays with you. It never leaves your home."
+      },
+      "results": {
+        "title": "READ THE RESULTS IN MINUTES",
+        "description": "Once you complete the test, use the provided guidelines to read and interpret the test results. Typically, results are available 5-10 minutes after sample collection."
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "return": {
+        "title": "What is your return policy?",
+        "content": "We accept returns within 30 days of purchase with a valid receipt."
+      },
+      "shipping": {
+        "title": "Do you offer international shipping?",
+        "content": "Yes, we ship to most countries worldwide."
+      },
+      "tracking": {
+        "title": "How can I track my order?",
+        "content": "You’ll receive an email with tracking details after your order ships."
+      }
+    },
+    "features": {
+      "clock": "Immediate results safely at home",
+      "hand": "No need to send us samples",
+      "finger": "Finger prick (blood) sample",
+      "swab": "Swab sample",
+      "urine": "Urine sample",
+      "saliva": "Saliva sample"
+    },
+    "buttons": {
+      "addToCart": "Add to Cart",
+      "shopAll": "Shop All"
+    },
+    "banner": {
+      "title": "Revolutionizing At-Home Testing: Instant Results Without Sending Samples – Setting Us Apart from EverlyWell",
+      "subtitle": "Unlock New Paths to Optimal Health"
+    }
+  },
+  "successPage": {
+    "title": "Thank You",
+    "subtitle": "Your order has been received.",
+    "orderDetails": {
+      "heading": "Order Details",
+      "orderNumber": "Order number",
+      "date": "Date",
+      "email": "Email",
+      "total": "Total",
+      "paymentMethod": "Payment method",
+      "currencySymbol": "€"
+    },
+    "shippingAddress": {
+      "heading": "Shipping Address",
+      "country": "Country / Region",
+      "address": "Street address",
+      "city": "Town / City",
+      "postcode": "Postcode / ZIP"
+    },
+    "invalid": "Invalid success page – missing order details."
+  }
+}

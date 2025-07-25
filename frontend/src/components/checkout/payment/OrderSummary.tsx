@@ -1,0 +1,54 @@
+import React from 'react';
+import './OrderSummary.css';
+import { useCart } from '../../../context/CartContext';
+import OrderItemRow from './OrderItemRow';
+import ShippingDetails from './ShippingDetails';
+import SummaryTotals from './SummaryTotals';
+import { useTranslation } from 'react-i18next';
+
+type ShippingInfo = {
+  name: string;
+  address: string;
+  phone: string;
+  city: string;
+  country: string;
+  email: string;
+};
+
+type Props = {
+  items: CartItem[];
+  shipping: ShippingInfo;
+  subtotal: number;
+  shippingCost: number;
+  total: number;
+};
+
+const OrderSummary: React.FC<Props> = ({
+  items, shipping, subtotal, shippingCost, total,
+}) => {
+  const { dispatch } = useCart();
+  const { t } = useTranslation();
+  const handleQuantityChange = (slug: string, quantity: number) => {
+    dispatch({ type: 'UPDATE_QUANTITY', payload: { slug, quantity } });
+  };
+
+  return (
+    <div className="order-summary">
+      <h2 className="order-summary-title">
+        {t('checkout.summary.title')} <span className="edit-link">({t('checkout.summary.edit')})</span>
+      </h2>
+
+      <table className="order-summary-table">
+        <tbody>
+          {items.map((item) => (
+            <OrderItemRow key={item.slug} item={item} onQuantityChange={handleQuantityChange} />
+          ))}
+          <ShippingDetails {...shipping} />
+          <SummaryTotals subtotal={subtotal} shippingCost={shippingCost} total={total} />
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+export default OrderSummary;
