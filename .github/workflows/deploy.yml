@@ -51,4 +51,4 @@ jobs:
           eb init -p "Corretto 17 running on 64bit Amazon Linux 2023" lab-away-backend --region $AWS_REGION --no-verify-ssl
 
           # Deploy the built jar to EB environment
-          eb deploy Lab-Away-env
+          eb deploy Lab-Away-env --staged
