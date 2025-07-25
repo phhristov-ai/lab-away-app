@@ -1,0 +1,116 @@
+package com.labaway.backend.service;
+
+import com.labaway.backend.entity.order.Address;
+import com.labaway.backend.entity.order.Order;
+import com.labaway.backend.entity.order.OrderItem;
+import com.labaway.backend.strategy.PaymentProvider;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+
+import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.List;
+import java.util.UUID;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+class EmailServiceImplTest {
+
+    @Mock
+    private JavaMailSender mailSender;
+    @Mock
+    private TemplateEngine templateEngine;
+    @InjectMocks
+    private EmailServiceImpl emailService;
+    @Mock
+    private MimeMessage mimeMessage;
+    @Mock
+    private MimeMessageHelper mimeMessageHelper;
+
+    @BeforeEach
+    public void setUp() throws MessagingException, NoSuchFieldException, IllegalAccessException {
+        when(mailSender.createMimeMessage()).thenReturn(mimeMessage);
+        Field fromEmailField = EmailServiceImpl.class.getDeclaredField("fromEmail");
+        fromEmailField.setAccessible(true);
+        fromEmailField.set(emailService, "test@example.com");
+    }
+
+    @Test
+    void sendOrderConfirmationEmail_shouldSendEmailWithHtmlContent() {
+        Order order = createTestOrder();
+        when(templateEngine.process(eq("order-confirmation"), any(Context.class))).thenReturn("<html>Email Content</html>");
+
+        emailService.sendOrderConfirmationEmail(order);
+
+        verify(mailSender).send(any(MimeMessage.class));
+        verify(templateEngine).process(eq("order-confirmation"), any(Context.class));
+    }
+
+    private Address createBillingAddress() {
+        return Address.builder()
+                .firstName("Richard")
+                .lastName("Lorenzo")
+                .streetAddress("1169 Quaye Lake Cir")
+                .city("Wellington")
+                .postCode("33411")
+                .country("United States (US)")
+                .build();
+    }
+
+    private Address createShippingAddress() {
+        return Address.builder()
+                .firstName("Richard")
+                .lastName("Lorenzo")
+                .streetAddress("Easy-Delivery 1EC8MO 33 boulevard Tisseron")
+                .city("MARSEILLE")
+                .postCode("13014")
+                .country("France")
+                .build();
+    }
+
+    private List<OrderItem> createOrderItems(Order order) {
+        return List.of(
+                OrderItem.builder()
+                        .price(BigDecimal.valueOf(18.00))
+                        .quantity(1)
+                        .order(order)
+                        .build()
+        );
+    }
+
+    private Order createTestOrder() {
+        Address billing = createBillingAddress();
+        Address shipping = createShippingAddress();
+
+        Order order = Order.builder()
+                .id(UUID.randomUUID())
+                .billingEmail("pastorrich@therroc.org")
+                .billingPhone("6193807070")
+                .billingAddress(billing)
+                .shippingAddress(shipping)
+                .paymentProvider(PaymentProvider.STRIPE)
+                .totalPrice(BigDecimal.valueOf(36.00))
+                .createdAt(Instant.parse("2024-12-17T00:00:00Z"))
+                .build();
+
+        order.setOrderItems(createOrderItems(order));
+
+        return order;
+    }
+
+}
