@@ -23,7 +23,7 @@ jobs:
         working-directory: ./frontend
         run: |
           npm install --legacy-peer-deps
-          npm run build
+          CI='' npm run build
 
       - name: Copy frontend build to backend resources
         run: |
