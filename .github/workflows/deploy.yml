@@ -30,6 +30,9 @@ jobs:
           rm -rf backend/src/main/resources/static/*
           cp -r frontend/build/* backend/src/main/resources/static/
 
+      - name: Make mvnw executable
+        run: chmod +x backend/mvnw
+      
       - name: Build backend jar
         working-directory: ./backend
         run: ./mvnw clean package -DskipTests
