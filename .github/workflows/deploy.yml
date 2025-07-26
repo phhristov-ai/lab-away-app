@@ -37,6 +37,12 @@ jobs:
         working-directory: ./backend
         run: ./mvnw clean package -DskipTests
 
+      - name: Copy jar to root for EB deployment
+        run: cp backend/target/*.jar ./application.jar
+      
+      - name: Stage jar for deployment
+        run: git add application.jar
+
       - name: Deploy to Elastic Beanstalk
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -48,7 +54,7 @@ jobs:
           export PATH=$PATH:~/.local/bin
 
           # Initialize EB CLI config (only first time)
-          eb init -p java-17 lab-away-backend --region $AWS_REGION --no-verify-ssl
+          eb init -p "Corretto 17 running on 64bit Amazon Linux 2023" Lab-Away --region $AWS_REGION --no-verify-ssl
 
           # Deploy the built jar to EB environment
-          eb deploy Lab-Away-env
+          eb deploy Lab-Away-env --staged
