@@ -38,8 +38,10 @@ jobs:
         run: ./mvnw clean package -DskipTests
 
       - name: Copy jar to root for EB deployment
-        run: |
-          cp backend/target/*.jar ./application.jar
+        run: cp backend/target/*.jar ./application.jar
+      
+      - name: Stage jar for deployment
+        run: git add application.jar
 
       - name: Deploy to Elastic Beanstalk
         env:
