@@ -7,7 +7,7 @@
 /frontend/node_modules/
 /frontend/build/
 /frontend/dist/
-/frontend/.env*
+#/frontend/.env*
 # Keep frontend folder but ignore unneeded stuff
 
 # === System / Logs ===
