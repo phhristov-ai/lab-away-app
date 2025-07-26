@@ -27,9 +27,10 @@ jobs:
 
       - name: Copy frontend build to backend resources
         run: |
+          mkdir -p backend/src/main/resources/static
           rm -rf backend/src/main/resources/static/*
           cp -r frontend/build/* backend/src/main/resources/static/
-
+          
       - name: Make mvnw executable
         run: chmod +x backend/mvnw
       
