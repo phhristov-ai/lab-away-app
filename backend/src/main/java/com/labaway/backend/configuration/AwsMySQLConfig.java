@@ -23,7 +23,7 @@ public class AwsMySQLConfig {
 
     @Bean
     public DataSource dataSource() throws Exception {
-        Map<String, String> secrets = secretsHelper.getSecret("MySQL");
+        Map<String, String> secrets = secretsHelper.getSecret("MySQL-DB");
 
         String username = secrets.get("username");
         String password = secrets.get("password");
