@@ -14,7 +14,7 @@ public class AwsSecretsManagerHelper {
 
     public AwsSecretsManagerHelper() {
         this.client = SecretsManagerClient.builder()
-                .region(Region.of(System.getenv("AWS_REGION")))
+                .region(Region.of("eu-north-1"))
                 .build();
     }
 
