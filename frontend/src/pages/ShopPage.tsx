@@ -64,7 +64,7 @@ const filteredProducts = useMemo(() => {
         selectedCategory={selectedCategory}
         onSelectCategory={setSelectedCategory}
       />
-      {loading ? <p>Loading...</p> : <ProductGrid products={filteredProducts} />}
+      {loading ? <p>Loading...</p> : <ProductGrid products={filteredProducts} showCreateNew={true} />}
     </div>
   );
 };

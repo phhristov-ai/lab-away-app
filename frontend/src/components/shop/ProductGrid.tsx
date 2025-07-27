@@ -7,14 +7,15 @@ import { Link } from 'react-router-dom';
 
 type ProductGridProps = {
   products: ProductPreviewType[];
+  showCreateNew?: boolean;
 };
 
-const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
-  const { isAdmin } = useAdmin();
+const ProductGrid: React.FC<ProductGridProps> = ({ products, showCreateNew = false }) => {
+    const { isAdmin } = useAdmin();
 
   return (
     <div className="product-grid">
-      {isAdmin && (
+      {isAdmin && showCreateNew && (
         <div className="product-item new-product-item">
           <Link to="/product/new" className="new-product-link">
             <div className="new-product-content">

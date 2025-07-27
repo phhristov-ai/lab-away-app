@@ -26,6 +26,10 @@ const Gallery: React.FC<GalleryProps> = ({ images, setImages, isAdmin }) => {
     setCurrentIndex(index);
   }, []);
 
+  const sortImages = (images: ProductImage[]): ProductImage[] => {
+    return [...images].sort((a, b) => (b.main ? 1 : 0) - (a.main ? 1 : 0));
+  };
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowLeft') goToPrev();
@@ -34,6 +38,14 @@ const Gallery: React.FC<GalleryProps> = ({ images, setImages, isAdmin }) => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [goToPrev, goToNext]);
+
+  useEffect(() => {
+    if (images.length > 1 && !images[0].main) {
+      const sorted = sortImages(images);
+      setImages(sorted);
+      setCurrentIndex(0);
+    }
+  }, [images]);
 
   const handleUpload = (
     event: ChangeEvent<HTMLInputElement> | DragEvent<HTMLDivElement>
@@ -49,8 +61,9 @@ const Gallery: React.FC<GalleryProps> = ({ images, setImages, isAdmin }) => {
 
     setImages((prevImages) => {
       const updatedImages = [...prevImages, ...newImages];
-      setCurrentIndex(updatedImages.length - 1);
-      return updatedImages;
+      const sorted = sortImages(updatedImages);
+      setCurrentIndex(sorted.findIndex(img => img.main) || sorted.length - 1);
+      return sorted;
     });
   };
 
@@ -82,16 +95,21 @@ const Gallery: React.FC<GalleryProps> = ({ images, setImages, isAdmin }) => {
   };
 
   const setAsMainImage = (index: number) => {
-    setImages((prevImages) =>
-      prevImages.map((img, idx) => ({
+    setImages((prevImages) => {
+      const updated = prevImages.map((img, idx) => ({
         ...img,
         main: idx === index,
-      }))
-    );
-    setCurrentIndex(index);
+      }));
+
+      const mainImage = updated.find(img => img.main)!;
+      const otherImages = updated.filter(img => !img.main);
+
+      return [mainImage, ...otherImages];
+    });
+
+    setCurrentIndex(0);
   };
 
-  if (images.length === 0) return <div>No images to display.</div>;
 
   return (
     <div className="gallery">

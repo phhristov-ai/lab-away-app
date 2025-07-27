@@ -74,6 +74,11 @@ export const useProductPage = () => {
         }
     }, [product, allCategories]);
 
+    useEffect(() => {
+        setImages(getInitialImages(product));
+    }, [product]);
+
+
     const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedOptions = Array.from(e.target.selectedOptions);
         const selected = selectedOptions.map(opt => {
@@ -106,7 +111,7 @@ export const useProductPage = () => {
 
     useEffect(() => {
         const loadProduct = async () => {
-            if (!slug) return;
+            if (!slug || slug === 'new') return;
 
             try {
                 const fullProduct = await fetchProductBySlug(slug);

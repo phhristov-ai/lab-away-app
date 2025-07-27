@@ -24,13 +24,13 @@ public class OrderController {
         return new ResponseEntity<>(orderService.createOrder(dto), HttpStatus.CREATED);
     }
 
-    @PostMapping("/confirm/{id}")
-    public ResponseEntity<Void> confirmOrder(@PathVariable String orderNumber) {
+    @PostMapping("/confirm/{orderNumber}")
+    public ResponseEntity<Void> confirmOrder(@PathVariable String orderNumber){
         orderService.confirmOrder(orderNumber);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{orderNumber}")
     public ResponseEntity<OrderDto> getOrder(@PathVariable String orderNumber) {
         return ResponseEntity.ok(orderService.getOrderByOrderNumber(orderNumber));
     }
@@ -42,14 +42,14 @@ public class OrderController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{orderNumber}")
     public ResponseEntity<Void> deleteOrder(@PathVariable String orderNumber) {
         orderService.deleteOrder(orderNumber);
         return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("/{id}/status")
+    @PatchMapping("/{orderNumber}/status")
     public ResponseEntity<Void> updateStatus(@PathVariable String orderNumber, @RequestParam OrderStatus status) {
         orderService.updateOrderStatus(orderNumber, status);
         return ResponseEntity.ok().build();
