@@ -25,25 +25,27 @@ public class AwsMySQLConfig {
     public DataSource dataSource() throws Exception {
         Map<String, String> secrets = secretsHelper.getSecret("MySQL");
 
-        String dbHost = secrets.get("host");
-        String dbUsername = secrets.get("username");
-        String dbPassword = secrets.get("password");
-        String dbName = secrets.get("dbname");
-        String dbPort = secrets.get("port");
+        String username = secrets.get("username");
+        String password = secrets.get("password");
+        String host = secrets.get("host");
+        String dbname = secrets.get("dbname");
 
-        String dbUrl = String.format("jdbc:mysql://%s:%s/%s?useSSL=false", dbHost, dbPort, dbName);
+        String port = String.valueOf(secrets.get("port"));
+        String engine = secrets.get("engine");
+
+        String url = String.format("jdbc:mysql://%s:%s/%s", host, port, dbname);
 
         HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setJdbcUrl(dbUrl);
-        dataSource.setUsername(dbUsername);
-        dataSource.setPassword(dbPassword);
+        dataSource.setJdbcUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
 
-        dataSource.setMaximumPoolSize(10);
-        dataSource.setMinimumIdle(5);
-        dataSource.setIdleTimeout(30000);
-        dataSource.setConnectionTimeout(30000);
+        dataSource.addDataSourceProperty("cachePrepStmts", "true");
+        dataSource.addDataSourceProperty("prepStmtCacheSize", "250");
+        dataSource.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
 
         return dataSource;
     }
+
 }
