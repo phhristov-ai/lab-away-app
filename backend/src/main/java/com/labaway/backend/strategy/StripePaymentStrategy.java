@@ -1,5 +1,6 @@
 package com.labaway.backend.strategy;
 
+import com.labaway.backend.configuration.StripeConfig;
 import com.labaway.backend.dto.payment.CreatePaymentRequestDto;
 import com.labaway.backend.dto.payment.CreatePaymentResponseDto;
 import com.labaway.backend.exception.PaymentException;
@@ -8,22 +9,22 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class StripePaymentStrategy implements PaymentStrategy {
 
-    @Value("${stripe.secret-key}")
-    private String stripeApiKey;
+    private final StripeConfig stripeConfig;
+
+    @Autowired
+    public StripePaymentStrategy(StripeConfig stripeConfig) {
+        this.stripeConfig = stripeConfig;
+    }
 
     @PostConstruct
     public void init() {
-        setStripeApiKey(stripeApiKey);
-    }
-
-    private static void setStripeApiKey(String key) {
-        Stripe.apiKey = key;
+        Stripe.apiKey = stripeConfig.getSecretKey();
     }
     @Override
     public PaymentProvider getProvider() {

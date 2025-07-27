@@ -1,5 +1,6 @@
 package com.labaway.backend.strategy;
 
+import com.labaway.backend.configuration.PayPalConfig;
 import com.labaway.backend.dto.payment.CreatePaymentRequestDto;
 import com.labaway.backend.dto.payment.CreatePaymentResponseDto;
 import com.labaway.backend.exception.PayPalServiceException;
@@ -7,7 +8,6 @@ import com.paypal.core.PayPalEnvironment;
 import com.paypal.core.PayPalHttpClient;
 import com.paypal.http.HttpResponse;
 import com.paypal.orders.*;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -15,17 +15,20 @@ import java.util.List;
 
 @Component
 public class PayPalPaymentStrategy implements PaymentStrategy {
-    private String clientId;
-    private String clientSecret;
-    private PayPalHttpClient payPalClient;
 
-    public PayPalPaymentStrategy(@Value("${paypal.client-id}") String clientId,
-                                 @Value("${paypal.client-secret}") String clientSecret) {
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
+    private final PayPalHttpClient payPalClient;
 
-        PayPalEnvironment environment = new PayPalEnvironment.Sandbox(this.clientId, this.clientSecret);
+    public PayPalPaymentStrategy(PayPalConfig payPalConfig) {
+        PayPalEnvironment environment = new PayPalEnvironment.Sandbox(
+                payPalConfig.getClientId(),
+                payPalConfig.getClientSecret()
+        );
+
         this.payPalClient = new PayPalHttpClient(environment);
+    }
+
+    public PayPalHttpClient getPayPalClient() {
+        return payPalClient;
     }
 
     @Override

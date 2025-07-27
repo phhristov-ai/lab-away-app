@@ -1,9 +1,9 @@
 package com.labaway.backend.security;
 
+import com.labaway.backend.configuration.JwtSecretConfig;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -12,8 +12,11 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    @Value("${jwt.secret}")
-    private String secret;
+    private final String secret;
+
+    public JwtUtil(JwtSecretConfig jwtSecretConfig) {
+        this.secret = jwtSecretConfig.getJwtSecret();
+    }
 
     private static final long JWT_EXPIRATION_MS = 3600000;
 

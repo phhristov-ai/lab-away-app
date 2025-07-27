@@ -1,5 +1,6 @@
 package com.labaway.backend.service;
 
+import com.labaway.backend.configuration.SmtpConfig;
 import com.labaway.backend.entity.order.Order;
 import com.labaway.backend.exception.EmailSendingException;
 import jakarta.mail.MessagingException;
@@ -17,13 +18,12 @@ import java.time.format.DateTimeFormatter;
 
 @Service
 public class EmailServiceImpl implements EmailService {
-
-    @Value("${spring.mail.from}")
     private String fromEmail;
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
 
-    public EmailServiceImpl(JavaMailSender mailSender, TemplateEngine templateEngine) {
+    public EmailServiceImpl(SmtpConfig smtpConfig, JavaMailSender mailSender, TemplateEngine templateEngine) {
+        this.fromEmail = smtpConfig.getFromEmail();
         this.mailSender = mailSender;
         this.templateEngine = templateEngine;
     }

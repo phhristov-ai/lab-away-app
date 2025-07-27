@@ -1,5 +1,6 @@
 package com.labaway.backend.service;
 
+import com.labaway.backend.configuration.SmtpConfig;
 import com.labaway.backend.entity.order.Address;
 import com.labaway.backend.entity.order.Order;
 import com.labaway.backend.entity.order.OrderItem;
@@ -33,21 +34,23 @@ class EmailServiceImplTest {
 
     @Mock
     private JavaMailSender mailSender;
+
     @Mock
     private TemplateEngine templateEngine;
-    @InjectMocks
-    private EmailServiceImpl emailService;
+
+    @Mock
+    private SmtpConfig smtpConfig;
+
     @Mock
     private MimeMessage mimeMessage;
-    @Mock
-    private MimeMessageHelper mimeMessageHelper;
+
+    private EmailServiceImpl emailService;
 
     @BeforeEach
-    public void setUp() throws MessagingException, NoSuchFieldException, IllegalAccessException {
+    void setUp() throws Exception {
+        when(smtpConfig.getFromEmail()).thenReturn("test@example.com");
         when(mailSender.createMimeMessage()).thenReturn(mimeMessage);
-        Field fromEmailField = EmailServiceImpl.class.getDeclaredField("fromEmail");
-        fromEmailField.setAccessible(true);
-        fromEmailField.set(emailService, "test@example.com");
+        emailService = new EmailServiceImpl(smtpConfig, mailSender, templateEngine);
     }
 
     @Test
