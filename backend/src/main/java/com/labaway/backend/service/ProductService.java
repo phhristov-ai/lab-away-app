@@ -44,9 +44,16 @@ public class ProductService {
                 .orElseThrow(() -> new ProductNotFoundException("Product with slug '" + slug + "' not found"));
 
         if (files != null && files.length > 0) {
+            product.getImages().clear();
             deleteOldImages(product);
+
             List<ProductImage> productImages = processImageFiles(files, dto.getMainImageIndex());
-            product.setImages(productImages);
+
+            for (ProductImage image : productImages) {
+                image.setProduct(product);
+            }
+
+            product.getImages().addAll(productImages);
         }
 
         List<Category> categories = categoryRepository.findBySlugInAndLanguage(dto.getCategories(), dto.getTranslation().getLanguage());
@@ -59,6 +66,7 @@ public class ProductService {
         Product savedProduct = productRepository.save(product);
         return productTransformer.toDto(savedProduct, dto.getTranslation().getLanguage());
     }
+
 
     private Product prepareAndSaveProduct(ProductPayloadDto productPayloadDto, List<ProductImage> productImages) {
         Language language = productPayloadDto.getTranslation().getLanguage();
