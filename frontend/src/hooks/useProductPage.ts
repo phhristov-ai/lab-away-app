@@ -125,30 +125,36 @@ export const useProductPage = () => {
         try {
             const isNew = slug === 'new';
             const language = i18n.language.toUpperCase();
-            if (!isFullProduct(product)) {
+
+            if (!isNew && !isFullProduct(product)) {
                 console.warn('Product is not fully loaded');
                 return;
             }
 
+            const filesToUpload = images
+                .filter(img => img.file)
+                .map(img => img.file as File);
+
+            const mainImageIndex = images.findIndex(img => img.main);
+
             const payload: ProductPayloadDto = {
-                price: price,
-                stock: product.stock,
+                price,
+                stock: 10, //TODO to fix later
                 active: true,
-                mainImageIndex: 0,
-                categories: selectedCategories.map((cat) => cat.slug),
-                translation:
-                {
-                    language: language,
+                mainImageIndex,
+                categories: selectedCategories.map(cat => cat.slug),
+                translation: {
+                    language,
                     name: title,
-                    description: product.description,
+                    description: 'Description', //TODO to fix later
                 },
             };
 
             let result;
             if (isNew) {
-                result = await createProduct(payload, imageFiles);
+                result = await createProduct(payload, filesToUpload);
             } else {
-                result = await updateProduct(slug!, payload, imageFiles);
+                result = await updateProduct(slug!, payload, filesToUpload);
             }
 
             const updatedSlug = result.slug;
@@ -163,6 +169,7 @@ export const useProductPage = () => {
             console.error('Error saving product:', err);
         }
     };
+
 
     return {
         slug,

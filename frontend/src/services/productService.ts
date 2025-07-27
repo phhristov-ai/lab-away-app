@@ -79,6 +79,9 @@ export const updateProduct = async (
 ) => {
   const token = localStorage.getItem('adminToken');
 
+
+  console.log(imageFiles);
+
   const formData = new FormData();
   formData.append('product', new Blob([JSON.stringify(productPayload)], { type: 'application/json' }));
 

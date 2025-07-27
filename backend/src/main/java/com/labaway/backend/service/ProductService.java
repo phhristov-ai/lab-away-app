@@ -77,9 +77,16 @@ public class ProductService {
         }
 
         Product product = productTransformer.fromCreateDto(productPayloadDto, categories);
+
+        for (ProductImage image : productImages) {
+            image.setProduct(product);
+        }
+
         product.setImages(productImages);
+
         return productRepository.save(product);
     }
+
 
 
     private void deleteOldImages(Product product) {

@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState, ChangeEvent, DragEvent, useRef } from 'react'; import './Gallery.css';
 import SlickDots from './SlickDots';
 import { ProductImage } from '../../types/ProductImage';
-import './Gallery.css';
 
 interface GalleryProps {
   images: ProductImage[];
@@ -42,23 +41,18 @@ const Gallery: React.FC<GalleryProps> = ({ images, setImages, isAdmin }) => {
     const files = 'dataTransfer' in event ? event.dataTransfer.files : event.target.files;
     if (!files || files.length === 0) return;
 
-    const file = files[0];
-    const imageUrl = URL.createObjectURL(file);
-
-    const newImage: ProductImage = {
-      imageUrl,
+    const newImages: ProductImage[] = Array.from(files).map((file) => ({
+      imageUrl: URL.createObjectURL(file),
       main: false,
       file,
-    };
+    }));
 
-    setImages(prevImages => {
-      const updatedImages = [...prevImages, newImage];
+    setImages((prevImages) => {
+      const updatedImages = [...prevImages, ...newImages];
       setCurrentIndex(updatedImages.length - 1);
       return updatedImages;
     });
-    setCurrentIndex(images.length);
   };
-
 
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -96,7 +90,6 @@ const Gallery: React.FC<GalleryProps> = ({ images, setImages, isAdmin }) => {
     );
     setCurrentIndex(index);
   };
-
 
   if (images.length === 0) return <div>No images to display.</div>;
 
