@@ -42,9 +42,6 @@ jobs:
         run: |
           mkdir -p deploy
           cp backend/target/*.jar deploy/application.jar
-          cd deploy
-          zip -r ../deploy.zip application.jar
-          cd ..
 
       - name: Deploy to Elastic Beanstalk
         env:
@@ -54,9 +51,8 @@ jobs:
         run: |
           pip install --user awsebcli
           export PATH=$PATH:~/.local/bin
-      
+
           eb init Lab-Away --region $AWS_REGION -p "Corretto 17 running on 64bit Amazon Linux 2023" --no-verify-ssl
-      
+
           cd deploy
           eb deploy Lab-Away-env --label "v-${{ github.run_number }}" --message "Automated deploy"
-
