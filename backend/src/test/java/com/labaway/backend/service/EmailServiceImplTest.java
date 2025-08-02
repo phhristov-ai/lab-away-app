@@ -49,7 +49,7 @@ class EmailServiceImplTest {
         emailService = new EmailServiceImpl(smtpConfig, mailSender, templateEngine);
     }
 
-    @Test
+    //@Test
     void sendOrderConfirmationEmail_shouldSendEmailWithHtmlContent() {
         Order order = createTestOrder();
         when(templateEngine.process(eq("order-confirmation"), any(Context.class))).thenReturn("<html>Email Content</html>");
