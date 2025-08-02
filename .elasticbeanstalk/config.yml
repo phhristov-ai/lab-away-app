@@ -1,0 +1,9 @@
+branch-defaults:
+  main:
+    environment: Lab-Away-env
+global:
+  application_name: Lab-Away
+  default_platform: Corretto 17 running on 64bit Amazon Linux 2023
+  default_region: eu-north-1
+  profile: null
+  sc: git
