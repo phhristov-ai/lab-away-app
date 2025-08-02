@@ -42,8 +42,9 @@ jobs:
         run: |
           mkdir -p deploy
           cp backend/target/*.jar deploy/application.jar
+          echo "web: java -jar application.jar" > deploy/Procfile
           cd deploy
-          zip ../app.zip application.jar
+          zip ../app.zip application.jar Procfile
           cd ..
 
       - name: Deploy to Elastic Beanstalk
@@ -57,5 +58,5 @@ jobs:
 
           eb init Lab-Away --region $AWS_REGION -p "Corretto 17 running on 64bit Amazon Linux 2023" --no-verify-ssl
 
-          # Deploy ZIP artifact
-          eb deploy Lab-Away-env --staged --label v-${{ github.run_number }} --message "Automated deploy via GitHub Actions"
+          # Deploy ZIP with jar + Procfile
+          eb deploy Lab-Away-env --label "v-${{ github.run_number }}" --message "Automated deploy" --source app.zip
