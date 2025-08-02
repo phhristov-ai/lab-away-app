@@ -54,8 +54,9 @@ jobs:
         run: |
           pip install --user awsebcli
           export PATH=$PATH:~/.local/bin
-
+      
           eb init Lab-Away --region $AWS_REGION -p "Corretto 17 running on 64bit Amazon Linux 2023" --no-verify-ssl
+      
+          cd deploy
+          eb deploy Lab-Away-env --label "v-${{ github.run_number }}" --message "Automated deploy"
 
-          # Deploy using the ZIP file, which contains the JAR at root level
-          eb deploy Lab-Away-env --source deploy.zip --label "v-${{ github.run_number }}" --message "Automated deploy"
