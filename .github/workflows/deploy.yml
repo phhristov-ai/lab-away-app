@@ -27,21 +27,21 @@ jobs:
 
       - name: Copy frontend build to backend resources
         run: |
-          mkdir -p backend/src/main/resources/static
           rm -rf backend/src/main/resources/static/*
           cp -r frontend/build/* backend/src/main/resources/static/
 
       - name: Make mvnw executable
         run: chmod +x backend/mvnw
-
-      - name: Build backend JAR
+      
+      - name: Build backend jar
         working-directory: ./backend
         run: ./mvnw clean package -DskipTests
 
-      - name: Package JAR for Elastic Beanstalk
-        run: |
-          mkdir -p deploy
-          cp backend/target/*.jar deploy/application.jar
+      - name: Copy jar to root for EB deployment
+        run: cp backend/target/*.jar ./application.jar
+
+      - name: Stage jar for deployment
+        run: git add application.jar
 
       - name: Deploy to Elastic Beanstalk
         env:
@@ -51,9 +51,7 @@ jobs:
         run: |
           pip install --user awsebcli
           export PATH=$PATH:~/.local/bin
-      
-          eb init Lab-Away --region $AWS_REGION -p "Corretto 17 running on 64bit Amazon Linux 2023" --no-verify-ssl
-      
-          # Deploy using the deploy directory contents as source bundle
-          eb deploy Lab-Away-env --label "v-${{ github.run_number }}" --message "Automated deploy" --staged --verbose --source deploy
-      
+
+          eb init -p "Corretto 17 running on 64bit Amazon Linux 2023" Lab-Away --region $AWS_REGION --no-verify-ssl
+
+          eb deploy Lab-Away-env --staged
