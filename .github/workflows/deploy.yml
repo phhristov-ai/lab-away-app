@@ -30,19 +30,16 @@ jobs:
           mkdir -p backend/src/main/resources/static
           rm -rf backend/src/main/resources/static/*
           cp -r frontend/build/* backend/src/main/resources/static/
-          
+
       - name: Make mvnw executable
         run: chmod +x backend/mvnw
-      
+
       - name: Build backend jar
         working-directory: ./backend
         run: ./mvnw clean package -DskipTests
 
-      - name: Copy jar to root for EB deployment
+      - name: Move jar to root for deployment
         run: cp backend/target/*.jar ./application.jar
-      
-      - name: Stage jar for deployment
-        run: git add application.jar
 
       - name: Deploy to Elastic Beanstalk
         env:
@@ -50,12 +47,8 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
-          # Install EB CLI
           pip install --user awsebcli
           export PATH=$PATH:~/.local/bin
 
-          # Initialize EB CLI config (only first time)
-          eb init -p "Corretto 17 running on 64bit Amazon Linux 2023" Lab-Away --region $AWS_REGION --no-verify-ssl
-
-          # Deploy the built jar to EB environment
-          eb deploy Lab-Away-env --staged
+          # Use pre-configured EB settings from .elasticbeanstalk/config.yml
+          eb deploy --staged
