@@ -38,8 +38,13 @@ jobs:
         working-directory: ./backend
         run: ./mvnw clean package -DskipTests
 
-      - name: Move jar to root for deployment
-        run: cp backend/target/*.jar ./application.jar
+      - name: Move jar to deployment folder and zip
+        run: |
+          mkdir -p deploy
+          cp backend/target/*.jar deploy/application.jar
+          cd deploy
+          zip ../app.zip application.jar
+          cd ..
 
       - name: Deploy to Elastic Beanstalk
         env:
@@ -50,5 +55,7 @@ jobs:
           pip install --user awsebcli
           export PATH=$PATH:~/.local/bin
 
-          # Use pre-configured EB settings from .elasticbeanstalk/config.yml
-          eb deploy --staged
+          eb init Lab-Away --region $AWS_REGION -p "Corretto 17 running on 64bit Amazon Linux 2023" --no-verify-ssl
+
+          # Deploy ZIP artifact
+          eb deploy Lab-Away-env --staged --label v-${{ github.run_number }} --message "Automated deploy via GitHub Actions"
