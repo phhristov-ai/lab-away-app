@@ -38,14 +38,11 @@ jobs:
         working-directory: ./backend
         run: ./mvnw clean package -DskipTests
 
-      - name: Move jar to deployment folder and zip
+      - name: Prepare deployment bundle
         run: |
           mkdir -p deploy
           cp backend/target/*.jar deploy/application.jar
           echo "web: java -jar application.jar" > deploy/Procfile
-          cd deploy
-          zip ../app.zip application.jar Procfile
-          cd ..
 
       - name: Deploy to Elastic Beanstalk
         env:
@@ -58,5 +55,4 @@ jobs:
 
           eb init Lab-Away --region $AWS_REGION -p "Corretto 17 running on 64bit Amazon Linux 2023" --no-verify-ssl
 
-          # Deploy ZIP with jar + Procfile
-          eb deploy Lab-Away-env --label "v-${{ github.run_number }}" --message "Automated deploy" --source app.zip
+          eb deploy Lab-Away-env --label "v-${{ github.run_number }}" --message "Automated deploy" deploy/
