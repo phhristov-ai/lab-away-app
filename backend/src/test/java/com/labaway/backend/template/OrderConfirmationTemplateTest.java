@@ -11,12 +11,10 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.NumberFormat;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
-record TestProduct(String name, double price) {}
-record TestOrderItem(TestProduct product, int quantity) {}
 
 class OrderConfirmationTemplateTest {
 
@@ -38,20 +36,23 @@ class OrderConfirmationTemplateTest {
                 .contains("John Doe")
                 .contains("product-1");
 
+        System.out.println(htmlContent);
         Files.delete(outputFile);
     }
 
     private Context createContextWithTestData() {
-        Context context = new Context();
+        Context context = new Context(Locale.ENGLISH);
+
         context.setVariable("orderId", "123456");
         context.setVariable("billingName", "John Doe");
         context.setVariable("orderDate", "2025-05-26");
-        context.setVariable("orderItems", createTestOrderItems());
 
-        context.setVariable("subtotal", "89.97");
+        context.setVariable("orderItems", createFormattedOrderItems());
+
+        context.setVariable("subtotal", "89.97 €");
         context.setVariable("shipping", "Free");
         context.setVariable("paymentMethod", "Credit Card");
-        context.setVariable("total", "89.97");
+        context.setVariable("total", "89.97 €");
 
         context.setVariable("billingAddress", "123 Billing St.");
         context.setVariable("billingCity", "Billingville");
@@ -69,10 +70,20 @@ class OrderConfirmationTemplateTest {
         return context;
     }
 
-    private List<TestOrderItem> createTestOrderItems() {
+    private List<Map<String, String>> createFormattedOrderItems() {
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.ENGLISH);
+
         return List.of(
-                new TestOrderItem(new TestProduct("product-1", 19.99), 2),
-                new TestOrderItem(new TestProduct("product-2", 49.99), 1)
+                Map.of(
+                        "productName", "product-1",
+                        "quantity", "2",
+                        "price", currencyFormat.format(19.99)
+                ),
+                Map.of(
+                        "productName", "product-2",
+                        "quantity", "1",
+                        "price", currencyFormat.format(49.99)
+                )
         );
     }
 

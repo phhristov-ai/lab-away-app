@@ -33,11 +33,17 @@ const Navbar = () => {
         <div className="navbar-inner">
           <div className="navbar-left">
             {isMobile ? (
-              <Hamburger onClick={() => setSidebarOpen(true)} isOpen={sidebarOpen} />
+              <>
+                <Hamburger onClick={() => setSidebarOpen(true)} isOpen={sidebarOpen} />
+                <Logo />
+              </>
             ) : (
-              <NavLinks />
+              <>
+                <Logo />
+                <NavLinks />
+              </>
             )}
-            <Logo />
+
 
           </div>
 

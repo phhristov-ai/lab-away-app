@@ -14,6 +14,7 @@ import AdminActionButtons from '../components/admin/AdminActionButtons';
 import { useProductPage } from '../hooks/useProductPage';
 import { t } from 'i18next';
 import CategorySelect from '../components/admin/CategorySelect';
+import Breadcrumb from '../components/shop/Breadcrumb';
 
 const ProductPage: React.FC = () => {
   const {
@@ -41,7 +42,9 @@ const ProductPage: React.FC = () => {
     selectedCategories,
     handleCategoryChange,
     images,
-    setImages
+    setImages,
+    breadcrumbItems,
+    hasFullBreadcrumb
   } = useProductPage();
 
 
@@ -49,74 +52,82 @@ const ProductPage: React.FC = () => {
 
   return (
     <div className="product-page">
-      <div className="product-gallery">
-        <Gallery
-          images={images}
-          setImages={setImages}
-          isAdmin={isAdmin}
-        />
+      <div className="product-main-section">
+        <div className="product-gallery">
+          {hasFullBreadcrumb ? (
+            <Breadcrumb items={breadcrumbItems} />
+          ) : (
+            <div className="breadcrumb-placeholder" />
+          )}
 
-      </div>
-      <div className="product-info">
-        {isAdmin && (
-          <CategorySelect
-            allCategories={allCategories}
-            selectedSlugs={selectedCategories.map(cat => cat.slug)}
-            onChange={handleCategoryChange}
+          <Gallery
+            images={images}
+            setImages={setImages}
+            isAdmin={isAdmin}
           />
-        )}
-        <ProductInfo
-          title={title}
-          price={price}
-          image={
-            isFullProduct(product)
-              ? product.images[0]?.imageUrl
-              : product.thumbnailUrl
-          }
-          slug={product.slug}
-          onTitleChange={setTitle}
-          onPriceChange={setPrice}
-        />
+        </div>
 
-        {isAdmin && (
-          <AdminActionButtons
-            isNew={slug === "new"}
-            onSave={handleSave}
-            onDelete={handleDeleteClick}
-            showConfirmDelete={showConfirmDelete}
-            onConfirmDelete={handleConfirmDelete}
-            onCancelDelete={() => setShowConfirmDelete(false)}
-            showSuccessModal={showSuccessModal}
-            successMessage={successMessage}
-            onCloseSuccess={() => setShowSuccessModal(false)}
+        <div className="product-info">
+          {isAdmin && (
+            <CategorySelect
+              allCategories={allCategories}
+              selectedSlugs={selectedCategories.map(cat => cat.slug)}
+              onChange={handleCategoryChange}
+            />
+          )}
+          <ProductInfo
+            title={title}
+            price={price}
+            image={
+              isFullProduct(product)
+                ? product.images[0]?.imageUrl
+                : product.thumbnailUrl
+            }
+            slug={product.slug}
+            onTitleChange={setTitle}
+            onPriceChange={setPrice}
           />
-        )}
-
-        <VerticalFeatureList items={featureItems} />
-        <p className="product-long-desc">{isFullProduct(product) ? product.description : ''}</p>
+          {isAdmin && (
+            <AdminActionButtons
+              isNew={slug === "new"}
+              onSave={handleSave}
+              onDelete={handleDeleteClick}
+              showConfirmDelete={showConfirmDelete}
+              onConfirmDelete={handleConfirmDelete}
+              onCancelDelete={() => setShowConfirmDelete(false)}
+              showSuccessModal={showSuccessModal}
+              successMessage={successMessage}
+              onCloseSuccess={() => setShowSuccessModal(false)}
+            />
+          )}
+          <VerticalFeatureList items={featureItems} />
+          <p className="product-long-desc">{isFullProduct(product) ? product.description : ''}</p>
+        </div>
       </div>
-      <div>
+
+      <div className="product-sections">
         <ThreeColumnLayout columns={columns} />
-      </div>
-      <div className="accordion-section">
-        <h2 className="faq-title">{t('productPage.faq.title')}</h2>
-        <Accordion items={faqItems} />
-      </div>
-      <ImageTextSection
-        imageSrc={Scientist}
-        imageAlt="No sample"
-        title={t('productPage.banner.title')}
-        text={t('productPage.banner.subtitle')}
-        buttonText={t('productPage.buttons.addToCart')}
-        reverse={true}
-        displayButton={false}
-        buttonLink="/shop"
-      />
 
-      <RandomProductRow />
+        <div className="accordion-section">
+          <h2 className="faq-title">{t('productPage.faq.title')}</h2>
+          <Accordion items={faqItems} />
+        </div>
 
+        <ImageTextSection
+          imageSrc={Scientist}
+          imageAlt="No sample"
+          title={t('productPage.banner.title')}
+          text={t('productPage.banner.subtitle')}
+          buttonText={t('productPage.buttons.addToCart')}
+          reverse={true}
+          displayButton={false}
+          buttonLink="/shop"
+        />
+
+        <RandomProductRow />
+      </div>
     </div>
   );
-};
+}
 
 export default ProductPage;

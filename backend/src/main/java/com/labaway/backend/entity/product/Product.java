@@ -1,6 +1,7 @@
 package com.labaway.backend.entity.product;
 
 import com.labaway.backend.entity.category.Category;
+import com.labaway.backend.enums.Language;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -56,5 +57,13 @@ public class Product {
 
     @UpdateTimestamp
     private Instant updatedAt;
+
+    public String getTranslatedName(Language language) {
+        return translations.stream()
+                .filter(t -> t.getLanguage() == language)
+                .map(ProductTranslation::getName)
+                .findFirst()
+                .orElse("Unnamed Product");
+    }
 
 }

@@ -19,9 +19,9 @@
         <th>Price</th>
     </tr>
     <tr th:each="item : ${orderItems}">
-        <td th:text="${item.product.name}"></td>
+        <td th:text="${item.productName}"></td>
         <td th:text="${item.quantity}"></td>
-        <td th:text="${#numbers.formatDecimal(item.product.price, 1, 2) + ' €'}"></td>
+        <td th:text="${item.price}"></td>
     </tr>
 </table>
 

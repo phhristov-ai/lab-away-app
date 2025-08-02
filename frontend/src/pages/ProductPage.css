@@ -1,11 +1,19 @@
 .product-page {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.product-main-section {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 20px;
-  padding: 20px;
-  width: 100%;
+  background-color: var(--background-color);
+  margin-left: calc(-4 * var(--spacing-lg));
+  margin-right: calc(-4 * var(--spacing-lg));
+  padding: 20px var(--spacing-lg);
   box-sizing: border-box;
+  width: auto;
 }
 
 .product-gallery {

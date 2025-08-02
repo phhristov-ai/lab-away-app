@@ -5,6 +5,10 @@
   padding: 20px;
 }
 
+.three-column-title {
+  text-align: center;
+}
+
 .column {
   flex: 1;
   display: flex;

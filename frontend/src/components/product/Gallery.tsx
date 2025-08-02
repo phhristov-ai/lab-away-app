@@ -165,31 +165,32 @@ const Gallery: React.FC<GalleryProps> = ({ images, setImages, isAdmin }) => {
         )}
 
         <i className="fi fi-rr-arrow-right slick-arrow next-arrow" onClick={goToNext} />
-
-        <div className="gallery-thumbnails">
-          {images.map((img, idx) => (
-            <div key={img.imageUrl} className={`thumbnail-wrapper ${img.main ? 'main-image' : ''}`}>
-              <img
-                src={img.imageUrl}
-                alt={`Thumbnail ${idx + 1}`}
-                onClick={() => goToImage(idx)}
-                className="thumbnail-image"
-              />
-              {isAdmin && (
-                <button
-                  className="set-main-button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setAsMainImage(idx);
-                  }}
-                  title="Set as main image"
-                >
-                  {img.main ? '★' : '☆'}
-                </button>
-              )}
-            </div>
-          ))}
-        </div>
+        {isAdmin &&
+          <div className="gallery-thumbnails">
+            {images.map((img, idx) => (
+              <div key={img.imageUrl} className={`thumbnail-wrapper ${img.main ? 'main-image' : ''}`}>
+                <img
+                  src={img.imageUrl}
+                  alt={`Thumbnail ${idx + 1}`}
+                  onClick={() => goToImage(idx)}
+                  className="thumbnail-image"
+                />
+                {isAdmin && (
+                  <button
+                    className="set-main-button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setAsMainImage(idx);
+                    }}
+                    title="Set as main image"
+                  >
+                    {img.main ? '★' : '☆'}
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        }
 
       </div>
 

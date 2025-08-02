@@ -3,18 +3,14 @@ package com.labaway.backend.strategy;
 import com.labaway.backend.configuration.StripeConfig;
 import com.labaway.backend.dto.payment.CreatePaymentRequestDto;
 import com.labaway.backend.dto.payment.CreatePaymentResponseDto;
-import com.labaway.backend.strategy.StripePaymentStrategy;
 import com.stripe.model.PaymentIntent;
-import com.stripe.model.checkout.Session;
 import com.stripe.param.PaymentIntentCreateParams;
-import com.stripe.param.checkout.SessionCreateParams;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;

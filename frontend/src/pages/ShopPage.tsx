@@ -8,6 +8,8 @@ import { fetchProducts } from '../services/productService';
 import { Category, fetchCategories } from '../services/categoriesService';
 import { ProductPreviewType } from '../types/ProductPreviewType';
 import { useTranslation } from 'react-i18next';
+import { t } from 'i18next';
+import { useSearchParams } from 'react-router-dom';
 
 const transformProducts = (backendProducts: any[]): ProductPreviewType[] => {
   return backendProducts.map(product => ({
@@ -46,18 +48,30 @@ const ShopPage: React.FC = () => {
     loadData();
   }, [i18n.language]);
 
-const filteredProducts = useMemo(() => {
-  if (!selectedCategory) return products;
+  const filteredProducts = useMemo(() => {
+    if (!selectedCategory) return products;
 
-  return products.filter(product =>
-    product.categories?.some(category => category.slug === selectedCategory)
-  );
-}, [products, selectedCategory]);
+    return products.filter(product =>
+      product.categories?.some(category => category.slug === selectedCategory)
+    );
+  }, [products, selectedCategory]);
 
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const categoryFromUrl = searchParams.get('category');
+    if (categoryFromUrl) {
+      setSelectedCategory(categoryFromUrl);
+    }
+  }, [searchParams]);
 
   return (
     <div className="shop-page">
-      <Breadcrumb />
+      <Breadcrumb items={[
+        { label: t('shop.breadcrumb.home'), to: '/' },
+        { label: t('shop.breadcrumb.certifiedTests') }
+      ]} />
+
       <ShopHeader />
       <FilterBar
         categories={categories}

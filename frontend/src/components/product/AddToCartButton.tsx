@@ -1,4 +1,5 @@
 import { useCart } from '../../context/CartContext';
+import './AddToCartButton.css';
 
 interface AddToCartButtonProps {
   onClick: () => void;
@@ -8,6 +9,7 @@ interface AddToCartButtonProps {
   image: string;
   price: number;
   quantity: number;
+  variant?: 'primary' | 'secondary';
 }
 
 const AddToCartButton: React.FC<AddToCartButtonProps> = ({
@@ -17,7 +19,8 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
   name,
   image,
   price,
-  quantity
+  quantity,
+  variant = 'primary'
 }) => {
   const { dispatch } = useCart();
 
@@ -36,7 +39,7 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
   };
 
   return (
-    <button className="add-to-cart-button" onClick={handleAdd}>
+    <button className={`add-to-cart-button ${variant}`} onClick={handleAdd}>
       {label}
     </button>
   );

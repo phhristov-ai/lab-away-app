@@ -2,10 +2,10 @@ package com.labaway.backend.service;
 
 import com.labaway.backend.configuration.SmtpConfig;
 import com.labaway.backend.entity.order.Order;
+import com.labaway.backend.enums.Language;
 import com.labaway.backend.exception.EmailSendingException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -13,8 +13,13 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -37,40 +42,69 @@ public class EmailServiceImpl implements EmailService {
             helper.setFrom(fromEmail);
             helper.setSubject("Your order has been confirmed");
 
-            Context context = new Context();
-            context.setVariable("orderId", order.getId().toString().substring(0, 8));
-            context.setVariable("orderDate", DateTimeFormatter.ofPattern("MMMM dd, yyyy").withZone(ZoneId.systemDefault()).format(order.getCreatedAt()));
-
-            context.setVariable("billingName", order.getBillingAddress().getFirstName() + " " + order.getBillingAddress().getLastName());
-            context.setVariable("billingAddress", order.getBillingAddress().getStreetAddress());
-            context.setVariable("billingCity", order.getBillingAddress().getCity());
-            context.setVariable("billingPostCode", order.getBillingAddress().getPostCode());
-            context.setVariable("billingCountry", order.getBillingAddress().getCountry());
-            context.setVariable("billingPhone", order.getBillingPhone());
-            context.setVariable("billingEmail", order.getBillingEmail());
-
-            context.setVariable("shippingName", order.getShippingAddress().getFirstName() + " " + order.getShippingAddress().getLastName());
-            context.setVariable("shippingAddress", order.getShippingAddress().getStreetAddress());
-            context.setVariable("shippingCity", order.getShippingAddress().getCity());
-            context.setVariable("shippingPostCode", order.getShippingAddress().getPostCode());
-            context.setVariable("shippingCountry", order.getShippingAddress().getCountry());
-
-            context.setVariable("paymentMethod", order.getPaymentProvider().toString());
-            context.setVariable("total", order.getTotalPrice().toString() + " €");
-
-            BigDecimal subtotal = order.getOrderItems().stream()
-                    .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-            context.setVariable("subtotal", subtotal.toString() + " €");
-
-            context.setVariable("shipping", "18,00 € (incl. VAT)");
-            context.setVariable("orderItems", order.getOrderItems());
-
+            Context context = buildOrderConfirmationContext(order);
             String html = templateEngine.process("order-confirmation", context);
             helper.setText(html, true);
 
             mailSender.send(message);
         } catch (MessagingException e) {
-            throw new EmailSendingException("Failed to send email", e);        }
+            throw new EmailSendingException("Failed to send email", e);
+        }
     }
+
+    private Context buildOrderConfirmationContext(Order order) {
+        Locale locale = Locale.forLanguageTag(order.getLanguage());
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(locale);
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy", locale)
+                .withZone(ZoneId.systemDefault());
+
+        Context context = new Context(locale);
+        context.setVariable("orderId", order.getId().toString().substring(0, 8));
+        context.setVariable("orderDate", dateFormatter.format(order.getCreatedAt()));
+
+        context.setVariable("billingName", order.getBillingAddress().getFirstName() + " " + order.getBillingAddress().getLastName());
+        context.setVariable("billingAddress", order.getBillingAddress().getStreetAddress());
+        context.setVariable("billingCity", order.getBillingAddress().getCity());
+        context.setVariable("billingPostCode", order.getBillingAddress().getPostCode());
+        context.setVariable("billingCountry", order.getBillingAddress().getCountry());
+        context.setVariable("billingPhone", order.getBillingPhone());
+        context.setVariable("billingEmail", order.getBillingEmail());
+
+        context.setVariable("shippingName", order.getShippingAddress().getFirstName() + " " + order.getShippingAddress().getLastName());
+        context.setVariable("shippingAddress", order.getShippingAddress().getStreetAddress());
+        context.setVariable("shippingCity", order.getShippingAddress().getCity());
+        context.setVariable("shippingPostCode", order.getShippingAddress().getPostCode());
+        context.setVariable("shippingCountry", order.getShippingAddress().getCountry());
+
+        context.setVariable("paymentMethod", order.getPaymentProvider().toString());
+        context.setVariable("total", currencyFormat.format(order.getTotalPrice()));
+
+        BigDecimal subtotal = order.getOrderItems().stream()
+                .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        context.setVariable("subtotal", currencyFormat.format(subtotal));
+
+        context.setVariable("shipping", currencyFormat.format(BigDecimal.valueOf(18)) + " (incl. VAT)");
+        context.setVariable("orderItems", getFormattedOrderItems(order, locale));
+
+        return context;
+    }
+
+    private List<Map<String, String>> getFormattedOrderItems(Order order, Locale locale) {
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(locale);
+
+        Language language = Arrays.stream(Language.values())
+                .filter(l -> l.name().equalsIgnoreCase(order.getLanguage()))
+                .findFirst()
+                .orElse(Language.EN);
+
+        return order.getOrderItems().stream()
+                .map(item -> Map.of(
+                        "productName", item.getProduct().getTranslatedName(language),
+                        "quantity", item.getQuantity().toString(),
+                        "price", currencyFormat.format(item.getPrice())
+                ))
+                .toList();
+    }
+
 }

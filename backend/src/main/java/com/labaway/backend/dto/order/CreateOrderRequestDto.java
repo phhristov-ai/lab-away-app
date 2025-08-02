@@ -1,5 +1,6 @@
 package com.labaway.backend.dto.order;
 
+import com.labaway.backend.enums.Language;
 import com.labaway.backend.strategy.PaymentProvider;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -40,4 +41,7 @@ public class CreateOrderRequestDto {
     @NotNull(message = "Order items are required")
     @Size(min = 1, message = "At least one item is required")
     private List<OrderItemDto> items;
+
+    @NotNull(message = "Active language must be sent")
+    private Language language;
 }
