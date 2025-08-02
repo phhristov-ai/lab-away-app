@@ -1,8 +1,9 @@
-      - name: Move jar to deployment folder and zip
-        run: |
-          mkdir -p deploy
-          cp backend/target/*.jar deploy/application.jar
-          echo "web: java -jar application.jar" > deploy/Procfile  # <<< ADD THIS LINE
-          cd deploy
-          zip ../app.zip application.jar Procfile                  # <<< ZIP BOTH FILES
-          cd ..
+branch-defaults:
+  main:
+    environment: Lab-Away-env
+global:
+  application_name: Lab-Away
+  default_platform: Corretto 17 running on 64bit Amazon Linux 2023
+  default_region: eu-north-1
+  profile: null
+  sc: git
