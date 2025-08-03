@@ -131,8 +131,10 @@ const BlogPostPage: React.FC = () => {
             style={{ width: '100%', fontSize: '1.1rem', marginTop: '1rem' }}
           />
         ) : (
-          <div className="blog-post-content">{post?.content ?? location.state?.content}</div>
-        )}
+          <div
+            className="blog-post-content"
+            dangerouslySetInnerHTML={{ __html: post?.content ?? location.state?.content }}
+          />)}
 
 
         {isAdmin && (
