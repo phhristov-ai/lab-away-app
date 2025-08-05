@@ -38,11 +38,10 @@ jobs:
         working-directory: ./backend
         run: ./mvnw clean package -DskipTests
 
-      - name: Copy jar to root for EB deployment
-        run: cp backend/target/*.jar ./application.jar
-
-      - name: Stage jar for deployment
-        run: git add application.jar
+      - name: Prepare deployment bundle
+        run: |
+          mkdir bundle
+          cp backend/target/*.jar bundle/application.jar
 
       - name: Deploy to Elastic Beanstalk
         env:
@@ -55,4 +54,4 @@ jobs:
 
           eb init -p "Corretto 17 running on 64bit Amazon Linux 2023" Lab-Away --region $AWS_REGION --no-verify-ssl
 
-          eb deploy Lab-Away-env --staged
+          eb deploy Lab-Away-env --source bundle deploy.zip
