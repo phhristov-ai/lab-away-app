@@ -42,19 +42,22 @@ jobs:
         run: |
           aws s3 sync frontend/build s3://${{ secrets.S3_FRONTEND_BUCKET }} --delete
 
-      # Make mvnw executable
+       # Make mvnw executable
       - name: Make mvnw executable
         run: chmod +x backend/mvnw
 
-      - name: Build backend jar
+      # Build backend jar
+      - name: Build backend JAR
         working-directory: ./backend
         run: ./mvnw clean package -DskipTests
 
-      - name: Prepare deploy directory
+      # Move JAR to root and stage it
+      - name: Stage application.jar for Elastic Beanstalk
         run: |
-          mkdir deploy
-          cp backend/target/*.jar deploy/application.jar
+          cp backend/target/*.jar application.jar
+          git add application.jar
 
+      # Deploy only the staged JAR (not source code)
       - name: Deploy to Elastic Beanstalk
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -66,4 +69,4 @@ jobs:
 
           eb init -p "Corretto 17 running on 64bit Amazon Linux 2023" Lab-Away --region $AWS_REGION --no-verify-ssl
 
-          eb deploy Lab-Away-env --source deploy
+          eb deploy Lab-Away-env --staged
