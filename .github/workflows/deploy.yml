@@ -51,14 +51,13 @@ jobs:
         working-directory: ./backend
         run: ./mvnw clean package -DskipTests
 
-      # Copy only JAR to deploy bundle
-      - name: Prepare JAR for EB deployment
+      - name: Prepare deployment bundle
         run: |
-          mkdir deploy
-          cp backend/target/*.jar deploy/application.jar
+          mkdir bundle
+          cp backend/target/*.jar bundle/application.jar
+          cd bundle && zip ../deploy.zip application.jar
 
-      # Deploy to Elastic Beanstalk
-      - name: Deploy backend to Elastic Beanstalk
+      - name: Deploy to Elastic Beanstalk
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -66,6 +65,5 @@ jobs:
         run: |
           pip install --user awsebcli
           export PATH=$PATH:~/.local/bin
-
           eb init -p "Corretto 17 running on 64bit Amazon Linux 2023" Lab-Away --region $AWS_REGION --no-verify-ssl
-          eb deploy Lab-Away-env --source deploy
+          eb deploy Lab-Away-env --source deploy.zip
