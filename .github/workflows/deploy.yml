@@ -46,16 +46,14 @@ jobs:
       - name: Make mvnw executable
         run: chmod +x backend/mvnw
 
-      # Build backend JAR
-      - name: Build backend
+      - name: Build backend jar
         working-directory: ./backend
         run: ./mvnw clean package -DskipTests
 
-      - name: Prepare deployment bundle
+      - name: Prepare deploy directory
         run: |
-          mkdir bundle
-          cp backend/target/*.jar bundle/application.jar
-          cd bundle && zip ../deploy.zip application.jar
+          mkdir deploy
+          cp backend/target/*.jar deploy/application.jar
 
       - name: Deploy to Elastic Beanstalk
         env:
@@ -65,5 +63,7 @@ jobs:
         run: |
           pip install --user awsebcli
           export PATH=$PATH:~/.local/bin
+
           eb init -p "Corretto 17 running on 64bit Amazon Linux 2023" Lab-Away --region $AWS_REGION --no-verify-ssl
-          eb deploy Lab-Away-env --source deploy.zip
+
+          eb deploy Lab-Away-env --source deploy
