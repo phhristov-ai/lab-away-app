@@ -19,20 +19,12 @@ import TermsConditionsPage from './pages/TermsConditionsPage';
 import ContactPage from './pages/ContactPage';
 import ImprintPage from './pages/ImprintPage';
 import './i18n/i18n';
-import { useTranslation } from 'react-i18next';
-import Spinner from './components/common/Spinner';
 import TopHeader from './components/header/TopHeader';
 import Navbar from './components/header/Navbar';
 import { AdminProvider } from './context/AdminContext';
 import AdminLoginPage from './pages/AdminLoginPage';
 
 function App() {
-
-  const { ready } = useTranslation();
-
-  if (!ready) {
-    return <Spinner />;
-  }
 
   return (
     <Router>

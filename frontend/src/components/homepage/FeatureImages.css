@@ -5,3 +5,11 @@
   padding: 40px 20px;
   flex-wrap: nowrap;
 }
+
+@media (max-width: 768px) {
+  .feature-images {
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+}

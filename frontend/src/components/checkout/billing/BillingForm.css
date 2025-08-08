@@ -4,6 +4,8 @@
     padding: 0 5%;
     font-size: 18px;
     line-height: 1.7;
+    box-sizing: border-box;
+    overflow-x: hidden;
   }
   
   .form-row {
@@ -29,7 +31,17 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     margin-right: 2rem;
-    border-radius: 1remx;
+    border-radius: 1rem;
   }
   
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+  }
+
+  .form-group input,
+  .form-group select {
+    margin-right: 0;
+  }
+}
 

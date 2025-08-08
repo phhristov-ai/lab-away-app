@@ -36,16 +36,16 @@ const Footer = () => {
     <footer className="footer">
       <div className="footer-inner">
         <div className="footer-row">
-          <div className="footer-column">
+          <div className="footer-column footer-column-logo">
             <Logo />
           </div>
-          <div className="footer-column">
+          <div className="footer-column footer-column-shop">
             <LinksList title={t('footer.titles.shop')} links={shopLinks} />
           </div>
-          <div className="footer-column">
+          <div className="footer-column footer-column-quicklinks">
             <LinksList title={t('footer.titles.quickLinks')} links={quickLinks} />
           </div>
-          <div className="footer-column">
+          <div className="footer-column footer-column-support">
             <h3>{t('footer.titles.support')}</h3>
             <ul>
               {supportLinks.map(({ label, url }) => (
@@ -55,14 +55,14 @@ const Footer = () => {
               ))}
             </ul>
           </div>
-          <div className="footer-column">
+          <div className="footer-column footer-column-subscribe">
             <FooterSubscribe />
           </div>
         </div>
-        <div className="footer-row">
+        <div className="footer-row footer-row-about">
           <FooterAbout />
         </div>
-        <div className="footer-row">
+        <div className="footer-row footer-row-bottom">
           <FooterBottom />
         </div>
       </div>

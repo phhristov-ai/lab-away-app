@@ -34,7 +34,7 @@ const Navbar = () => {
           <div className="navbar-left">
             {isMobile ? (
               <>
-                <Hamburger onClick={() => setSidebarOpen(true)} isOpen={sidebarOpen} />
+                <Hamburger onClick={() => setSidebarOpen(prev => !prev)} isOpen={sidebarOpen} />
                 <Logo />
               </>
             ) : (
@@ -43,7 +43,6 @@ const Navbar = () => {
                 <NavLinks />
               </>
             )}
-
 
           </div>
 
