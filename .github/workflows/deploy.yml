@@ -1,4 +1,4 @@
-name: Deploy to Elastic Beanstalk
+name: Deploy Full Stack App
 
 on:
   push:
@@ -6,44 +6,58 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Set up Java for Spring Boot
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
 
+      # Set up Node for React
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # Build frontend
       - name: Build frontend
         working-directory: ./frontend
         run: |
           npm install --legacy-peer-deps
           CI='' npm run build
-      
-      - name: Copy frontend build to backend resources
-        run: |
-          mkdir -p backend/src/main/resources/static
-          rm -rf backend/src/main/resources/static/*
-          cp -r frontend/build/* backend/src/main/resources/static/
 
+      # Upload frontend build to S3
+      - name: Upload frontend to S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+          aws s3 sync frontend/build s3://${{ secrets.S3_FRONTEND_BUCKET }} --delete
+
+       # Make mvnw executable
       - name: Make mvnw executable
         run: chmod +x backend/mvnw
-      
-      - name: Build backend jar
+
+      # Build backend jar
+      - name: Build backend JAR
         working-directory: ./backend
         run: ./mvnw clean package -DskipTests
 
-      - name: Copy jar to root for EB deployment
-        run: cp backend/target/*.jar ./application.jar
+      # Move JAR to root and stage it
+      - name: Stage application.jar for Elastic Beanstalk
+        run: |
+          cp backend/target/*.jar application.jar
+          git add application.jar
 
-      - name: Stage jar for deployment
-        run: git add application.jar
-
+      # Deploy only the staged JAR (not source code)
       - name: Deploy to Elastic Beanstalk
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
