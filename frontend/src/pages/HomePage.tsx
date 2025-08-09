@@ -9,6 +9,7 @@ import ScrollAnimatedArrows from '../components/homepage/ScrollAnimatedArrows';
 import { useLocation } from 'react-router-dom';
 import RandomProductRow from '../components/common/RandomProducts';
 import './HomePage.css';
+import FullWidthButton from '../components/homepage/FullWidthButton';
 
 const HomePage = () => {
   const { t } = useTranslation();
@@ -42,7 +43,7 @@ const HomePage = () => {
       <RandomProductRow />
 
       <ScrollAnimatedArrows />
-
+      <FullWidthButton text="Go to Shop" to="/shop" />
       <RandomProductRow />
 
       <ImageTextSection

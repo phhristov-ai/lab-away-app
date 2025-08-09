@@ -1,6 +1,6 @@
-/* Container setup remains same */
+/* === DESKTOP STYLES === */
 
-.three-column-container {
+.how-it-works-container {
   display: flex;
   align-items: flex-start;
   padding: 40px;
@@ -8,11 +8,7 @@
   height: 100%;
 }
 
-.three-column-container.equal-width .column {
-  flex: 1;
-}
-
-.left-column {
+.how-it-works-left {
   height: calc(4 * 180px + 3 * 100px);
   display: flex;
   align-items: center;
@@ -24,33 +20,27 @@
   font-weight: 600;
 }
 
-.middle-column {
+.how-it-works-middle {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   min-height: calc(4 * 180px + 3 * 100px);
   box-sizing: border-box;
+  flex: 1;
 }
 
-.arrow-icon {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-  margin-bottom: 20px;
-  z-index: 5;
-}
-
-.right-column {
+.how-it-works-right {
   display: flex;
   flex-direction: column;
+  flex: 1;
 }
 
 .feature-block {
   padding: 0;
   margin-bottom: 100px;
   border-radius: 8px;
-  height: 180px; /* match arrow height */
+  height: 180px;
   box-sizing: border-box;
   flex-shrink: 0;
 }
@@ -79,14 +69,14 @@
 .arrows-stack.arrows-grey {
   display: flex;
   flex-direction: column;
-  gap: 100px; /* gap matches margin-bottom of feature-block */
-  align-items: center; /* Center horizontally */
+  gap: 100px;
+  align-items: center;
 }
 
 .arrows-grey .arrow-vertical {
   width: 10px;
   height: 180px;
-  background-color: rgba(0,0,0,0.1);
+  background-color: rgba(0, 0, 0, 0.1);
   border-radius: 4px;
 }
 
@@ -100,41 +90,38 @@
   z-index: 10;
 }
 
-/* Blue arrows styling */
 .arrows-blue .arrow-vertical {
   position: absolute;
   width: 10px;
   background-color: #3498db;
   border-radius: 4px;
-  left: 50%; /* Center horizontally */
+  left: 50%;
   transform: translateX(-50%);
   transition: height 0.4s ease;
-  height: 0; /* default height */
+  height: 0;
 }
 
-/* Vertical positions for blue arrows */
 .arrows-blue .arrow-vertical:nth-child(1) {
   top: 0;
 }
 
 .arrows-blue .arrow-vertical:nth-child(2) {
-  top: 280px; /* 180 (arrow) + 100 (gap) */
+  top: 280px;
 }
 
 .arrows-blue .arrow-vertical:nth-child(3) {
-  top: 560px; /* 2 * (180 + 100) */
+  top: 560px;
 }
 
 .arrows-blue .arrow-vertical:nth-child(4) {
-  top: 840px; /* 3 * (180 + 100) */
+  top: 840px;
 }
 
-/* Remove margin after last arrow if needed */
 .arrow-vertical:last-child {
   margin-bottom: 0;
 }
 
-/* Gap icons positioned absolutely between arrows */
+/* Gap icons */
 .gap-icon {
   position: absolute;
   left: 50%;
@@ -147,15 +134,41 @@
   z-index: 20;
 }
 
-/* Vertical positions for gap icons */
 .gap-icon-1 {
-  top: 180px; /* bottom of 1st arrow */
+  top: 180px;
 }
 
 .gap-icon-2 {
-  top: 480px; /* 180 + 100 + 180 */
+  top: 480px;
 }
 
 .gap-icon-3 {
-  top: 780px; /* 2 * (180 + 100) + 180 */
+  top: 780px;
+}
+
+/* === MOBILE STYLES === */
+@media (max-width: 768px) {
+  .how-it-works-container {
+    flex-direction: row;
+    padding: 20px;
+    gap: 16px;
+  }
+
+  .how-it-works-left {
+    display: none;
+  }
+
+  .how-it-works-middle {
+    width: 25%;
+    min-height: auto;
+    align-items: flex-start;
+  }
+
+  .how-it-works-right {
+    width: 75%;
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

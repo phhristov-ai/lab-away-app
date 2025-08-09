@@ -9,7 +9,7 @@ const AnimationDescription: React.FC<AnimationDescriptionProps> = ({ sectionRefs
     const { t } = useTranslation();
 
     return (
-        <div className="column right-column">
+        <div className="how-it-works-right">
             {[0, 1, 2, 3].map((index) => {
                 const featureKey = `homepage.homeTestFeature.sections.${index}`;
                 return (

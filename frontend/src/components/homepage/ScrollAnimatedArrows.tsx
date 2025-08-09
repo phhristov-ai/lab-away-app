@@ -1,60 +1,40 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import './ScrollAnimatedArrows.css';
 import ArrowStack from './ArrowStack';
 import { useTranslation } from 'react-i18next';
 import AnimationDescription from './AnimationDescription';
+import useArrowAnimation from '../../hooks/useArrowAnimation';
+
 
 const ScrollAnimatedArrows: React.FC = () => {
-    const { t } = useTranslation();
-    const sectionRefs = [
-        React.useRef<HTMLDivElement>(null),
-        React.useRef<HTMLDivElement>(null),
-        React.useRef<HTMLDivElement>(null),
-        React.useRef<HTMLDivElement>(null),
-    ];
+  const { t } = useTranslation();
 
-    const [blueArrowHeights, setBlueArrowHeights] = useState(['0px', '0px', '0px', '0px']);
+  const sectionRefs = React.useRef([
+    React.createRef<HTMLDivElement>(),
+    React.createRef<HTMLDivElement>(),
+    React.createRef<HTMLDivElement>(),
+    React.createRef<HTMLDivElement>(),
+  ]).current;
 
-    useEffect(() => {
-        const offset = 150;
+  const MAX_ARROW_HEIGHT = 180;
+  const ANIMATION_DURATION = 400;
 
-        const MAX_ARROW_HEIGHT = 180;
+  const arrowHeights = useArrowAnimation(sectionRefs, MAX_ARROW_HEIGHT, ANIMATION_DURATION);
+  const blueArrowHeights = arrowHeights.map((height) => `${height}px`);
 
-        const onScroll = () => {
-            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-            const updatedHeights = sectionRefs.map((ref) => {
-                if (!ref.current) return '0px';
-                const sectionTop = ref.current.offsetTop - offset;
-                if (scrollTop > sectionTop) {
-                    const sectionHeight = ref.current.clientHeight;
-                    const scaledHeight = Math.min(sectionHeight, MAX_ARROW_HEIGHT);
-                    return `${scaledHeight}px`;
-                }
-                return '0px';
-            });
-            setBlueArrowHeights(updatedHeights);
-        };
-
-        window.addEventListener('scroll', onScroll);
-        onScroll();
-
-        return () => window.removeEventListener('scroll', onScroll);
-    }, []);
-
-    return (
-        <div id="how-it-works" className="three-column-container equal-width">
-            {/* LEFT COLUMN */}
-            <div className="column left-column">
-                <h1 className="scroll-title">{t('homepage.homeTestFeature.mainTitle')}</h1>
-            </div>
-            {/* MIDDLE COLUMN */}
-            <div className="column middle-column">
-                <ArrowStack blueArrowHeights={blueArrowHeights} />
-            </div>
-            {/* RIGHT COLUMN */}
-            <AnimationDescription sectionRefs={sectionRefs} />
-        </div>
-    );
+  return (
+    <div id="how-it-works" className="how-it-works-container">
+      <div className="how-it-works-left">
+        <h1 className="scroll-title">{t('homepage.homeTestFeature.mainTitle')}</h1>
+      </div>
+      <div className="how-it-works-middle">
+        <ArrowStack blueArrowHeights={blueArrowHeights} />
+      </div>
+      <div className="how-it-works-right">
+        <AnimationDescription sectionRefs={sectionRefs} />
+      </div>
+    </div>
+  );
 };
 
 export default ScrollAnimatedArrows;
