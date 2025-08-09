@@ -124,4 +124,24 @@
     width: 100%;
     margin-bottom: 20px;
   }
+
+  .footer-column {
+    flex: 1 1 38%;
+  }
+
+  .footer-inner {
+    padding: var(--spacing-sm) var(--spacing-lg);
+  }
+
+  .footer-column-logo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100px;
+  }
+
+  .footer-column-logo .company-logo {
+    margin-bottom: 0;
+  }
 }

@@ -3,9 +3,22 @@ import { useTranslation } from 'react-i18next';
 // @ts-ignore
 import { HashLink } from 'react-router-hash-link';
 import './NavLinks.css';
+import { useEffect } from 'react';
 
 const NavLinks = ({ isMobileSidebarOpen = false, onClose }: { isMobileSidebarOpen?: boolean; onClose?: () => void }) => {
   const { t } = useTranslation();
+
+  useEffect(() => {
+    if (isMobileSidebarOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileSidebarOpen]);
 
   return (
     <ul className={`navbar-links ${isMobileSidebarOpen ? 'mobile-sidebar' : ''}`}>

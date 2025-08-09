@@ -6,7 +6,7 @@
 
 .navbar-links.mobile-sidebar {
   position: fixed;
-  top: 120px;
+  top: 90px;
   left: 0;
   width: 50%;
   height: calc(100vh - 120px);

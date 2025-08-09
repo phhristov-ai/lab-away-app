@@ -44,4 +44,8 @@
   .footer-about {
     padding: 0px;
   }
+
+  .footer-bottom-right {
+    justify-content: flex-start;
+  }
 }
