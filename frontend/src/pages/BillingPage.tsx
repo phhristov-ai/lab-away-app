@@ -1,37 +1,37 @@
 import BillingForm from "../components/checkout/billing/BillingForm";
-import { useState } from "react";
 import ShippingForm from "../components/checkout/billing/ShippingForm";
 import CustomButton from "../components/checkout/billing/CustomButton";
-import { useNavigate } from 'react-router-dom';
 import './BillingPage.css';
 import CheckoutLayout from "../layouts/CheckoutLayout";
-import { useCheckout } from "../context/CheckoutContext";
 import { useTranslation } from 'react-i18next';
+import { useBillingPage } from "../hooks/useBillingPage";
 
 const BillingPage = () => {
-  const { billingData, setBillingData, setShippingData } = useCheckout();
-  const [showShipping, setShowShipping] = useState(false);
-  const navigate = useNavigate();
+  const {
+    showShipping,
+    handleCheckboxChange,
+    handleNextClick,
+    setBillingData,
+    setShippingData,
+    billingFormRef,
+    shippingFormRef,
+  } = useBillingPage();
+
   const { t } = useTranslation();
 
-  const handleCheckboxChange = (checked: boolean) => {
-    setShowShipping(checked);
-  };
-
-
-  const handleNextClick = () => {
-    if (!showShipping) {
-      setShippingData(billingData);
-    }
-    navigate('/payment');
-  };
-
-    return <CheckoutLayout>
-        <div>
-        <BillingForm onToggleShipping={handleCheckboxChange} onChange={setBillingData} />
-        {showShipping && <ShippingForm onChange={setShippingData} />}
+  return (
+    <CheckoutLayout>
+      <div>
+        <BillingForm
+          ref={billingFormRef}
+          onToggleShipping={handleCheckboxChange}
+          onChange={setBillingData}
+        />
+        {showShipping && (
+          <ShippingForm ref={shippingFormRef} onChange={setShippingData} />
+        )}
         <div className="align-right">
-        <CustomButton
+          <CustomButton
             label={t('checkout.actions.next')}
             onClick={handleNextClick}
             variant="primary"
@@ -39,7 +39,7 @@ const BillingPage = () => {
         </div>
       </div>
     </CheckoutLayout>
-  };
-  
-  export default BillingPage;
-  
+  );
+};
+
+export default BillingPage;

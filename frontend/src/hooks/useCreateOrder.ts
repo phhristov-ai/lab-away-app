@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 enum PaymentProvider {
   STRIPE = 'STRIPE',
@@ -27,14 +28,24 @@ type CreateOrderPayload = {
   shippingAddress: Address;
   items: OrderItem[];
   paymentProvider: PaymentProvider;
+  language: Language;
 };
 
+type Language = 'EN' | 'DE' | 'BG';
+
 export const useCreateOrder = () => {
-  const createOrder = useCallback(async (orderData: CreateOrderPayload) => {
+  const { i18n } = useTranslation();
+
+  const createOrder = useCallback(async (orderData: Omit<CreateOrderPayload, 'language'>) => {
+    const payload: CreateOrderPayload = {
+      ...orderData,
+      language: i18n.language.toUpperCase() as Language,
+    };
+
     const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/orders`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(orderData),
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
@@ -43,7 +54,7 @@ export const useCreateOrder = () => {
     }
 
     return await response.json();
-  }, []);
+  }, [i18n.language]);
 
   return { createOrder };
 };

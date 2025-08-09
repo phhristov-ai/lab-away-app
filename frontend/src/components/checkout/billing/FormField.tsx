@@ -5,10 +5,11 @@ type FormFieldProps = {
   label: string;
   type?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  error?: string;
 };
 
-const FormField: React.FC<FormFieldProps> = ({ id, label, type = 'text', onChange }) => (
-  <div className="form-group">
+const FormField: React.FC<FormFieldProps> = ({ id, label, type = 'text', onChange, error }) => (
+  <div className={`form-group ${error ? 'has-error' : ''}`}>
     <label htmlFor={id}>{label}</label>
     <input
       type={type}
@@ -17,6 +18,7 @@ const FormField: React.FC<FormFieldProps> = ({ id, label, type = 'text', onChang
       name={id}
       onChange={onChange}
     />
+    {error && <p className="error-message">{error}</p>}
   </div>
 );
 

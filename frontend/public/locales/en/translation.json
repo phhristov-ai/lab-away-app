@@ -329,5 +329,12 @@
       "postcode": "Postcode / ZIP"
     },
     "invalid": "Invalid success page – missing order details."
+  },
+  "form" : {
+    "errors" : {
+      "required" : "Required",
+      "invalidEmail" : "Email is invalid",
+      "invalidPhone" : "Phone is invalid"
+    }
   }
 }
