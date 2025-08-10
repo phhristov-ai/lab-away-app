@@ -1,5 +1,10 @@
 import React from 'react';
 import firstIcon from '../../assets/icons/first-icon.svg';
+import secondIcon from '../../assets/icons/second-icon.svg';
+import thirdIcon from '../../assets/icons/third-icon.svg';
+import forthIcon from '../../assets/icons/forth-icon.svg';
+
+
 import './ScrollAnimatedArrows.css';
 
 const MAX_ARROW_HEIGHT = 180;
@@ -15,7 +20,7 @@ const ArrowStack: React.FC<ArrowStackProps> = ({
   blueArrowHeights,
   arrowWidth = 40,
   iconSrc = firstIcon,
-  gapIconsSrc = [firstIcon, firstIcon, firstIcon],
+  gapIconsSrc = [secondIcon, thirdIcon, forthIcon],
 }) => {
   return (
     <div className="arrow-stack-container">

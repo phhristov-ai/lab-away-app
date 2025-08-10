@@ -3,7 +3,7 @@
 .how-it-works-container {
   display: flex;
   align-items: flex-start;
-  padding: 40px;
+  padding-top: 40px;
   gap: 40px;
   height: 100%;
 }
@@ -74,7 +74,7 @@
 }
 
 .arrows-grey .arrow-vertical {
-  width: 10px;
+  width: 3px;
   height: 180px;
   background-color: rgba(0, 0, 0, 0.1);
   border-radius: 4px;
@@ -92,8 +92,8 @@
 
 .arrows-blue .arrow-vertical {
   position: absolute;
-  width: 10px;
-  background-color: #3498db;
+  width: 3px;
+  background-color: var(--primary-color);
   border-radius: 4px;
   left: 50%;
   transform: translateX(-50%);
@@ -150,7 +150,7 @@
 @media (max-width: 768px) {
   .how-it-works-container {
     flex-direction: row;
-    padding: 20px;
+    padding-top: 20px;
     gap: 16px;
   }
 
