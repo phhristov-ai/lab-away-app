@@ -55,12 +55,12 @@ class EmailServiceImplTest {
     @Test
     void sendOrderConfirmationEmail_shouldSendEmailWithHtmlContent() {
         Order order = createTestOrder();
-        when(templateEngine.process(eq("order-confirmation"), any(Context.class))).thenReturn("<html>Email Content</html>");
+        when(templateEngine.process(eq("order-confirmation-en"), any(Context.class))).thenReturn("<html>Email Content</html>");
 
         emailService.sendOrderConfirmationEmail(order);
 
         verify(mailSender).send(any(MimeMessage.class));
-        verify(templateEngine).process(eq("order-confirmation"), any(Context.class));
+        verify(templateEngine).process(eq("order-confirmation-en"), any(Context.class));
     }
 
     private Address createBillingAddress() {

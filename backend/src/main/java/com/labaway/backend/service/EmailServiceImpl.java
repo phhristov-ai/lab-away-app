@@ -43,7 +43,7 @@ public class EmailServiceImpl implements EmailService {
             helper.setSubject("Your order has been confirmed");
 
             Context context = buildOrderConfirmationContext(order);
-            String html = templateEngine.process("order-confirmation", context);
+            String html = templateEngine.process("order-confirmation-" + order.getLanguage().toLowerCase(), context);
             helper.setText(html, true);
 
             mailSender.send(message);

@@ -26,7 +26,7 @@ class OrderConfirmationTemplateTest {
         TemplateEngine templateEngine = thymeleafTemplateEngine();
         Context context = createContextWithTestData();
 
-        String htmlContent = templateEngine.process("order-confirmation", context);
+        String htmlContent = templateEngine.process("order-confirmation-en", context);
 
         Path outputFile = tempDir.resolve("order-confirmation-test.html");
         Files.writeString(outputFile, htmlContent);
