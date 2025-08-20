@@ -4,48 +4,83 @@
     <meta charset="UTF-8">
     <title>Order Confirmation</title>
 </head>
-<body>
-<h2>New Order: #<span th:text="${orderId}"></span></h2>
+<body style="font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 0; padding: 0;">
 
-<p>You have received an order from <span th:text="${billingName}"></span></p>
-
-<p>The order is as follows:<br>
-    Order #<span th:text="${orderId}"></span> (<span th:text="${orderDate}"></span>)</p>
-
-<table border="1" cellpadding="5" cellspacing="0">
+<table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #e0e0e0;">
     <tr>
-        <th>Product</th>
-        <th>Quantity</th>
-        <th>Price</th>
+        <td style="padding: 20px; text-align: center;">
+            <img src="https://www.lab-away.com/static/media/lab-away.logo.6fb712dbcc4db7fca767.png" alt="Logo" style="max-width: 200px;">
+        </td>
     </tr>
-    <tr th:each="item : ${orderItems}">
-        <td th:text="${item.productName}"></td>
-        <td th:text="${item.quantity}"></td>
-        <td th:text="${item.price}"></td>
+
+    <tr>
+        <td style="padding: 20px;">
+            <h2 style="color: #4edafd; margin-bottom: 10px;">New Order: #<span th:text="${orderId}"></span></h2>
+            <p style="margin: 0;">You have received an order from <strong th:text="${billingName}"></strong></p>
+            <p style="margin-top: 10px;">The order is as follows:<br>
+                Order #<span th:text="${orderId}"></span> (<span th:text="${orderDate}"></span>)
+            </p>
+
+            <table border="0" cellpadding="8" cellspacing="0" width="100%" style="border-collapse: collapse; margin-top: 15px;">
+                <thead>
+                <tr style="background-color: #4edafd; color: white;">
+                    <th align="left">Product</th>
+                    <th align="center">Quantity</th>
+                    <th align="right">Price</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${orderItems}" style="border-bottom: 1px solid #ddd;">
+                    <td th:text="${item.productName}"></td>
+                    <td align="center" th:text="${item.quantity}"></td>
+                    <td align="right" th:text="${item.price}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <p style="margin-top: 20px;">
+                Subtotal: <span th:text="${subtotal}"></span><br>
+                Shipping: <span th:text="${shipping}"></span><br>
+                Payment method: <span th:text="${paymentMethod}"></span><br>
+                <strong style="color: #4edafd;">Total: <span th:text="${total}"></span></strong>
+            </p>
+
+            <!-- Billing & Shipping Side-by-Side -->
+            <table width="100%" cellpadding="0" cellspacing="0" style="margin-top: 20px;">
+                <tr>
+                    <!-- Billing Address -->
+                    <td width="50%" valign="top" style="padding-right: 10px;">
+                        <h3 style="color: #4edafd; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Billing Address</h3>
+                        <p style="margin: 0;">
+                            <span th:text="${billingName}"></span><br>
+                            <span th:text="${billingAddress}"></span><br>
+                            <span th:text="${billingCity}"></span>, <span th:text="${billingPostCode}"></span><br>
+                            <span th:text="${billingCountry}"></span><br>
+                            <span th:text="${billingPhone}"></span><br>
+                            <span th:text="${billingEmail}"></span>
+                        </p>
+                    </td>
+
+                    <!-- Shipping Address -->
+                    <td width="50%" valign="top" style="padding-left: 10px;">
+                        <h3 style="color: #4edafd; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Shipping Address</h3>
+                        <p style="margin: 0;">
+                            <span th:text="${shippingName}"></span><br>
+                            <span th:text="${shippingAddress}"></span><br>
+                            <span th:text="${shippingCity}"></span>, <span th:text="${shippingPostCode}"></span><br>
+                            <span th:text="${shippingCountry}"></span>
+                        </p>
+                    </td>
+                </tr>
+            </table>
+
+
+            <p style="margin-top: 30px; font-size: 12px; color: #888;">
+                Thank you for your order!
+            </p>
+        </td>
     </tr>
 </table>
 
-<p>Subtotal: <span th:text="${subtotal}"></span><br>
-    Shipping: <span th:text="${shipping}"></span><br>
-    Payment method: <span th:text="${paymentMethod}"></span><br>
-    <strong>Total: <span th:text="${total}"></span></strong></p>
-
-<h3>Billing address</h3>
-<p>
-    <span th:text="${billingName}"></span><br>
-    <span th:text="${billingAddress}"></span><br>
-    <span th:text="${billingCity}"></span>, <span th:text="${billingPostCode}"></span><br>
-    <span th:text="${billingCountry}"></span><br>
-    <span th:text="${billingPhone}"></span><br>
-    <span th:text="${billingEmail}"></span>
-</p>
-
-<h3>Shipping address</h3>
-<p>
-    <span th:text="${shippingName}"></span><br>
-    <span th:text="${shippingAddress}"></span><br>
-    <span th:text="${shippingCity}"></span>, <span th:text="${shippingPostCode}"></span><br>
-    <span th:text="${shippingCountry}"></span>
-</p>
 </body>
 </html>

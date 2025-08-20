@@ -9,6 +9,7 @@ import com.labaway.backend.entity.product.Product;
 import com.labaway.backend.entity.repository.OrderItemRepository;
 import com.labaway.backend.entity.repository.OrderRepository;
 import com.labaway.backend.entity.repository.ProductRepository;
+import com.labaway.backend.enums.Language;
 import com.labaway.backend.enums.OrderStatus;
 import com.labaway.backend.strategy.PaymentProvider;
 import com.labaway.backend.strategy.PaymentStrategy;
@@ -174,6 +175,7 @@ class OrderServiceTest {
                 .shippingAddress(addressDto)
                 .items(List.of(itemDto))
                 .paymentProvider(PaymentProvider.STRIPE)
+                .language(Language.EN)
                 .build();
     }
 

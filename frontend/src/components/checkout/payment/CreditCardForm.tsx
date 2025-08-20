@@ -7,6 +7,7 @@ import { useCart } from '../../../context/CartContext';
 import { useStripePayment } from '../../../hooks/useStripePayment';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import i18n from '../../../i18n/i18n';
 
 enum PaymentProvider {
   STRIPE = 'STRIPE',
@@ -51,6 +52,7 @@ const CreditCardForm = () => {
           quantity: item.quantity,
           price: item.price,
         })),
+        language: i18n.language
       };
 
       // 2. Create order

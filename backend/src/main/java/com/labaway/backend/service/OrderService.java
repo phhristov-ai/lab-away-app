@@ -69,6 +69,7 @@ public class OrderService {
                 .status(OrderStatus.PENDING)
                 .paymentProvider(dto.getPaymentProvider())
                 .orderNumber(orderNumberGenerator.generate())
+                .language(dto.getLanguage().name())
                 .build();
         return orderRepository.save(order);
     }

@@ -4,6 +4,9 @@ import com.labaway.backend.configuration.SmtpConfig;
 import com.labaway.backend.entity.order.Address;
 import com.labaway.backend.entity.order.Order;
 import com.labaway.backend.entity.order.OrderItem;
+import com.labaway.backend.entity.product.Product;
+import com.labaway.backend.entity.product.ProductTranslation;
+import com.labaway.backend.enums.Language;
 import com.labaway.backend.strategy.PaymentProvider;
 import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,7 +52,7 @@ class EmailServiceImplTest {
         emailService = new EmailServiceImpl(smtpConfig, mailSender, templateEngine);
     }
 
-    //@Test
+    @Test
     void sendOrderConfirmationEmail_shouldSendEmailWithHtmlContent() {
         Order order = createTestOrder();
         when(templateEngine.process(eq("order-confirmation"), any(Context.class))).thenReturn("<html>Email Content</html>");
@@ -87,9 +90,21 @@ class EmailServiceImplTest {
                 OrderItem.builder()
                         .price(BigDecimal.valueOf(18.00))
                         .quantity(1)
+                        .product(getProduct())
                         .order(order)
                         .build()
         );
+    }
+
+    private Product getProduct() {
+        Product product = new Product();
+        ProductTranslation translation = new ProductTranslation();
+        translation.setProduct(product);
+        translation.setLanguage(Language.EN);
+        translation.setName("STD Bundle");
+        translation.setDescription("Description");
+        product.setTranslations(List.of(translation));
+        return product;
     }
 
     private Order createTestOrder() {
@@ -105,6 +120,7 @@ class EmailServiceImplTest {
                 .paymentProvider(PaymentProvider.STRIPE)
                 .totalPrice(BigDecimal.valueOf(36.00))
                 .createdAt(Instant.parse("2024-12-17T00:00:00Z"))
+                .language("EN")
                 .build();
 
         order.setOrderItems(createOrderItems(order));
