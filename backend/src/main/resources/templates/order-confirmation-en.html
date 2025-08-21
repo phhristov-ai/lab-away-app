@@ -6,10 +6,13 @@
 </head>
 <body style="font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 0; padding: 0;">
 
-<table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #e0e0e0;">
+<table width="100%" cellpadding="0" cellspacing="0"
+       style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #e0e0e0;">
     <tr>
         <td style="padding: 20px; text-align: center;">
-            <img src="https://www.lab-away.com/static/media/lab-away.logo.6fb712dbcc4db7fca767.png" alt="Logo" style="max-width: 200px;">
+            <img src="https://lab-away.com/static/media/lab-away.logo.6fb712dbcc4db7fca767.png"
+                 alt="Lab-Away Logo"
+                 style="max-width: 200px; display: block; margin: 0 auto;" />
         </td>
     </tr>
 
@@ -21,7 +24,8 @@
                 Order #<span th:text="${orderId}"></span> (<span th:text="${orderDate}"></span>)
             </p>
 
-            <table border="0" cellpadding="8" cellspacing="0" width="100%" style="border-collapse: collapse; margin-top: 15px;">
+            <table border="0" cellpadding="8" cellspacing="0" width="100%"
+                   style="border-collapse: collapse; margin-top: 15px;">
                 <thead>
                 <tr style="background-color: #4edafd; color: white;">
                     <th align="left">Product</th>
@@ -50,7 +54,8 @@
                 <tr>
                     <!-- Billing Address -->
                     <td width="50%" valign="top" style="padding-right: 10px;">
-                        <h3 style="color: #4edafd; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Billing Address</h3>
+                        <h3 style="color: #4edafd; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Billing
+                            Address</h3>
                         <p style="margin: 0;">
                             <span th:text="${billingName}"></span><br>
                             <span th:text="${billingAddress}"></span><br>
@@ -63,7 +68,8 @@
 
                     <!-- Shipping Address -->
                     <td width="50%" valign="top" style="padding-left: 10px;">
-                        <h3 style="color: #4edafd; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Shipping Address</h3>
+                        <h3 style="color: #4edafd; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Shipping
+                            Address</h3>
                         <p style="margin: 0;">
                             <span th:text="${shippingName}"></span><br>
                             <span th:text="${shippingAddress}"></span><br>

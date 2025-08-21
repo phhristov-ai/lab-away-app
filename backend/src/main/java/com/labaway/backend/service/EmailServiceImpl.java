@@ -6,20 +6,23 @@ import com.labaway.backend.enums.Language;
 import com.labaway.backend.exception.EmailSendingException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.NumberFormat;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -37,13 +40,19 @@ public class EmailServiceImpl implements EmailService {
     public void sendOrderConfirmationEmail(Order order) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            MimeMessageHelper helper = new MimeMessageHelper(
+                    message,
+                    MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+                    "UTF-8"
+            );
+
             helper.setTo(order.getBillingEmail());
             helper.setFrom(fromEmail);
             helper.setSubject("Your order has been confirmed");
 
             Context context = buildOrderConfirmationContext(order);
             String html = templateEngine.process("order-confirmation-" + order.getLanguage().toLowerCase(), context);
+            System.out.println("Generated HTML:\n" + html);
             helper.setText(html, true);
 
             mailSender.send(message);
@@ -55,6 +64,8 @@ public class EmailServiceImpl implements EmailService {
     private Context buildOrderConfirmationContext(Order order) {
         Locale locale = Locale.forLanguageTag(order.getLanguage());
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(locale);
+        currencyFormat.setCurrency(Currency.getInstance("EUR"));
+
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy", locale)
                 .withZone(ZoneId.systemDefault());
 
@@ -92,6 +103,7 @@ public class EmailServiceImpl implements EmailService {
 
     private List<Map<String, String>> getFormattedOrderItems(Order order, Locale locale) {
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(locale);
+        currencyFormat.setCurrency(Currency.getInstance("EUR"));
 
         Language language = Arrays.stream(Language.values())
                 .filter(l -> l.name().equalsIgnoreCase(order.getLanguage()))
