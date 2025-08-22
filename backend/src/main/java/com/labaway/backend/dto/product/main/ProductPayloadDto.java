@@ -1,16 +1,19 @@
 package com.labaway.backend.dto.product.main;
 
-import com.labaway.backend.enums.Language;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductPayloadDto {
 
     @NotNull(message = "Price is required")
@@ -33,4 +36,6 @@ public class ProductPayloadDto {
 
     @NotNull(message = "One translation is required")
     private @Valid ProductTranslationDto translation;
+
+    private List<String> imageUrls;
 }

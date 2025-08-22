@@ -32,10 +32,11 @@ public class BlogTranslation {
     @Column(name = "reading_time")
     private Integer readingTime;
 
-
     private String title;
-    private String content;
 
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String content;
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

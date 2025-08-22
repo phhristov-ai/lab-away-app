@@ -8,6 +8,7 @@ import com.labaway.backend.entity.product.ProductTranslation;
 import com.labaway.backend.entity.repository.ProductPreviewProjection;
 import com.labaway.backend.enums.Language;
 import com.labaway.backend.exception.CategoryNotFoundException;
+import com.labaway.backend.exception.ProductNotFoundException;
 import com.labaway.backend.exception.ResourceNotFoundException;
 import com.labaway.backend.entity.repository.CategoryRepository;
 import com.labaway.backend.entity.repository.ProductImageRepository;
@@ -331,8 +332,8 @@ class ProductServiceTest {
         when(productRepository.findBySlug("missing")).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> productService.deleteProductBySlug("missing"))
-                .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessageContaining("Product not found with slug");
+                .isInstanceOf(ProductNotFoundException.class)
+                .hasMessageContaining("Product with slug 'missing' not found");
     }
 
     private ProductPayloadDto createSampleCreateDto() {

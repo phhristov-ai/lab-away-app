@@ -18,10 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,33 +38,71 @@ public class ProductService {
 
     @Transactional
     public ProductDto updateProduct(String slug, ProductPayloadDto dto, MultipartFile[] files) throws IOException {
-        Product product = productRepository.findBySlug(slug)
-                .orElseThrow(() -> new ProductNotFoundException("Product with slug '" + slug + "' not found"));
+        Product product = findProductBySlug(slug);
 
-        if (files != null && files.length > 0) {
-            product.getImages().clear();
-            deleteOldImages(product);
+        updateProductImages(product, dto, files);
 
-            List<ProductImage> productImages = processImageFiles(files, dto.getMainImageIndex());
-
-            for (ProductImage image : productImages) {
-                image.setProduct(product);
-            }
-
-            product.getImages().addAll(productImages);
-        }
-
-        List<Category> categories = categoryRepository.findBySlugInAndLanguage(dto.getCategories(), dto.getTranslation().getLanguage());
-        if (categories.size() != dto.getCategories().size()) {
-            throw new CategoryNotFoundException("One or more categories not found for language: " + dto.getTranslation().getLanguage());
-        }
-
+        List<Category> categories = resolveCategories(dto);
         productTransformer.updateEntity(product, dto, categories);
 
         Product savedProduct = productRepository.save(product);
         return productTransformer.toDto(savedProduct, dto.getTranslation().getLanguage());
     }
 
+    private Product findProductBySlug(String slug) {
+        return productRepository.findBySlug(slug)
+                .orElseThrow(() -> new ProductNotFoundException("Product with slug '" + slug + "' not found"));
+    }
+
+    private void updateProductImages(Product product, ProductPayloadDto dto, MultipartFile[] files) throws IOException {
+        Set<String> retainedUrls = extractRetainedUrls(dto);
+
+        deleteRemovedImages(product, retainedUrls);
+        uploadNewImages(product, dto.getMainImageIndex(), files);
+    }
+
+    private Set<String> extractRetainedUrls(ProductPayloadDto dto) {
+        return dto.getImageUrls() == null ? Collections.emptySet() : new HashSet<>(dto.getImageUrls());
+    }
+
+    private void deleteRemovedImages(Product product, Set<String> retainedUrls) {
+        List<ProductImage> toRemove = product.getImages().stream()
+                .filter(image -> !retainedUrls.contains(image.getImageUrl()))
+                .collect(Collectors.toList());
+
+        for (ProductImage image : toRemove) {
+            try {
+                s3Service.deleteFile(image.getImageUrl());
+            } catch (Exception e) {
+                System.err.println("Failed to delete S3 file: " + image.getImageUrl() + " - " + e.getMessage());
+            }
+        }
+
+        product.getImages().removeAll(toRemove);
+    }
+
+    private void uploadNewImages(Product product, Integer mainImageIndex, MultipartFile[] files) throws IOException {
+        if (files == null || files.length == 0) {
+            return;
+        }
+
+        List<ProductImage> newImages = processImageFiles(files, mainImageIndex);
+        for (ProductImage image : newImages) {
+            image.setProduct(product);
+        }
+        product.getImages().addAll(newImages);
+    }
+
+    private List<Category> resolveCategories(ProductPayloadDto dto) {
+        List<Category> categories = categoryRepository.findBySlugInAndLanguage(
+                dto.getCategories(), dto.getTranslation().getLanguage());
+
+        if (categories.size() != dto.getCategories().size()) {
+            throw new CategoryNotFoundException("One or more categories not found for language: " + dto.getTranslation().getLanguage());
+        }
+
+        return categories;
+    }
 
     private Product prepareAndSaveProduct(ProductPayloadDto productPayloadDto, List<ProductImage> productImages) {
         Language language = productPayloadDto.getTranslation().getLanguage();
@@ -86,8 +122,6 @@ public class ProductService {
 
         return productRepository.save(product);
     }
-
-
 
     private void deleteOldImages(Product product) {
         for (ProductImage oldImage : product.getImages()) {
@@ -120,18 +154,6 @@ public class ProductService {
         return productImages;
     }
 
-
-    private Set<Category> resolveCategories(List<String> categorySlugs, Set<Category> currentCategories) {
-        if (categorySlugs == null || categorySlugs.isEmpty()) {
-            return currentCategories;
-        }
-        List<Category> foundCategories = categoryRepository.findBySlugInAndLanguage(categorySlugs, Language.EN);
-        if (foundCategories.size() != categorySlugs.size()) {
-            throw new CategoryNotFoundException("Some categories not found");
-        }
-        return new HashSet<>(foundCategories);
-    }
-
     public List<ProductPreviewDto> getAllProductPreviews(Language lang) {
         return productRepository.findAllProductPreviewsByLanguage(lang.name()).stream()
                 .map(productTransformer::fromProjection)
@@ -159,16 +181,14 @@ public class ProductService {
     }
 
     public ProductDto getProductBySlug(String slug, Language lang) {
-        Product product = productRepository.findBySlug(slug)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+        Product product = findProductBySlug(slug);
 
         return productTransformer.toDto(product, lang);
     }
 
     @Transactional
     public void deleteProductBySlug(String slug) {
-        Product product = productRepository.findBySlug(slug)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found with slug " + slug));
+        Product product = findProductBySlug(slug);
 
         deleteOldImages(product);
         productRepository.delete(product);

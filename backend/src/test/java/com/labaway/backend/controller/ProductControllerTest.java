@@ -1,5 +1,7 @@
 package com.labaway.backend.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.labaway.backend.dto.category.CategoryDto;
 import com.labaway.backend.dto.product.main.*;
 import com.labaway.backend.dto.product.image.ProductImageDto;
@@ -36,12 +38,12 @@ class ProductControllerTest {
     @Mock
     private S3Service s3Service;
     private ProductDto productDto;
-    private ProductPayloadDto productPayloadDto;
+    private String productPayloadDtoJson;
     private ProductImageDto productImageDto;
 
     private List<CategoryDto> categoryDtos;
     @BeforeEach
-    void setUp() {
+    void setUp() throws JsonProcessingException {
         MockitoAnnotations.openMocks(this);
         categoryDtos = buildCategoryDtos();
         productImageDto = createProductImageDto("http://example.com/image.jpg", true);
@@ -49,7 +51,7 @@ class ProductControllerTest {
         productDto = createProductDto("Test Product", "test-product", BigDecimal.TEN, 5,
                 "Test description", categoryDtos, List.of(productImageDto));
 
-        productPayloadDto = createCreateProductDto("Test Product", BigDecimal.TEN, 5,
+        productPayloadDtoJson = createCreateProductJson("Test Product", BigDecimal.TEN, 5,
                 "Test description", true, List.of("test-category", "bundle-category"));
     }
 
@@ -83,21 +85,21 @@ class ProductControllerTest {
 
     @Test
     void create_shouldReturnCreatedProductWithImages() throws IOException {
-        when(productService.createProduct(eq(productPayloadDto), any(MultipartFile[].class)))
+        when(productService.createProduct(any(ProductPayloadDto.class), any(MultipartFile[].class)))
                 .thenReturn(productDto);
 
         MultipartFile[] mockFiles = new MultipartFile[] {
                 createMockMultipartFile("image.jpg", "image content")
         };
 
-        ResponseEntity<ProductDto> response = productController.createProductWithImages(productPayloadDto, mockFiles);
+        ResponseEntity<ProductDto> response = productController.createProductWithImages(productPayloadDtoJson, mockFiles);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(response.getBody()).isEqualTo(productDto);
 
-        verify(productService, times(1)).createProduct(productPayloadDto, mockFiles);
+        verify(productService, times(1)).createProduct(any(ProductPayloadDto.class), aryEq(mockFiles));
         verifyNoMoreInteractions(productService);
-        verify(productService).createProduct(eq(productPayloadDto), aryEq(mockFiles));
+        verify(productService).createProduct(any(ProductPayloadDto.class), aryEq(mockFiles));
     }
 
     @Test
@@ -107,15 +109,14 @@ class ProductControllerTest {
                 createMockMultipartFile("image2.jpg", "content2")
         };
 
-        when(productService.createProduct(eq(productPayloadDto), any(MultipartFile[].class)))
+        when(productService.createProduct(any(ProductPayloadDto.class), any(MultipartFile[].class)))
                 .thenReturn(productDto);
 
-        ResponseEntity<ProductDto> response = productController.createProductWithImages(productPayloadDto, mockFiles);
-
+        ResponseEntity<ProductDto> response = productController.createProductWithImages(productPayloadDtoJson, mockFiles);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(response.getBody()).isEqualTo(productDto);
 
-        verify(productService).createProduct(eq(productPayloadDto), aryEq(mockFiles));
+        verify(productService).createProduct(any(ProductPayloadDto.class), aryEq(mockFiles));
     }
 
     @Test
@@ -127,7 +128,7 @@ class ProductControllerTest {
         when(productService.createProduct(any(), any()))
                 .thenThrow(new IOException("S3 upload failed"));
 
-        ResponseEntity<ProductDto> response = productController.createProductWithImages(productPayloadDto, mockFiles);
+        ResponseEntity<ProductDto> response = productController.createProductWithImages(productPayloadDtoJson, mockFiles);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
         assertThat(response.getBody()).isNull();
@@ -170,14 +171,14 @@ class ProductControllerTest {
                 .name("Updated Product")
                 .build();
 
-        when(productService.updateProduct(slug, productPayloadDto, mockFiles)).thenReturn(updatedProductDto);
+        when(productService.updateProduct(anyString(), any(ProductPayloadDto.class), aryEq(mockFiles))).thenReturn(updatedProductDto);
 
-        ResponseEntity<ProductDto> response = productController.updateProduct(slug, productPayloadDto, mockFiles);
+        ResponseEntity<ProductDto> response = productController.updateProduct(slug, productPayloadDtoJson, mockFiles);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(updatedProductDto);
 
-        verify(productService).updateProduct(slug, productPayloadDto, mockFiles);
+        verify(productService).updateProduct(anyString(), any(ProductPayloadDto.class), aryEq(mockFiles));
     }
 
     @Test
@@ -186,14 +187,14 @@ class ProductControllerTest {
         MultipartFile[] mockFiles = new MultipartFile[] {
                 createMockMultipartFile("image.jpg", "image content")
         };
-        when(productService.updateProduct(slug, productPayloadDto, mockFiles)).thenReturn(null);
+        when(productService.updateProduct(anyString(), any(ProductPayloadDto.class), aryEq(mockFiles))).thenReturn(null);
 
-        ResponseEntity<ProductDto> response = productController.updateProduct(slug, productPayloadDto, mockFiles);
+        ResponseEntity<ProductDto> response = productController.updateProduct(slug, productPayloadDtoJson, mockFiles);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody()).isNull();
 
-        verify(productService).updateProduct(slug, productPayloadDto, mockFiles);
+        verify(productService).updateProduct(anyString(), any(ProductPayloadDto.class), aryEq(mockFiles));
     }
 
     @Test
@@ -278,14 +279,25 @@ class ProductControllerTest {
                 .build();
     }
 
-    private static ProductPayloadDto createCreateProductDto(String name, BigDecimal price, int stock,
-                                                            String description, boolean active, List<String> categories) {
-        return ProductPayloadDto.builder()
+    private static String createCreateProductJson(String name, BigDecimal price, int stock,
+                                                  String description, boolean active, List<String> categories) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+
+        ProductPayloadDto dto = ProductPayloadDto.builder()
                 .price(price)
                 .stock(stock)
                 .active(active)
                 .categories(categories)
+                .mainImageIndex(0)
+                .translation(ProductTranslationDto.builder()
+                        .language(Language.EN)
+                        .name(name)
+                        .description(description)
+                        .build())
                 .build();
+
+        return mapper.writeValueAsString(dto);
+
     }
 
     private static ProductPreviewDto createProductPreviewDto(String name, String slug, BigDecimal price, String thumbnailUrl) {

@@ -18,11 +18,6 @@ public class SmtpConfig {
         this.username = secrets.get("smtpUsername");
         this.password = secrets.get("smtpPassword");
         this.fromEmail = secrets.get("fromEmail");
-
-        System.out.println("TESTHERE");
-        System.out.println(this.username);
-        System.out.println(this.password);
-
     }
 
     public String getUsername() {

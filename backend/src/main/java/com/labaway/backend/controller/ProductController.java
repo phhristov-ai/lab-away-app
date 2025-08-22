@@ -1,8 +1,11 @@
 package com.labaway.backend.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.labaway.backend.dto.product.main.*;
 import com.labaway.backend.enums.Language;
 import com.labaway.backend.service.ProductService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -52,13 +55,16 @@ public class ProductController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProductDto> createProductWithImages(
-            @RequestPart("product") @Valid ProductPayloadDto productPayloadDto,
+            @RequestPart(value = "product") String productJson,
             @RequestPart("files") MultipartFile[] files) {
 
         try {
+            ObjectMapper mapper = new ObjectMapper();
+            ProductPayloadDto productPayloadDto = mapper.readValue(productJson, ProductPayloadDto.class);
             ProductDto createdProduct = productService.createProduct(productPayloadDto, files);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
-        } catch (IOException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -67,16 +73,20 @@ public class ProductController {
     @PutMapping(value = "/{slug}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProductDto> updateProduct(
             @PathVariable String slug,
-            @RequestPart("product") @Valid ProductPayloadDto updateProductDto,
+            @RequestPart("product") String productJson,
             @RequestPart(value = "files", required = false) MultipartFile[] files) {
 
         try {
+            ObjectMapper mapper = new ObjectMapper();
+            ProductPayloadDto updateProductDto = mapper.readValue(productJson, ProductPayloadDto.class);
+
             ProductDto updatedProduct = productService.updateProduct(slug, updateProductDto, files);
             if (updatedProduct == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
             return ResponseEntity.ok(updatedProduct);
-        } catch (IOException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

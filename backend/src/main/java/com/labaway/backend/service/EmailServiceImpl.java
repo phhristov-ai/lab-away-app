@@ -70,7 +70,7 @@ public class EmailServiceImpl implements EmailService {
                 .withZone(ZoneId.systemDefault());
 
         Context context = new Context(locale);
-        context.setVariable("orderId", order.getId().toString().substring(0, 8));
+        context.setVariable("orderId", order.getOrderNumber());
         context.setVariable("orderDate", dateFormatter.format(order.getCreatedAt()));
 
         context.setVariable("billingName", order.getBillingAddress().getFirstName() + " " + order.getBillingAddress().getLastName());
