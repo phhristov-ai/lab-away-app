@@ -137,23 +137,27 @@ export const useProductPage = () => {
                 return;
             }
 
-            const filesToUpload = images
-                .filter(img => img.file)
-                .map(img => img.file as File);
+            const {
+                normalizedImages,
+                mainImageIndex,
+                filesToUpload,
+                existingImageUrls,
+            } = processImagesForPayload(images);
 
-            const mainImageIndex = images.findIndex(img => img.main);
+            console.log("mainImageIndex:" + mainImageIndex);
 
             const payload: ProductPayloadDto = {
                 price,
                 stock: 10, //TODO to fix later
                 active: true,
-                mainImageIndex,
+                mainImageIndex: mainImageIndex,
                 categories: selectedCategories.map(cat => cat.slug),
                 translation: {
                     language,
                     name: title,
                     description: 'Description', //TODO to fix later
                 },
+                imageUrls: existingImageUrls,
             };
 
             let result;
@@ -175,6 +179,46 @@ export const useProductPage = () => {
             console.error('Error saving product:', err);
         }
     };
+
+    type NormalizedImageData = {
+        normalizedImages: ProductImage[];
+        mainImageIndex: number;
+        filesToUpload: File[];
+        existingImageUrls: string[];
+    };
+
+    function processImagesForPayload(images: ProductImage[]): NormalizedImageData {
+        const normalizedImages = normalizeMainImage(images);
+
+        const mainImageIndex = normalizedImages.findIndex(img => img.main);
+
+        const filesToUpload = normalizedImages
+            .filter(img => img.file)
+            .map(img => img.file as File);
+
+        const existingImageUrls = normalizedImages
+            .filter(img => !img.file)
+            .map(img => img.imageUrl);
+
+        return {
+            normalizedImages,
+            mainImageIndex,
+            filesToUpload,
+            existingImageUrls,
+        };
+    }
+
+    function normalizeMainImage(images: ProductImage[]): ProductImage[] {
+        if (images.length === 0) return [];
+        const mainIndex = images.findIndex(img => img.main);
+
+        const validMainIndex = mainIndex >= 0 ? mainIndex : 0;
+
+        return images.map((img, idx) => ({
+            ...img,
+            main: idx === validMainIndex,
+        }));
+    }
 
     const breadcrumbItems: BreadcrumbItem[] = [
         { label: t('shop.breadcrumb.home'), to: '/' },

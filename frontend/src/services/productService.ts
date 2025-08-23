@@ -14,6 +14,7 @@ export type ProductPayloadDto = {
   mainImageIndex: number;
   categories: string[];
   translation: ProductTranslationDto;
+  imageUrls: string[];
 };
 
 export const fetchProducts = async () => {

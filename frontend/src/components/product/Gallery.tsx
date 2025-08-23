@@ -1,6 +1,8 @@
-import React, { useCallback, useEffect, useState, ChangeEvent, DragEvent, useRef } from 'react'; import './Gallery.css';
+import React from 'react';
+import './Gallery.css';
 import SlickDots from './SlickDots';
 import { ProductImage } from '../../types/ProductImage';
+import { useGallery } from '../../hooks/useGallery';
 
 interface GalleryProps {
   images: ProductImage[];
@@ -9,107 +11,20 @@ interface GalleryProps {
 }
 
 const Gallery: React.FC<GalleryProps> = ({ images, setImages, isAdmin }) => {
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [isDragging, setIsDragging] = useState(false);
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const goToPrev = useCallback(() => {
-    setCurrentIndex(prev => (prev === 0 ? images.length - 1 : prev - 1));
-  }, [images.length]);
-
-  const goToNext = useCallback(() => {
-    setCurrentIndex(prev => (prev === images.length - 1 ? 0 : prev + 1));
-  }, [images.length]);
-
-  const goToImage = useCallback((index: number) => {
-    setCurrentIndex(index);
-  }, []);
-
-  const sortImages = (images: ProductImage[]): ProductImage[] => {
-    return [...images].sort((a, b) => (b.main ? 1 : 0) - (a.main ? 1 : 0));
-  };
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') goToPrev();
-      if (e.key === 'ArrowRight') goToNext();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [goToPrev, goToNext]);
-
-  useEffect(() => {
-    if (images.length > 1 && !images[0].main) {
-      const sorted = sortImages(images);
-      setImages(sorted);
-      setCurrentIndex(0);
-    }
-  }, [images]);
-
-  const handleUpload = (
-    event: ChangeEvent<HTMLInputElement> | DragEvent<HTMLDivElement>
-  ) => {
-    const files = 'dataTransfer' in event ? event.dataTransfer.files : event.target.files;
-    if (!files || files.length === 0) return;
-
-    const newImages: ProductImage[] = Array.from(files).map((file) => ({
-      imageUrl: URL.createObjectURL(file),
-      main: false,
-      file,
-    }));
-
-    setImages((prevImages) => {
-      const updatedImages = [...prevImages, ...newImages];
-      const sorted = sortImages(updatedImages);
-      setCurrentIndex(sorted.findIndex(img => img.main) || sorted.length - 1);
-      return sorted;
-    });
-  };
-
-  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = () => {
-    setIsDragging(false);
-  };
-
-  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(false);
-    handleUpload(e);
-  };
-
-  const handleDelete = () => {
-    if (images.length === 0) return;
-
-    const updatedImages = images.filter((_, index) => index !== currentIndex);
-    setImages(updatedImages);
-
-    // Adjust currentIndex
-    if (currentIndex >= updatedImages.length) {
-      setCurrentIndex(Math.max(0, updatedImages.length - 1));
-    }
-  };
-
-  const setAsMainImage = (index: number) => {
-    setImages((prevImages) => {
-      const updated = prevImages.map((img, idx) => ({
-        ...img,
-        main: idx === index,
-      }));
-
-      const mainImage = updated.find(img => img.main)!;
-      const otherImages = updated.filter(img => !img.main);
-
-      return [mainImage, ...otherImages];
-    });
-
-    setCurrentIndex(0);
-  };
-
+  const {
+    currentIndex,
+    isDragging,
+    fileInputRef,
+    goToPrev,
+    goToNext,
+    goToImage,
+    handleUpload,
+    handleDelete,
+    setAsMainImage,
+    handleDragOver,
+    handleDragLeave,
+    handleDrop,
+  } = useGallery(images, setImages);
 
   return (
     <div className="gallery">
@@ -134,7 +49,6 @@ const Gallery: React.FC<GalleryProps> = ({ images, setImages, isAdmin }) => {
               <span className="gallery-placeholder">Click or drag image to add</span>
             )}
 
-            {/* ❌ Delete button */}
             {isAdmin && images.length > 0 && (
               <button
                 onClick={(e) => {
@@ -160,38 +74,39 @@ const Gallery: React.FC<GalleryProps> = ({ images, setImages, isAdmin }) => {
           <img
             src={images[currentIndex].imageUrl}
             alt={`Slide ${currentIndex + 1}`}
-            className="main-image"
+            className="main-thumbnail-image"
           />
         )}
 
         <i className="fi fi-rr-arrow-right slick-arrow next-arrow" onClick={goToNext} />
-        {isAdmin &&
+
+        {isAdmin && (
           <div className="gallery-thumbnails">
             {images.map((img, idx) => (
-              <div key={img.imageUrl} className={`thumbnail-wrapper ${img.main ? 'main-image' : ''}`}>
+              <div
+                key={img.imageUrl}
+                className={`thumbnail-wrapper ${img.main ? 'main-thumbnail-image' : ''}`}
+              >
                 <img
                   src={img.imageUrl}
                   alt={`Thumbnail ${idx + 1}`}
                   onClick={() => goToImage(idx)}
                   className="thumbnail-image"
                 />
-                {isAdmin && (
-                  <button
-                    className="set-main-button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setAsMainImage(idx);
-                    }}
-                    title="Set as main image"
-                  >
-                    {img.main ? '★' : '☆'}
-                  </button>
-                )}
+                <button
+                  className="set-main-button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setAsMainImage(idx);
+                  }}
+                  title="Set as main image"
+                >
+                  {img.main ? '★' : '☆'}
+                </button>
               </div>
             ))}
           </div>
-        }
-
+        )}
       </div>
 
       <SlickDots

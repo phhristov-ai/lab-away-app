@@ -59,6 +59,22 @@ public class ProductService {
 
         deleteRemovedImages(product, retainedUrls);
         uploadNewImages(product, dto.getMainImageIndex(), files);
+        updateMainImageFlag(product, dto.getMainImageIndex());
+    }
+
+    private void updateMainImageFlag(Product product, Integer mainImageIndex) {
+        List<ProductImage> images = product.getImages();
+
+        if (mainImageIndex == null || mainImageIndex < 0 || mainImageIndex >= images.size()) {
+            for (int i = 0; i < images.size(); i++) {
+                images.get(i).setMain(i == 0);
+            }
+            return;
+        }
+
+        for (int i = 0; i < images.size(); i++) {
+            images.get(i).setMain(i == mainImageIndex);
+        }
     }
 
     private Set<String> extractRetainedUrls(ProductPayloadDto dto) {
