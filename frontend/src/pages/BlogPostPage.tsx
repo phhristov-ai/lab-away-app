@@ -1,6 +1,7 @@
 import RandomProducts from '../components/common/RandomProducts';
 import { useBlogPost } from '../hooks/useBlogPost';
 import './BlogPostPage.css';
+import './AdminBlogPost.css';
 import { formatDate } from '../utils/format';
 import AdminActionButtons from '../components/admin/AdminActionButtons';
 import CategorySelect from '../components/admin/CategorySelect';
@@ -70,54 +71,35 @@ const BlogPostPage: React.FC = () => {
         </div>
 
         {isAdmin ? (
-          <div
+          <button
+            type="button"
+            className="admin-image-upload"
             onClick={() => document.getElementById('image-upload')?.click()}
-            style={{
-              cursor: 'pointer',
-              width: 675,
-              height: 450,
-              backgroundColor: '#eee',
-              borderRadius: 8,
-              margin: '1rem 0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              position: 'relative',
-            }}
           >
+
             {imagePreview || post?.image || location.state?.image ? (
               <img
                 src={imagePreview ?? post?.image ?? location.state?.image}
                 alt="Blog preview"
-                style={{
-                  width: 675,
-                  height: 450,
-                  objectFit: 'cover',
-                }}
+                className="admin-image-preview"
               />
             ) : (
-              <span style={{ color: '#999', fontSize: '1.25rem' }}>Click to add image</span>
+              <span className="admin-image-placeholder">Click to add image</span>
             )}
             <input
               type="file"
               id="image-upload"
               accept="image/*"
               onChange={handleImageChange}
-              style={{ display: 'none' }}
+              className="hidden-file-input"
             />
-          </div>
+          </button>
         ) : (
           (post?.image ?? location.state?.image) && (
             <img
               src={post.image ?? location.state?.image}
               alt={post.title}
-              style={{
-                width: '100%',
-                maxHeight: 400,
-                objectFit: 'cover',
-                borderRadius: 8,
-                margin: '1rem 0',
-              }}
+              className="blog-post-image"
             />
           )
         )}
@@ -128,7 +110,7 @@ const BlogPostPage: React.FC = () => {
             value={editedContent}
             onChange={(e) => setEditedContent(e.target.value)}
             rows={15}
-            style={{ width: '100%', fontSize: '1.1rem', marginTop: '1rem' }}
+            className="admin-post-textarea"
           />
         ) : (
           <div

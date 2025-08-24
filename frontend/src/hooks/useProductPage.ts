@@ -47,10 +47,6 @@ export const useProductPage = () => {
         setShowConfirmDelete(true);
     };
 
-    const imageFiles: File[] = images
-        .map(img => img.file)
-        .filter((file): file is File => file !== undefined);
-
     // Fetch categories
     useEffect(() => {
         fetchCategories()
@@ -138,7 +134,6 @@ export const useProductPage = () => {
             }
 
             const {
-                normalizedImages,
                 mainImageIndex,
                 filesToUpload,
                 existingImageUrls,

@@ -29,15 +29,30 @@ const Gallery: React.FC<GalleryProps> = ({ images, setImages, isAdmin }) => {
   return (
     <div className="gallery">
       <div className="gallery-main">
-        <i className="fi fi-rr-arrow-left slick-arrow prev-arrow" onClick={goToPrev} />
+        <button
+          type="button"
+          className="slick-arrow prev-arrow"
+          onClick={goToPrev}
+          aria-label="Previous image"
+        >
+          <i className="fi fi-rr-arrow-left" />
+        </button>
 
         {isAdmin ? (
           <div
             className={`gallery-image-wrapper${isDragging ? ' dragging' : ''}`}
+            tabIndex={0}
             onClick={() => fileInputRef.current?.click()}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                fileInputRef.current?.click();
+              }
+            }}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
+            aria-label="Upload image by clicking or dragging and dropping a file"
           >
             {images[currentIndex]?.imageUrl ? (
               <img
@@ -78,7 +93,14 @@ const Gallery: React.FC<GalleryProps> = ({ images, setImages, isAdmin }) => {
           />
         )}
 
-        <i className="fi fi-rr-arrow-right slick-arrow next-arrow" onClick={goToNext} />
+        <button
+          type="button"
+          className="slick-arrow next-arrow"
+          onClick={goToNext}
+          aria-label="Next image"
+        >
+          <i className="fi fi-rr-arrow-right" />
+        </button>
 
         {isAdmin && (
           <div className="gallery-thumbnails">
@@ -87,12 +109,19 @@ const Gallery: React.FC<GalleryProps> = ({ images, setImages, isAdmin }) => {
                 key={img.imageUrl}
                 className={`thumbnail-wrapper ${img.main ? 'main-thumbnail-image' : ''}`}
               >
-                <img
-                  src={img.imageUrl}
-                  alt={`Thumbnail ${idx + 1}`}
+                <button
+                  type="button"
+                  className="thumbnail-button"
                   onClick={() => goToImage(idx)}
-                  className="thumbnail-image"
-                />
+                  aria-label={`View image thumbnail ${idx + 1}`}
+                >
+                  <img
+                    src={img.imageUrl}
+                    alt={`Thumbnail ${idx + 1}`}
+                    className="thumbnail-image"
+                  />
+                </button>
+
                 <button
                   className="set-main-button"
                   onClick={(e) => {

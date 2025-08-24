@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import './TextStyles.css'; 
 
 const PrivacyPolicyPage = () => {
   const { t } = useTranslation();
@@ -6,7 +7,7 @@ const PrivacyPolicyPage = () => {
   return (
     <div>
       <h1>{t("privacy.title")}</h1>
-      <p style={{ whiteSpace: "pre-line" }}>
+      <p className="pre-line-text">
         {t("privacy.privacyPolicy")}
       </p>
     </div>

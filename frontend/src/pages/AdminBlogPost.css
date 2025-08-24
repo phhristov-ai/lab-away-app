@@ -1,0 +1,41 @@
+.admin-image-upload {
+  cursor: pointer;
+  width: 675px;
+  height: 450px;
+  background-color: #eee;
+  border-radius: 8px;
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.admin-image-placeholder {
+  color: #999;
+  font-size: 1.25rem;
+}
+
+.blog-post-image {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.admin-post-textarea {
+  width: 100%;
+  font-size: 1.1rem;
+  margin-top: 1rem;
+}
+
+.hidden-file-input {
+  display: none;
+}
+
+.admin-image-preview {
+  width: 675px;
+  height: 450px;
+  object-fit: cover;
+}

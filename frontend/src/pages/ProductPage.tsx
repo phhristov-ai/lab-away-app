@@ -20,7 +20,6 @@ const ProductPage: React.FC = () => {
   const {
     slug,
     product,
-    setProduct,
     title,
     setTitle,
     price,
@@ -51,7 +50,8 @@ const ProductPage: React.FC = () => {
   if (!product) return <div>Product not found</div>;
 
   return (
-    <div className="product-page">
+
+    <div key={isAdmin ? 'admin' : 'user'} className="product-page">
       <div className="product-main-section">
         <div className="product-gallery">
           {hasFullBreadcrumb ? (

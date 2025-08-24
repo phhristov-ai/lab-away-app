@@ -1,4 +1,5 @@
 import React from 'react';
+import './CategorySelect.css';
 
 type Category = {
   slug: string;
@@ -18,10 +19,10 @@ const CategorySelect: React.FC<CategorySelectProps> = ({
 }) => {
   return (
     <select
+      className="category-select"
       multiple
       value={selectedSlugs}
       onChange={onChange}
-      style={{ minWidth: '200px', minHeight: '100px' }}
     >
       {allCategories.map(category => (
         <option key={category.slug} value={category.slug}>

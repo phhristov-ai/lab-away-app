@@ -127,8 +127,16 @@
   border-radius: 4px;
 }
 
+.main-thumbnail-image {
+  width: 100%;
+}
+
 .thumbnail-wrapper.main-thumbnail-image .thumbnail-image {
   border-color: gold;
+}
+
+.gallery-thumbnails .main-thumbnail-image {
+  width: auto;
 }
 
 .set-main-button {

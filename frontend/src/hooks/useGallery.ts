@@ -2,9 +2,20 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { ProductImage } from '../types/ProductImage';
 
 export function useGallery(images: ProductImage[], setImages: React.Dispatch<React.SetStateAction<ProductImage[]>>) {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(() => {
+    const mainIndex = images.findIndex((img) => img.main);
+    return mainIndex !== -1 ? mainIndex : 0;
+  });
+
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const mainIndex = images.findIndex((img) => img.main);
+    if (mainIndex !== -1 && mainIndex !== currentIndex) {
+      setCurrentIndex(mainIndex);
+    }
+  }, [images]);
 
   const goToPrev = useCallback(() => {
     setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));

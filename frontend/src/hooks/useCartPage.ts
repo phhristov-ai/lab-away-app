@@ -1,0 +1,40 @@
+import { useTranslation } from "react-i18next";
+import { useCart } from "../context/CartContext";
+
+export const useCartPage = () => {
+    const { state } = useCart();
+    const { t } = useTranslation();
+
+    const enrichedItems = state.items.map(item => ({
+        ...item,
+        inclVat: t('checkout.cart.inclVat'),
+        subtotal: item.price * item.quantity,
+        title: item.name,
+        product: item.name,
+    }));
+
+    const subtotalValue = state.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const vat = 3; // You might want to calculate this dynamically later
+    const shippingCost = 7; // Also could be dynamic
+    const total = subtotalValue + shippingCost;
+
+    const labels: CartLabels = {
+        cartTotalsTitle: t('checkout.cartTotals.title'),
+        description: t('checkout.cartTotals.description'),
+        amount: t('checkout.cartTotals.amount'),
+        shipping: t('checkout.summary.shipping'),
+        total: t('checkout.summary.total'),
+        vatNotePrefix: t('checkout.cartTotals.vatNotePrefix'),
+        vatNoteSuffix: t('checkout.cartTotals.vatNoteSuffix'),
+        continue: t('checkout.actions.continue'),
+    };
+
+    return {
+        enrichedItems,
+        subtotalValue,
+        vat,
+        shippingCost,
+        total,
+        labels,
+    };
+};
