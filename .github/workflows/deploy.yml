@@ -29,6 +29,8 @@ jobs:
       # Build frontend
       - name: Build frontend
         working-directory: ./frontend
+        env:
+          REACT_APP_PAYPAL_CLIENT_ID: ${{ secrets.REACT_APP_PAYPAL_CLIENT_ID }}
         run: |
           npm install --legacy-peer-deps
           CI='' npm run build
