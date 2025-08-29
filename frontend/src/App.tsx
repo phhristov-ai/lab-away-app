@@ -23,41 +23,56 @@ import TopHeader from './components/header/TopHeader';
 import Navbar from './components/header/Navbar';
 import { AdminProvider } from './context/AdminContext';
 import AdminLoginPage from './pages/AdminLoginPage';
+import CookieConsentFooter from './components/common/CookieConsentFooter';
+import { useState } from 'react';
+import GDPRPopup from './components/common/GDPRPopup';
+import { ConsentProvider } from './context/consent/ConsentProvider';
 
 function App() {
 
+  const [showSettings, setShowSettings] = useState(false);
+
+  const handleOpenSettings = () => {
+    setShowSettings(true);
+    console.log('Cookie settings popup should open');
+  };
+
   return (
-    <Router>
-      <ScrollToTop />
-      <CheckoutProvider >
-        <CartProvider>
-          <AdminProvider>
-            <TopHeader />
-            <Navbar />
-            <div className="page-container">
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/shop" element={<ShopPage />} />
-                <Route path="/product/:slug" element={<ProductPage />} />
-                <Route path="/blog" element={<BlogPage />} />
-                <Route path="/blog/:slug" element={<BlogPostPage />} />
-                <Route path="/checkout" element={<BillingPage />} />
-                <Route path="/cart" element={<CartPage />} />
-                <Route path="/payment" element={<PaymentPage />} />
-                <Route path="/success" element={<SuccessPage />} />
-                <Route path="/delivery" element={<DeliveryPage />} />
-                <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-                <Route path="/terms-and-conditions" element={<TermsConditionsPage />} />
-                <Route path="/contact" element={<ContactPage />} />
-                <Route path="/imprint" element={<ImprintPage />} />
-                <Route path="/admin" element={<AdminLoginPage />} />
-              </Routes>
-            </div>
-            <Footer />
-          </AdminProvider>
-        </CartProvider>
-      </CheckoutProvider>
-    </Router>
+    <ConsentProvider>
+      <Router>
+        <ScrollToTop />
+        <CheckoutProvider >
+          <CartProvider>
+            <AdminProvider>
+              <TopHeader />
+              <Navbar />
+              <div className="page-container">
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/shop" element={<ShopPage />} />
+                  <Route path="/product/:slug" element={<ProductPage />} />
+                  <Route path="/blog" element={<BlogPage />} />
+                  <Route path="/blog/:slug" element={<BlogPostPage />} />
+                  <Route path="/checkout" element={<BillingPage />} />
+                  <Route path="/cart" element={<CartPage />} />
+                  <Route path="/payment" element={<PaymentPage />} />
+                  <Route path="/success" element={<SuccessPage />} />
+                  <Route path="/delivery" element={<DeliveryPage />} />
+                  <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+                  <Route path="/terms-and-conditions" element={<TermsConditionsPage />} />
+                  <Route path="/contact" element={<ContactPage />} />
+                  <Route path="/imprint" element={<ImprintPage />} />
+                  <Route path="/admin" element={<AdminLoginPage />} />
+                </Routes>
+              </div>
+              <Footer />
+              <CookieConsentFooter onOpenSettings={handleOpenSettings} />
+              {showSettings && <GDPRPopup onClose={() => setShowSettings(false)} />}
+            </AdminProvider>
+          </CartProvider>
+        </CheckoutProvider>
+      </Router>
+    </ConsentProvider>
   );
 }
 

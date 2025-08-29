@@ -1,0 +1,207 @@
+.gdpr-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gdpr-popup {
+  background: white;
+  width: 60%;
+  height: 80%;
+  display: flex;
+  border-radius: 8px;
+  overflow: visible;
+  font-family: sans-serif;
+  position: relative;
+
+}
+
+.gdpr-sidebar {
+  width: 40%;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #ddd;
+}
+
+.gdpr-tab {
+  padding: 16px;
+  cursor: pointer;
+  border: 1px solid #f1f1f1;
+  background-color: #fff;
+  color: #000;
+  text-transform: uppercase;
+  margin: 5px 20px;
+}
+
+.gdpr-tab.active {
+  background-color: #f1f1f1;
+  color: var(--primary-color);
+}
+
+.gdpr-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+}
+
+.gdpr-content {
+  flex: 1;
+  padding: 24px;
+  background-color: #f1f1f1;
+}
+
+.gdpr-content h2 {
+  margin-top: 0;
+}
+
+.gdpr-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 16px 24px;
+}
+
+.gdpr-logo-container {
+  text-align: left;
+  margin: 20px 20px;
+}
+
+.gdpr-logo {
+  max-width: 80px;
+  height: auto;
+}
+
+.gdpr-close-button {
+  position: absolute;
+  top: -30px;
+  /* Half the button's height */
+  right: -30px;
+  /* Half the button's width */
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  background-color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 48px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  transition: all .3s ease;
+  font-family: 'Helvetica Neue UltraLight';
+  font-weight: 100;
+  padding: 0px;
+}
+
+.gdpr-close-button:hover {
+  background-color: #fff;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+}
+
+.gdpr-separator {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin-bottom: 1.5rem;
+}
+
+.gdpr-buttons-container {
+  width: 100%;
+  background-color: #f1f1f1;
+}
+
+.gdpr-logo-mobile {
+  display: none;
+}
+
+.gdpr-mobile-title {
+  display: none;
+}
+
+/* Example media query to stack layout under 768px width */
+@media (max-width: 768px) {
+
+  .gdpr-popup {
+    flex-direction: column;
+    width: 75%;
+  }
+
+  .gdpr-sidebar {
+    display: none;
+  }
+
+  .gdpr-header-desktop {
+    display: none;
+  }
+
+  .gdpr-mobile-title {
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    position: relative;
+    background-color: #fff;
+    padding: 10px;
+  }
+
+  .gdpr-mobile-title::before {
+    content: "\203A";
+    /* › */
+    display: inline-block;
+    /* Needed for transform to work */
+    font-size: 1.6rem;
+    /* Bigger arrow */
+    margin-right: 10px;
+    /* Space between arrow and text */
+    transition: transform 0.2s ease;
+  }
+
+  /* Rotate the arrow when open */
+  .gdpr-mobile-title.open::before {
+    transform: rotate(90deg);
+    /* › becomes v */
+  }
+
+  .gdpr-section-collapsible {
+    display: none;
+  }
+
+  .gdpr-section-collapsible.active {
+    display: block;
+    background-color: #fff;
+    padding: 5px;
+  }
+
+  .gdpr-logo-mobile {
+    margin: 20px;
+    display: block;
+    text-align: left;
+  }
+
+  .gdpr-logo-container {
+    display: none;
+  }
+
+  .gdpr-section-title {
+    font-weight: normal;
+    font-size: 1.2rem;
+  }
+
+  .gdpr-close-button {
+    transform: scale(0.8); /* Scale down to 80% */
+    top: -24px; /* Adjust position if needed */
+    right: -24px;
+  }
+}

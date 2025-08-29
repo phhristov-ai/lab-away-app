@@ -1,0 +1,63 @@
+.cookie-toggle {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0.75rem 0;
+}
+
+.cookie-slider {
+  position: relative;
+  width: 50px;
+  height: 26px;
+  display: inline-block;
+}
+
+.cookie-slider input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider-circle {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: red;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.slider-circle::before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+.cookie-slider input:checked + .slider-circle {
+  background-color: #2e9935;
+}
+
+.cookie-slider input:checked + .slider-circle::before {
+  transform: translateX(24px);
+}
+
+.toggle-label {
+  font-weight: bold;
+}
+
+.toggle-label.enabled {
+  color: #2e9935;
+}
+
+.toggle-label.disabled {
+  color: red;
+}
