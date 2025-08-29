@@ -2,9 +2,7 @@
   text-align: center;
 }
 
-html, body {
-  overflow-x: hidden;
-}
+
 
 .pre-line-text {
   white-space: pre-line;
@@ -51,6 +49,8 @@ input[type=number] {
 .page-container {
   padding: 0 var(--spacing-lg);
   margin: 0 calc(3*var(--spacing-lg));
+      overflow-x: hidden;
+
 }
 
 
