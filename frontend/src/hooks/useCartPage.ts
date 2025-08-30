@@ -1,5 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useCart } from "../context/CartContext";
+import { useEffect } from "react";
+import { trackGAEvent } from "../utils/analytics";
 
 export const useCartPage = () => {
     const { state } = useCart();
@@ -17,6 +19,21 @@ export const useCartPage = () => {
     const vat = 3; // You might want to calculate this dynamically later
     const shippingCost = 7; // Also could be dynamic
     const total = subtotalValue + shippingCost;
+
+    useEffect(() => {
+        if (enrichedItems.length > 0) {
+            trackGAEvent('view_cart', {
+                currency: 'EUR', // or your currency
+                value: total,
+                items: enrichedItems.map(item => ({
+                    item_id: item.slug,
+                    item_name: item.name,
+                    price: item.price,
+                    quantity: item.quantity
+                })),
+            });
+        }
+    }, [enrichedItems, total]);
 
     const labels: CartLabels = {
         cartTotalsTitle: t('checkout.cartTotals.title'),

@@ -1,8 +1,9 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCheckout } from '../context/CheckoutContext';
 import { BillingFormHandle } from '../components/checkout/billing/BillingForm';
 import { ShippingFormHandle } from '../components/checkout/billing/ShippingForm';
+import { trackGAEvent } from '../utils/analytics';
 
 export function useBillingPage() {
   const { billingData, setBillingData, setShippingData } = useCheckout();
@@ -11,6 +12,14 @@ export function useBillingPage() {
 
   const billingFormRef = useRef<BillingFormHandle>(null);
   const shippingFormRef = useRef<ShippingFormHandle>(null);
+
+  useEffect(() => {
+    // Track when billing page is viewed
+    trackGAEvent('begin_checkout', {
+      step: 2,
+      description: 'Billing page viewed',
+    });
+  }, []);
 
   const handleCheckboxChange = (checked: boolean) => {
     setShowShipping(checked);
@@ -25,6 +34,11 @@ export function useBillingPage() {
     if (!showShipping) {
       setShippingData(billingData);
     }
+
+    trackGAEvent('checkout_progress', {
+      step: 2,
+      action: 'Billing details submitted',
+    });
 
     navigate('/payment');
   };

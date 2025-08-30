@@ -1,4 +1,5 @@
 import React, { createContext, useReducer, useContext, ReactNode, useMemo } from 'react';
+import { trackAddToCart, trackGAEvent, trackRemoveFromCart } from '../utils/analytics';
 
 type CartItem = {
   slug: string;
@@ -23,36 +24,88 @@ const initialState: CartState = { items: [] };
 
 function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
-    case 'ADD_ITEM': {
-      const existing = state.items.find(item => item.slug === action.payload.slug);
-      if (existing) {
-        return {
-          items: state.items.map(item =>
-            item.slug === action.payload.slug
-              ? { ...item, quantity: item.quantity + action.payload.quantity }
-              : item
-          ),
-        };
-      }
-      return { items: [...state.items, action.payload] };
-    }
+    case 'ADD_ITEM':
+      return handleAddItem(state, action.payload);
     case 'REMOVE_ITEM':
-      return {
-        items: state.items.filter(item => item.slug !== action.payload.slug),
-      };
+      return handleRemoveItem(state, action.payload.slug);
     case 'CLEAR_CART':
-      return { items: [] };
+      return handleClearCart(state);
     case 'UPDATE_QUANTITY':
-      return {
-        items: state.items.map(item =>
-          item.slug === action.payload.slug
-            ? { ...item, quantity: action.payload.quantity }
-            : item
-        ),
-      };
+      return handleUpdateQuantity(state, action.payload.slug, action.payload.quantity);
     default:
       return state;
   }
+}
+
+function handleAddItem(state: CartState, payload: CartItem): CartState {
+  const existing = state.items.find(item => item.slug === payload.slug);
+
+  trackAddToCart({
+    item_id: payload.slug,
+    item_name: payload.name,
+    price: payload.price,
+    quantity: payload.quantity,
+    item_category: 'Products',
+  });
+
+  if (existing) {
+    return {
+      items: state.items.map(item =>
+        item.slug === payload.slug
+          ? { ...item, quantity: item.quantity + payload.quantity }
+          : item
+      ),
+    };
+  }
+  return { items: [...state.items, payload] };
+}
+
+function handleRemoveItem(state: CartState, slug: string): CartState {
+  const removedItem = state.items.find(item => item.slug === slug);
+  if (removedItem) {
+    trackRemoveFromCart({
+      item_id: removedItem.slug,
+      item_name: removedItem.name,
+      price: removedItem.price,
+      quantity: removedItem.quantity,
+    });
+  }
+  return {
+    items: state.items.filter(item => item.slug !== slug),
+  };
+}
+
+function handleClearCart(state: CartState): CartState {
+  if (state.items.length > 0) {
+    trackGAEvent('clear_cart', {
+      items: state.items.map(item => ({
+        item_id: item.slug,
+        item_name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+      })),
+    });
+  }
+  return { items: [] };
+}
+
+function handleUpdateQuantity(state: CartState, slug: string, quantity: number): CartState {
+  const item = state.items.find(item => item.slug === slug);
+  if (item && item.quantity !== quantity) {
+    trackGAEvent('update_cart_quantity', {
+      item_id: item.slug,
+      item_name: item.name,
+      price: item.price,
+      old_quantity: item.quantity,
+      new_quantity: quantity,
+    });
+  }
+
+  return {
+    items: state.items.map(item =>
+      item.slug === slug ? { ...item, quantity } : item
+    ),
+  };
 }
 
 const CartContext = createContext<{

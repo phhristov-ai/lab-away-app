@@ -10,6 +10,7 @@ import { t } from 'i18next';
 import { Category, fetchCategories } from '../services/categoriesService';
 import { ProductImage } from '../types/ProductImage';
 import { BreadcrumbItem } from '../components/shop/Breadcrumb';
+import { trackViewItem } from '../utils/analytics';
 
 export const useProductPage = () => {
     const { slug } = useParams<{ slug: string }>();
@@ -46,6 +47,18 @@ export const useProductPage = () => {
     const handleDeleteClick = () => {
         setShowConfirmDelete(true);
     };
+
+    useEffect(() => {
+        if (product && isFullProduct(product)) {
+            trackViewItem({
+                item_id: product.slug,
+                item_name: product.name,
+                price: product.price,
+                quantity: 1,
+                item_category: product.categories?.[0]?.name || 'Products',
+            });
+        }
+    }, [product]);
 
     // Fetch categories
     useEffect(() => {
