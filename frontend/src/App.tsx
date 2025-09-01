@@ -27,6 +27,7 @@ import CookieConsentFooter from './components/common/CookieConsentFooter';
 import { useState } from 'react';
 import GDPRPopup from './components/common/GDPRPopup';
 import { ConsentProvider } from './context/consent/ConsentProvider';
+import ScrollToTopButton from './components/common/ScrollToTopButton';
 
 function App() {
 
@@ -68,6 +69,7 @@ function App() {
               <Footer />
               <CookieConsentFooter onOpenSettings={handleOpenSettings} />
               {showSettings && <GDPRPopup onClose={() => setShowSettings(false)} />}
+              <ScrollToTopButton />
             </AdminProvider>
           </CartProvider>
         </CheckoutProvider>

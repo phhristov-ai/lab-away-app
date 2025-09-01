@@ -188,10 +188,6 @@
   "shop": {
     "title": "ZERTIFIZIERTE HEIMTESTS",
     "subtitle": "Durchsuchen Sie unsere Labortests für zu Hause für zuverlässige und genaue Ergebnisse",
-    "breadcrumb": {
-      "home": "Startseite",
-      "certifiedTests": "ZERTIFIZIERTE HEIMTESTS"
-    },
     "filters": {
       "all": "Alle"
     }

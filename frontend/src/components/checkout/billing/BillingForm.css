@@ -1,7 +1,7 @@
 .address-form {
   width: 100%;
   background-color: var(--background-color);
-  padding: 0 5%;
+  padding: var(--spacing-lg);
   font-size: 18px;
   line-height: 1.7;
   box-sizing: border-box;
@@ -29,7 +29,6 @@
 .form-group select {
   padding: 1.5rem;
   border: 1px solid #ccc;
-  border-radius: 4px;
   margin-right: 2rem;
   border-radius: 1rem;
 }

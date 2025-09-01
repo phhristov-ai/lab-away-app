@@ -14,7 +14,6 @@ import AdminActionButtons from '../components/admin/AdminActionButtons';
 import { useProductPage } from '../hooks/useProductPage';
 import { t } from 'i18next';
 import CategorySelect from '../components/admin/CategorySelect';
-import Breadcrumb from '../components/shop/Breadcrumb';
 
 const ProductPage: React.FC = () => {
   const {
@@ -41,9 +40,7 @@ const ProductPage: React.FC = () => {
     selectedCategories,
     handleCategoryChange,
     images,
-    setImages,
-    breadcrumbItems,
-    hasFullBreadcrumb
+    setImages
   } = useProductPage();
 
 
@@ -54,12 +51,6 @@ const ProductPage: React.FC = () => {
     <div key={isAdmin ? 'admin' : 'user'} className="product-page">
       <div className="product-main-section">
         <div className="product-gallery">
-          {hasFullBreadcrumb ? (
-            <Breadcrumb items={breadcrumbItems} />
-          ) : (
-            <div className="breadcrumb-placeholder" />
-          )}
-
           <Gallery
             images={images}
             setImages={setImages}

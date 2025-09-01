@@ -9,7 +9,6 @@ import { getColumns, getFaqItems, getFeatureItems } from '../services/productPag
 import { t } from 'i18next';
 import { Category, fetchCategories } from '../services/categoriesService';
 import { ProductImage } from '../types/ProductImage';
-import { BreadcrumbItem } from '../components/shop/Breadcrumb';
 import { trackViewItem } from '../utils/analytics';
 
 export const useProductPage = () => {
@@ -228,23 +227,6 @@ export const useProductPage = () => {
         }));
     }
 
-    const breadcrumbItems: BreadcrumbItem[] = [
-        { label: t('shop.breadcrumb.home'), to: '/' },
-    ];
-
-    if (product?.categories?.length) {
-        breadcrumbItems.push({
-            label: product.categories[0].name,
-            to: `/shop?category=${product.categories[0].slug}`,
-        });
-    }
-
-    if (product?.name) {
-        breadcrumbItems.push({ label: product.name });
-    }
-
-    const hasFullBreadcrumb = !!product?.categories?.[0] && !!product?.name;
-
     return {
         slug,
         product,
@@ -271,8 +253,6 @@ export const useProductPage = () => {
         selectedCategories,
         handleCategoryChange,
         images,
-        setImages,
-        breadcrumbItems,
-        hasFullBreadcrumb
+        setImages
     };
 };

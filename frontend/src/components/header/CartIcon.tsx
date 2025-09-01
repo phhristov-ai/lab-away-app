@@ -10,23 +10,24 @@ interface CartIconProps {
 
 const CartIcon: React.FC<CartIconProps> = ({ cartCount }) => {
   const { t } = useTranslation();
+
   return (
-    <div className="cart-icon">
-      <span className="thb-item-text">
-        <Link to="/cart">
+    <Link to="/cart" className="cart-icon-link">
+      <div className="cart-icon">
+        <span className="thb-item-text">
           <img
             src={ShoppingCart}
             alt={t('header.cart.altText')}
             className="cart-img"
           />
-        </Link>
-      </span>
-      <div className="thb-item-icon-wrapper">
-        <span className="count thb-cart-count">
-          {`(${cartCount})`}
         </span>
+        <div className="thb-item-icon-wrapper">
+          <span className="count thb-cart-count">
+            {`(${cartCount})`}
+          </span>
+        </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

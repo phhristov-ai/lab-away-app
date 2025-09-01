@@ -7,7 +7,7 @@
   .product-image {
     width: 200px;
     height: 200px;
-    background-color: #eee;
+    background: transparent;
     display: block;
     object-fit: cover;
 }

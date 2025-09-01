@@ -5,16 +5,19 @@ import FooterAbout from './FooterAbout';
 import FooterBottom from './FooterBottom';
 import Logo from '../header/Logo';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import ShortFooter from './ShortFooter';
 
 const Footer = () => {
   const { t } = useTranslation();
+  const location = useLocation();
+
   const shopLinks = [
-    { label: 'Drug Tests', url: '#' },
-    { label: 'Fertility Tests', url: '#' },
-    { label: 'STI/STD Tests', url: '#' },
-    { label: 'Ovulation Test', url: '#' },
-    { label: 'Vitamin D Test', url: '#' },
+    { label: 'Drug Tests', url: '/product/drug-tests' },
+    { label: 'Fertility Tests', url: '/product/fertility-tests' },
+    { label: 'STI/STD Tests', url: '/product/stistd-tests' },
+    { label: 'Ovulation Test', url: '/product/ovulation-test' },
+    { label: 'Vitamin D Test', url: '/product/vitamin-d-test' },
   ];
 
   const quickLinks = [
@@ -31,6 +34,13 @@ const Footer = () => {
     { label: t('footer.links.contact.contact'), url: '/contact' },
     { label: t('footer.links.legal.imprint'), url: '/imprint' },
   ];
+
+
+  const isCheckoutPage = ['/checkout', '/payment', '/success', '/cart'].includes(location.pathname);
+
+  if (isCheckoutPage) {
+    return <ShortFooter />;
+  }
 
   return (
     <footer className="footer">

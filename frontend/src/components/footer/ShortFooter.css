@@ -1,0 +1,17 @@
+.footer-about-with-logo {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  padding: 20px 40px;
+}
+
+.footer-about-with-logo > * {
+  flex: 0 1 auto;
+}
+
+.footer--short .footer-about {
+  width: auto;
+  padding: 0;
+  flex: 1;
+}

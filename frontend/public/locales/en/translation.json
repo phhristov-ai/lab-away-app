@@ -109,7 +109,8 @@
     "steps": {
       "orderSummary": "Order Summary",
       "billingShipping": "Billing & Shipping",
-      "orderPayment": "Order & Payment"
+      "orderPayment": "Order & Payment",
+      "thankYou" : "Order Confirmation"
     },
     "billing": {
       "title": "Billing Details",
@@ -254,10 +255,6 @@
   "shop": {
     "title": "CERTIFIED HOME TESTS",
     "subtitle": "Browse our lab-grade home tests for reliable and accurate results at home",
-    "breadcrumb": {
-      "home": "Home",
-      "certifiedTests": "Cetrified Home Tests"
-    },
     "filters": {
       "all": "All"
     }
