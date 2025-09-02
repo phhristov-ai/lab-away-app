@@ -153,6 +153,7 @@
       "title": "Cart Totals",
       "description": "Description",
       "amount": "Amount",
+      "subtotal" : "Subtotal",
       "vatNotePrefix": "(includes VAT)"
     },
     "payment": {
@@ -173,7 +174,6 @@
     },
     "summary": {
       "title": "Your order",
-      "edit": "Edit shopping bag",
       "subtotal": "Subtotal",
       "vat": "VAT",
       "shipping": "Shipping",

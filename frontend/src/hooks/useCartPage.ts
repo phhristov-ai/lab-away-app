@@ -16,8 +16,8 @@ export const useCartPage = () => {
     }));
 
     const subtotalValue = state.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const vat = 3; // You might want to calculate this dynamically later
-    const shippingCost = 7; // Also could be dynamic
+    const vat = 0; // You might want to calculate this dynamically later
+    const shippingCost = 0; // Free shipping
     const total = subtotalValue + shippingCost;
 
     useEffect(() => {
@@ -39,6 +39,7 @@ export const useCartPage = () => {
         cartTotalsTitle: t('checkout.cartTotals.title'),
         description: t('checkout.cartTotals.description'),
         amount: t('checkout.cartTotals.amount'),
+        subtotal: t('checkout.cartTotals.subtotal'),
         shipping: t('checkout.summary.shipping'),
         total: t('checkout.summary.total'),
         vatNotePrefix: t('checkout.cartTotals.vatNotePrefix'),

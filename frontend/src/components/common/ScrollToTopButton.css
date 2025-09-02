@@ -21,3 +21,9 @@
   color: #fff;
   border: 1px solid #0693e3;
 }
+
+@media only screen and (max-width: 768px) {
+  .scroll-to-top-button {
+    display: none;
+  }
+}

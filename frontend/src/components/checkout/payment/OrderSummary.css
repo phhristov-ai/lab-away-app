@@ -1,6 +1,5 @@
 .order-summary {
-    padding: 24px;
-    background-color: #f9f9f9;
+    background-color: var(--background-color);
     border-radius: 8px;
   }
   
@@ -9,20 +8,13 @@
     margin-bottom: 16px;
   }
   
-  .edit-link {
-    font-size: 14px;
-    color: var(--secondary-color);
-    cursor: pointer;
-  }
-  
   .order-summary-table {
     width: 100%;
     border-collapse: collapse;
   }
   
   .order-summary-table td {
-    padding: 12px;
-    vertical-align: top;
+    padding: 5px;
   }
   
   .order-summary-price {
@@ -44,8 +36,9 @@
   }
   
   .order-summary-total td {
-    font-size: 18px;
     font-weight: bold;
     padding-top: 12px;
   }
+  
+  
   

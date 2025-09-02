@@ -35,7 +35,7 @@ const OrderSummary: React.FC<Props> = ({
   return (
     <div className="order-summary">
       <h2 className="order-summary-title">
-        {t('checkout.summary.title')} <span className="edit-link">({t('checkout.summary.edit')})</span>
+        {t('checkout.summary.title')}
       </h2>
 
       <table className="order-summary-table">

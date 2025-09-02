@@ -25,7 +25,7 @@ const PaymentPage = () => {
   }));
 
   const subtotalValue = state.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const shippingCost = 7;
+  const shippingCost = 0;
   const total = (subtotalValue + shippingCost);
 
   return (

@@ -36,6 +36,7 @@ const CartPage: React.FC = () => {
                 cartTotalsTitle: labels.cartTotalsTitle,
                 description: labels.description,
                 amount: labels.amount,
+                subtotal: labels.subtotal,
                 shipping: labels.shipping,
                 total: labels.total,
                 vatNotePrefix: labels.vatNotePrefix,

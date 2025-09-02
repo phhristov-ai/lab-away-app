@@ -11,6 +11,7 @@ type CartTotalsProps = {
     cartTotalsTitle: string;
     description: string;
     amount: string;
+    subtotal: string;
     shipping: string;
     total: string;
     vatNotePrefix: string;
@@ -23,6 +24,7 @@ const CartTotals: React.FC<CartTotalsProps> = ({
   total,
   shipping,
   labels,
+  subtotal
 }) => {
   const { i18n } = useTranslation();
   const locale = i18n.language;
@@ -38,6 +40,10 @@ const CartTotals: React.FC<CartTotalsProps> = ({
           </tr>
         </thead>
         <tbody>
+          <tr>
+            <td>{labels.subtotal}</td>
+            <td>{formatCurrency(subtotal, locale)}</td>
+          </tr>
           <tr>
             <td>{labels.shipping}</td>
             <td>{formatCurrency(shipping, locale)}</td>

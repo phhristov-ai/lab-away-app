@@ -1,6 +1,9 @@
 .product-info {
     font-size: 24px;
-    min-height: 100px;
+}
+
+.product-info .product-title {
+  font-size: 18px;
 }
 
 .title-placeholder {
