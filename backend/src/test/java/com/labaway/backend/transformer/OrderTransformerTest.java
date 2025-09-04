@@ -52,7 +52,6 @@ class OrderTransformerTest {
         assertThat(dto.getStatus()).isEqualTo("PENDING");
         assertThat(dto.getTotalPrice()).isEqualByComparingTo("99.99");
         assertThat(dto.getCustomerEmail()).isEqualTo("user@example.com");
-        assertThat(dto.getCustomerPhone()).isEqualTo("123456789");
         assertThat(dto.getBillingAddress()).isEqualTo(billingDto);
         assertThat(dto.getShippingAddress()).isEqualTo(shippingDto);
         assertThat(dto.getOrderItems()).hasSize(2);
@@ -111,8 +110,7 @@ class OrderTransformerTest {
                 .createdAt(now)
                 .updatedAt(now)
                 .totalPrice(new BigDecimal("99.99"))
-                .billingEmail("user@example.com")
-                .billingPhone("123456789")
+                .customerEmail("user@example.com")
                 .billingAddress(billingAddress)
                 .shippingAddress(shippingAddress)
                 .paymentProvider(PaymentProvider.STRIPE)

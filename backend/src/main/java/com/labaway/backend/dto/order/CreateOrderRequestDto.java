@@ -20,9 +20,9 @@ import java.util.List;
 @Builder
 public class CreateOrderRequestDto {
 
-    @Email(message = "Billing email must be a valid email address")
-    @NotBlank(message = "Billing email is required")
-    private String billingEmail;
+    @Email(message = "Customer email must be a valid email address")
+    @NotBlank(message = "Customer email is required")
+    private String customerEmail;
 
     @NotBlank(message = "Billing phone is required")
     private String billingPhone;

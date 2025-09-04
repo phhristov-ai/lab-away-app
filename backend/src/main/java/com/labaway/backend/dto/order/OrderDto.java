@@ -26,9 +26,6 @@ public class OrderDto {
     @Email(message = "Customer email must be a valid email address")
     private String customerEmail;
 
-    @NotBlank(message = "Customer phone is required")
-    private String customerPhone;
-
     @NotNull(message = "Billing address is required")
     private AddressDto billingAddress;
 

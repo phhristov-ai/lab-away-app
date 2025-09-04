@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.math.BigDecimal;
+import java.util.Currency;
 import java.util.List;
 
 @Service
@@ -61,8 +62,7 @@ public class OrderService {
 
     private Order createInitialOrder(CreateOrderRequestDto dto, BigDecimal total) {
         Order order = Order.builder()
-                .billingEmail(dto.getBillingEmail())
-                .billingPhone(dto.getBillingPhone())
+                .customerEmail(dto.getCustomerEmail())
                 .billingAddress(orderTransformer.toEntity(dto.getBillingAddress()))
                 .shippingAddress(orderTransformer.toEntity(dto.getShippingAddress()))
                 .totalPrice(total)
@@ -89,11 +89,14 @@ public class OrderService {
 
     private CreatePaymentResponseDto initiatePayment(CreateOrderRequestDto dto, BigDecimal total, Order order) {
         PaymentStrategy strategy = paymentStrategyFactory.getStrategy(dto.getPaymentProvider());
+        Currency currency = Currency.getInstance("EUR");
+        int fractionDigits = currency.getDefaultFractionDigits();
+        long amount = total.movePointRight(fractionDigits).longValue();
 
         CreatePaymentRequestDto paymentRequest = CreatePaymentRequestDto.builder()
-                .amount(total.multiply(BigDecimal.valueOf(100)).longValue())
+                .amount(amount)
                 .currency("eur")
-                .customerEmail(order.getBillingEmail())
+                .customerEmail(order.getCustomerEmail())
                 .successUrl(frontendUrl + "/success?orderId=" + order.getId())
                 .cancelUrl(frontendUrl + "/cancel")
                 .build();

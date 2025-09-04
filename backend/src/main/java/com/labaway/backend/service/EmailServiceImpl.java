@@ -6,19 +6,13 @@ import com.labaway.backend.enums.Language;
 import com.labaway.backend.exception.EmailSendingException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.NumberFormat;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -46,7 +40,7 @@ public class EmailServiceImpl implements EmailService {
                     "UTF-8"
             );
 
-            helper.setTo(order.getBillingEmail());
+            helper.setTo(order.getCustomerEmail());
             helper.setFrom(fromEmail);
             helper.setSubject("Your order has been confirmed");
 
@@ -78,13 +72,14 @@ public class EmailServiceImpl implements EmailService {
         context.setVariable("billingCity", order.getBillingAddress().getCity());
         context.setVariable("billingPostCode", order.getBillingAddress().getPostCode());
         context.setVariable("billingCountry", order.getBillingAddress().getCountry());
-        context.setVariable("billingPhone", order.getBillingPhone());
-        context.setVariable("billingEmail", order.getBillingEmail());
+        context.setVariable("billingPhone", order.getBillingAddress());
+        context.setVariable("customerEmail", order.getCustomerEmail());
 
         context.setVariable("shippingName", order.getShippingAddress().getFirstName() + " " + order.getShippingAddress().getLastName());
         context.setVariable("shippingAddress", order.getShippingAddress().getStreetAddress());
         context.setVariable("shippingCity", order.getShippingAddress().getCity());
         context.setVariable("shippingPostCode", order.getShippingAddress().getPostCode());
+        context.setVariable("shippingPhone", order.getShippingAddress().getPhone());
         context.setVariable("shippingCountry", order.getShippingAddress().getCountry());
 
         context.setVariable("paymentMethod", order.getPaymentProvider().toString());

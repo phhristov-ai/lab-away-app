@@ -31,4 +31,7 @@ public class Address {
 
     @Column(nullable = false)
     private String postCode;
+
+    @Column(nullable = false)
+    private String phone;
 }

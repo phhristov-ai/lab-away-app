@@ -29,4 +29,7 @@ public class AddressDto {
 
     @NotBlank(message = "Post code is required")
     private String postCode;
+
+    @NotBlank(message = "Phone number is required")
+    private String phone;
 }

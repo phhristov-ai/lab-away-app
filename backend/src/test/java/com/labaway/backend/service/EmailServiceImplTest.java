@@ -113,8 +113,7 @@ class EmailServiceImplTest {
 
         Order order = Order.builder()
                 .id(UUID.randomUUID())
-                .billingEmail("pastorrich@therroc.org")
-                .billingPhone("6193807070")
+                .customerEmail("pastorrich@therroc.org")
                 .billingAddress(billing)
                 .shippingAddress(shipping)
                 .paymentProvider(PaymentProvider.STRIPE)

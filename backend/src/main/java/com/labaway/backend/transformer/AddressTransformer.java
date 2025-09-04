@@ -19,6 +19,7 @@ public class AddressTransformer {
                 .address(address.getStreetAddress())
                 .city(address.getCity())
                 .postCode(address.getPostCode())
+                .phone(address.getPhone())
                 .build();
     }
 
@@ -34,6 +35,7 @@ public class AddressTransformer {
                 .streetAddress(dto.getAddress())
                 .city(dto.getCity())
                 .postCode(dto.getPostCode())
+                .phone(dto.getPhone())
                 .build();
     }
 }

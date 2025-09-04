@@ -23,7 +23,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -166,10 +165,10 @@ class OrderServiceTest {
     }
 
     private CreateOrderRequestDto buildCreateOrderRequestDto() {
-        AddressDto addressDto = new AddressDto("John", "Doe", "Country", "Address", "City", "12345");
+        AddressDto addressDto = new AddressDto("John", "Doe", "Country", "Address", "City", "12345", "+359892153902");
         OrderItemDto itemDto = new OrderItemDto("test-product", 1, BigDecimal.TEN);
         return CreateOrderRequestDto.builder()
-                .billingEmail("test@example.com")
+                .customerEmail("test@example.com")
                 .billingPhone("123456")
                 .billingAddress(addressDto)
                 .shippingAddress(addressDto)
@@ -185,8 +184,7 @@ class OrderServiceTest {
 
         Order order = Order.builder()
                 .orderNumber(orderNumber)
-                .billingEmail("test@example.com")
-                .billingPhone("123456")
+                .customerEmail("test@example.com")
                 .billingAddress(billing)
                 .shippingAddress(shipping)
                 .stripeSessionId("test-session-id")
@@ -213,12 +211,11 @@ class OrderServiceTest {
                 .orderNumber(orderNumber)
                 .status("PENDING")
                 .customerEmail("test@example.com")
-                .customerPhone("123456")
                 .totalPrice(BigDecimal.TEN)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
-                .billingAddress(new AddressDto("John", "Doe", "Country", "Address", "City", "12345"))
-                .shippingAddress(new AddressDto("John", "Doe", "Country", "Address", "City", "12345"))
+                .billingAddress(new AddressDto("John", "Doe", "Country", "Address", "City", "12345", "+359892153902"))
+                .shippingAddress(new AddressDto("John", "Doe", "Country", "Address", "City", "12345", "+359892153902"))
                 .orderItems(List.of(OrderItemDto.builder().quantity(1).price(BigDecimal.TEN).build()))
                 .paymentProvider(PaymentProvider.STRIPE)
                 .build();

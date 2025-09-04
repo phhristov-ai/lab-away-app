@@ -31,20 +31,8 @@ public class Order {
     @Column(name = "order_number", nullable = false, unique = true, updatable = false)
     private String orderNumber;
 
-    @Column(name = "billing_email", nullable = false)
-    private String billingEmail;
-
-    @Column(name = "billing_phone", nullable = false)
-    private String billingPhone;
-
-    @Embedded
-    @AttributeOverride(name = "firstName", column = @Column(name = "billing_first_name", nullable = false))
-    @AttributeOverride(name = "lastName", column = @Column(name = "billing_last_name", nullable = false))
-    @AttributeOverride(name = "country", column = @Column(name = "billing_country", nullable = false))
-    @AttributeOverride(name = "streetAddress", column = @Column(name = "billing_address", nullable = false))
-    @AttributeOverride(name = "city", column = @Column(name = "billing_city", nullable = false))
-    @AttributeOverride(name = "postCode", column = @Column(name = "billing_post_code", nullable = false))
-    private Address billingAddress;
+    @Column(name = "customer_email", nullable = false)
+    private String customerEmail;
 
     @Embedded
     @AttributeOverride(name = "firstName", column = @Column(name = "shipping_first_name", nullable = false))
@@ -53,7 +41,18 @@ public class Order {
     @AttributeOverride(name = "streetAddress", column = @Column(name = "shipping_address", nullable = false))
     @AttributeOverride(name = "city", column = @Column(name = "shipping_city", nullable = false))
     @AttributeOverride(name = "postCode", column = @Column(name = "shipping_post_code", nullable = false))
+    @AttributeOverride(name = "phone", column = @Column(name = "shipping_phone", nullable = false))
     private Address shippingAddress;
+
+    @Embedded
+    @AttributeOverride(name = "firstName", column = @Column(name = "billing_first_name", nullable = false))
+    @AttributeOverride(name = "lastName", column = @Column(name = "billing_last_name", nullable = false))
+    @AttributeOverride(name = "country", column = @Column(name = "billing_country", nullable = false))
+    @AttributeOverride(name = "streetAddress", column = @Column(name = "billing_address", nullable = false))
+    @AttributeOverride(name = "city", column = @Column(name = "billing_city", nullable = false))
+    @AttributeOverride(name = "postCode", column = @Column(name = "billing_post_code", nullable = false))
+    @AttributeOverride(name = "phone", column = @Column(name = "billing_phone", nullable = false))
+    private Address billingAddress;
 
     @Column(name = "total_price", nullable = false)
     private BigDecimal totalPrice;
