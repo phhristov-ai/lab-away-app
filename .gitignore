@@ -3,6 +3,11 @@
 /backend/.idea/
 /backend/*.iml
 
+# === Backend Integration ===
+/backend-integration/target
+/backend-integration/.idea/
+/backend-integration/*.iml
+
 # === Frontend ===
 /frontend/node_modules/
 /frontend/build/
