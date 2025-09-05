@@ -1,2 +1,4 @@
-package com.labaway.integration.dto;public class CategoryDto {
+package com.labaway.integration.dto;
+
+public class CategoryDto {
 }

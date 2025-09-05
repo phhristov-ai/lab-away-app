@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 const PaymentPage = () => {
   const { t } = useTranslation();
   const { state } = useCart();
-  const { shippingData, billingData } = useCheckout();
+  const { shippingData } = useCheckout();
   const [paymentMethod, setPaymentMethod] = useState<'creditCard' | 'paypal'>('creditCard');
 
   const enrichedItems = state.items.map(item => ({
@@ -76,7 +76,7 @@ const PaymentPage = () => {
                 phone: shippingData.phone,
                 city: `${shippingData.postcode} ${shippingData.city}`,
                 country: shippingData.country,
-                email: billingData.email,
+                email: shippingData.email,
               }}
               subtotal={subtotalValue}
               shippingCost={shippingCost}

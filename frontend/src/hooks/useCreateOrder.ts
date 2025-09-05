@@ -13,6 +13,7 @@ type Address = {
   city: string;
   country: string;
   postCode: string;
+  phone: string;
 };
 
 type OrderItem = {
@@ -22,8 +23,7 @@ type OrderItem = {
 };
 
 type CreateOrderPayload = {
-  billingEmail: string;
-  billingPhone: string;
+  customerEmail: string;
   billingAddress: Address;
   shippingAddress: Address;
   items: OrderItem[];

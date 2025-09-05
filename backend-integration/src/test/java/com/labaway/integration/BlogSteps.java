@@ -1,2 +1,6 @@
-package com.labaway.integration;public class BlogSteps {
+package com.labaway.integration;
+
+public class BlogSteps {
+
+
 }

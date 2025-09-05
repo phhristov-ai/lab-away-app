@@ -4,14 +4,18 @@ import { useTranslation } from 'react-i18next';
 type FormData = Record<string, string>;
 type Errors = Record<string, string>;
 
-const requiredFields = ['firstName', 'lastName', 'country', 'address', 'city', 'postcode'];
+const requiredFields = ['firstName', 'lastName', 'country', 'email', 'phone', 'address', 'city', 'postcode'];
 
 export function useShippingForm(onChange: (data: FormData) => void) {
   const { t } = useTranslation();
   const [formData, setFormData] = useState<FormData>({});
   const [errors, setErrors] = useState<Errors>({});
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+type SyntheticOrFakeEvent =
+  | React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  | { target: { id: string; value: string } };
+
+const handleChange = (e: SyntheticOrFakeEvent) => {
     const { id, value } = e.target;
     const updatedData = { ...formData, [id]: value };
     setFormData(updatedData);

@@ -15,7 +15,7 @@ const FormField: React.FC<FormFieldProps> = ({ id, label, type = 'text', onChang
       type={type}
       className="input-cell"
       id={id}
-      name={id}
+      name={label}
       onChange={onChange}
     />
     {error && <p className="error-message">{error}</p>}

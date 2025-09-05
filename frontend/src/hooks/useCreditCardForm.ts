@@ -27,8 +27,7 @@ export const useCreditCardForm = () => {
 
     try {
       const orderData = {
-        billingEmail: billingData.email,
-        billingPhone: billingData.phone,
+        customerEmail: shippingData.email,
         paymentProvider: PaymentProvider.STRIPE,
         billingAddress: {
           firstName: billingData.firstName,
@@ -37,6 +36,7 @@ export const useCreditCardForm = () => {
           city: billingData.city,
           country: billingData.country,
           postCode: billingData.postcode,
+          phone: billingData.phone
         },
         shippingAddress: {
           firstName: shippingData.firstName,
@@ -45,6 +45,8 @@ export const useCreditCardForm = () => {
           city: shippingData.city,
           country: shippingData.country,
           postCode: shippingData.postcode,
+          phone: shippingData.phone,
+
         },
         items: state.items.map(item => ({
           slug: item.slug,

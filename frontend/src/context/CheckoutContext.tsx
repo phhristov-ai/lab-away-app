@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useMemo } from 'react';
 
 interface CheckoutContextType {
   billingData: Record<string, string>;
@@ -13,8 +13,15 @@ export const CheckoutProvider: React.FC<{ children: ReactNode }> = ({ children }
   const [billingData, setBillingData] = useState<Record<string, string>>({});
   const [shippingData, setShippingData] = useState<Record<string, string>>({});
 
+  const contextValue = useMemo(() => ({
+    billingData,
+    setBillingData,
+    shippingData,
+    setShippingData,
+  }), [billingData, setBillingData, shippingData, setShippingData]);
+
   return (
-    <CheckoutContext.Provider value={{ billingData, setBillingData, shippingData, setShippingData }}>
+    <CheckoutContext.Provider value={contextValue}>
       {children}
     </CheckoutContext.Provider>
   );

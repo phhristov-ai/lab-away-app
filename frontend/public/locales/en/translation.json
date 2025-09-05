@@ -106,25 +106,24 @@
     "copyright": "© 2025 Lab Away - Home test kits for STI/STDs and Drugs Test"
   },
   "checkout": {
+    "email": "Email address",
     "steps": {
       "orderSummary": "Order Summary",
       "billingShipping": "Billing & Shipping",
       "orderPayment": "Order & Payment",
-      "thankYou" : "Order Confirmation"
+      "thankYou": "Order Confirmation"
     },
     "billing": {
       "title": "Billing Details",
       "fields": {
         "firstName": "First name",
         "lastName": "Last name",
-        "email": "Email address",
         "phone": "Phone",
         "country": "Country / Region *",
         "address": "Street address",
         "city": "Town / City",
         "postcode": "Postcode / ZIP"
-      },
-      "shipToDifferent": "Ship to a different address?"
+      }
     },
     "shipping": {
       "title": "Shipping Details",
@@ -133,9 +132,11 @@
         "lastName": "Last name",
         "country": "Country / Region *",
         "address": "Street address",
+        "phone": "Phone",
         "city": "Town / City",
         "postcode": "Postcode / ZIP"
-      }
+      },
+      "useDifferentBilling": "Use a different billing address?"
     },
     "cart": {
       "title": "Your Tests",
@@ -153,7 +154,7 @@
       "title": "Cart Totals",
       "description": "Description",
       "amount": "Amount",
-      "subtotal" : "Subtotal",
+      "subtotal": "Subtotal",
       "vatNotePrefix": "(includes VAT)"
     },
     "payment": {
@@ -327,11 +328,11 @@
     },
     "invalid": "Invalid success page – missing order details."
   },
-  "form" : {
-    "errors" : {
-      "required" : "Required",
-      "invalidEmail" : "Email is invalid",
-      "invalidPhone" : "Phone is invalid"
+  "form": {
+    "errors": {
+      "required": "Required",
+      "invalidEmail": "Email is invalid",
+      "invalidPhone": "Phone is invalid"
     }
   }
 }

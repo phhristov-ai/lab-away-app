@@ -7,7 +7,6 @@ type Errors = Record<string, string>;
 const requiredFields = [
   'firstName',
   'lastName',
-  'email',
   'phone',
   'country',
   'address',

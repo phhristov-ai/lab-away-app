@@ -2,7 +2,7 @@ import React from 'react';
 import CartItems from '../components/checkout/cart/CartItems';
 import CartTotals from '../components/checkout/cart/CartTotals';
 import CheckoutLayout from '../layouts/CheckoutLayout';
-import CustomButton from '../components/checkout/billing/CustomButton';
+import CustomButton from '../components/checkout/shipping/CustomButton';
 import { useNavigate } from 'react-router-dom';
 import './CartPage.css';
 import { useCartPage } from '../hooks/useCartPage';

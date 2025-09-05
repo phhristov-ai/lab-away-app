@@ -7,7 +7,7 @@ import BlogPostPage from './pages/BlogPostPage';
 import Footer from './components/footer/Footer';
 import './App.css';
 import CartPage from './pages/CartPage';
-import BillingPage from './pages/BillingPage';
+import BillingPage from './pages/ShippingPage';
 import PaymentPage from './pages/PaymentPage';
 import { CartProvider } from './context/CartContext';
 import ScrollToTop from './components/common/ScrollToTop';
