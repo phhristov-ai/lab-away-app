@@ -4,7 +4,7 @@ import OrderSummaryImg from '../assets/images/checkout/Order-Summary.png';
 import BillingShippingImg from '../assets/images/checkout/Billing-Shipping.png';
 import OrderPaymentImg from '../assets/images/checkout/Order-Payment.png';
 import './CheckoutLayout.css';
-
+import RandomProductRow from '../components/common/RandomProducts';
 import { useLocation } from 'react-router-dom';
 import CheckoutGraph from '../components/checkout/cart/CheckoutGraph';
 import { useTranslation } from 'react-i18next';
@@ -49,6 +49,7 @@ const CheckoutLayout: React.FC<CheckoutLayoutProps> = ({ children }) => {
     <div className="checkout-layout">
       <CheckoutGraph steps={steps} />
       <div className="checkout-content">{children}</div>
+      <RandomProductRow />
     </div>
   );
 };

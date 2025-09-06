@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -6,16 +7,31 @@ type Errors = Record<string, string>;
 
 const requiredFields = ['firstName', 'lastName', 'country', 'email', 'phone', 'address', 'city', 'postcode'];
 
-export function useShippingForm(onChange: (data: FormData) => void) {
+export function useShippingForm(onChange: (data: FormData) => void, initialValues: Record<string, string>) {
   const { t } = useTranslation();
-  const [formData, setFormData] = useState<FormData>({});
+  const [formData, setFormData] = useState<FormData>(initialValues);
   const [errors, setErrors] = useState<Errors>({});
 
-type SyntheticOrFakeEvent =
-  | React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  | { target: { id: string; value: string } };
+  type SyntheticOrFakeEvent =
+    | React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    | { target: { id: string; value: string } };
 
-const handleChange = (e: SyntheticOrFakeEvent) => {
+
+  const [useDifferentBilling, setUseDifferentBilling] = useState<boolean>(() => {
+    if (initialValues.differentBilling !== undefined) {
+      return Boolean(initialValues.differentBilling);
+    }
+    const saved = localStorage.getItem('differentBilling');
+    return saved ? JSON.parse(saved) : false;
+  });
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked;
+    setUseDifferentBilling(checked);
+    localStorage.setItem('differentBilling', JSON.stringify(checked));
+  };
+
+  const handleChange = (e: SyntheticOrFakeEvent) => {
     const { id, value } = e.target;
     const updatedData = { ...formData, [id]: value };
     setFormData(updatedData);
@@ -40,5 +56,12 @@ const handleChange = (e: SyntheticOrFakeEvent) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  return { formData, errors, handleChange, validate };
+  return {
+    formData,
+    errors,
+    handleChange,
+    validate,
+    useDifferentBilling,
+    handleCheckboxChange,
+  };
 }

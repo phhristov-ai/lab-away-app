@@ -28,6 +28,13 @@ export const fetchBlogPost = async (slug: string, lang: string) => {
   return response.data;
 };
 
+export const fetchRandomBlogs = async (lang: string) => {
+  const response = await axiosInstance.get('/blogs/random', {
+    params: { lang: lang.toUpperCase() },
+  });
+  return response.data;
+};
+
 const sendBlogRequest = async (
   {
     slug,

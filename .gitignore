@@ -15,6 +15,8 @@
 #/frontend/.env*
 # Keep frontend folder but ignore unneeded stuff
 
+*.iml
+
 # === System / Logs ===
 .DS_Store
 *.log

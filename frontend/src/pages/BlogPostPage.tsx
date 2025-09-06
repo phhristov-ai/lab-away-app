@@ -5,6 +5,7 @@ import './AdminBlogPost.css';
 import { formatDate } from '../utils/format';
 import AdminActionButtons from '../components/admin/AdminActionButtons';
 import CategorySelect from '../components/admin/CategorySelect';
+import BlogPostGrid from '../components/blog/BlogPostGrid';
 
 const BlogPostPage: React.FC = () => {
   const {
@@ -29,7 +30,8 @@ const BlogPostPage: React.FC = () => {
     handleDeleteClick,
     handleConfirmDelete,
     setShowConfirmDelete,
-    i18n
+    i18n,
+    randomPosts
   } = useBlogPost();
 
   if (slug === "new" && !isAdmin) {
@@ -113,11 +115,13 @@ const BlogPostPage: React.FC = () => {
             className="admin-post-textarea"
           />
         ) : (
-          <div
+          <div><div
             className="blog-post-content"
             dangerouslySetInnerHTML={{ __html: post?.content ?? location.state?.content }}
-          />)}
-
+          />
+          <BlogPostGrid blogPosts={randomPosts} />
+          </div>
+          )}
 
         {isAdmin && (
           <AdminActionButtons
@@ -134,8 +138,7 @@ const BlogPostPage: React.FC = () => {
         )}
 
       </div>
-
-      {post && (
+      {!isAdmin && post && (
         <aside className="blog-post-sidebar">
           <RandomProducts direction="column" categorySlug={post.categories?.[0]?.slug} />
         </aside>

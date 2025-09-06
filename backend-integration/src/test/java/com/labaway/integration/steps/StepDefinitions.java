@@ -1,4 +1,4 @@
-package com.labaway.integration;
+package com.labaway.integration.steps;
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;

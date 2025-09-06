@@ -19,7 +19,7 @@
 
   <properties>
     <java.version>17</java.version>
-    <cucumber.version>7.12.1</cucumber.version> <!-- Latest stable Cucumber -->
+    <cucumber.version>7.28.1</cucumber.version>
   </properties>
 
   <dependencies>
@@ -35,6 +35,11 @@
           <artifactId>junit</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
     <!-- JUnit 5 -->
@@ -59,10 +64,9 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- Optional: if you want to write feature files in resources -->
     <dependency>
       <groupId>io.cucumber</groupId>
-      <artifactId>cucumber-picocontainer</artifactId>
+      <artifactId>cucumber-spring</artifactId>
       <version>${cucumber.version}</version>
       <scope>test</scope>
     </dependency>

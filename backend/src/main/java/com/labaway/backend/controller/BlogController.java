@@ -26,7 +26,7 @@ public class BlogController {
         return blogService.getAllBlogsForPreview(lang);
     }
 
-    @GetMapping("/random-by-category")
+    @GetMapping("/random")
     public List<BlogPreviewDto> getRandomBlogs(
             @RequestParam(defaultValue = "EN") Language lang) {
         return blogService.getRandomBlogPreviews(lang);

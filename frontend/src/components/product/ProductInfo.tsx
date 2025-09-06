@@ -5,6 +5,7 @@ import QuantitySelector from './QuantitySelector';
 import { useTranslation } from 'react-i18next';
 import '../../pages/BlogPostPage.css';
 import { useProductInfo } from '../../hooks/useProductInfo';
+import { useNavigate } from 'react-router-dom';
 
 type ProductInfoProps = {
   title: string;
@@ -32,9 +33,9 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
 
   const [quantity, setQuantity] = useState(1);
   const { t } = useTranslation();
-
+  const navigate = useNavigate();
   const handleAddToCart = () => {
-    console.log('Item added to cart');
+    navigate('/cart');
   };
 
   return (

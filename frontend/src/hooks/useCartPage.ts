@@ -2,11 +2,13 @@ import { useTranslation } from "react-i18next";
 import { useCart } from "../context/CartContext";
 import { useEffect } from "react";
 import { trackGAEvent } from "../utils/analytics";
+import { useNavigate } from "react-router-dom";
 
 export const useCartPage = () => {
     const { state } = useCart();
     const { t } = useTranslation();
-
+    const navigate = useNavigate();
+    
     const enrichedItems = state.items.map(item => ({
         ...item,
         inclVat: t('checkout.cart.inclVat'),
@@ -19,6 +21,13 @@ export const useCartPage = () => {
     const vat = 0; // You might want to calculate this dynamically later
     const shippingCost = 0; // Free shipping
     const total = subtotalValue + shippingCost;
+
+    useEffect(() => {
+        if (state.items.length === 0) {
+            navigate('/');
+        }
+    }, [state.items, navigate]);
+
 
     useEffect(() => {
         if (enrichedItems.length > 0) {

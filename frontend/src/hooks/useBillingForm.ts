@@ -14,9 +14,9 @@ const requiredFields = [
   'postcode'
 ];
 
-export function useBillingForm(onChange: (data: FormData) => void) {
+export function useBillingForm(onChange: (data: FormData) => void, initialValues: Record<string, string>) {
   const { t } = useTranslation();
-  const [formData, setFormData] = useState<FormData>({});
+  const [formData, setFormData] = useState<FormData>(initialValues);
   const [errors, setErrors] = useState<Errors>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {

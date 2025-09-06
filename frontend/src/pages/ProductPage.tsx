@@ -66,7 +66,7 @@ const ProductPage: React.FC = () => {
               onChange={handleCategoryChange}
             />
           )}
-          <ProductInfo
+          {!isAdmin && (<ProductInfo
             title={title}
             price={price}
             image={
@@ -77,7 +77,7 @@ const ProductPage: React.FC = () => {
             slug={product.slug}
             onTitleChange={setTitle}
             onPriceChange={setPrice}
-          />
+          />)}
           {isAdmin && (
             <AdminActionButtons
               isNew={slug === "new"}
@@ -98,7 +98,6 @@ const ProductPage: React.FC = () => {
 
       <div className="product-sections">
         <ThreeColumnLayout columns={columns} />
-
         <div className="accordion-section">
           <h2 className="faq-title">{t('productPage.faq.title')}</h2>
           <Accordion items={faqItems} />

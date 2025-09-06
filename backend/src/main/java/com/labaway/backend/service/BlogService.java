@@ -45,7 +45,7 @@ public class BlogService {
     public BlogResponseDto createBlog(BlogDto blogDto, MultipartFile file) throws IOException {
         TranslationDto translation = blogDto.getTranslation();
         Language lang = translation.getLanguage();
-        String title = translation.getTitle();
+        String title = translation.getTitle().trim();
         String slug = generateSlug(title);
         if (blogRepository.findBySlug(slug).isPresent()) {
             throw new IllegalArgumentException("A blog with this slug already exists: " + slug);

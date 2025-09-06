@@ -9,16 +9,36 @@ interface CheckoutContextType {
 
 const CheckoutContext = createContext<CheckoutContextType | undefined>(undefined);
 
+const STORAGE_KEYS = {
+  billing: 'checkout_billingData',
+  shipping: 'checkout_shippingData',
+};
+
 export const CheckoutProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [billingData, setBillingData] = useState<Record<string, string>>({});
-  const [shippingData, setShippingData] = useState<Record<string, string>>({});
+  const [billingData, setBillingData] = useState<Record<string, string>>(() => {
+    const saved = localStorage.getItem(STORAGE_KEYS.billing);
+    return saved ? JSON.parse(saved) : {};
+  });
+
+  const [shippingData, setShippingData] = useState<Record<string, string>>(() => {
+    const saved = localStorage.getItem(STORAGE_KEYS.shipping);
+    return saved ? JSON.parse(saved) : {};
+  });
+
+  React.useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.billing, JSON.stringify(billingData));
+  }, [billingData]);
+
+  React.useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.shipping, JSON.stringify(shippingData));
+  }, [shippingData]);
 
   const contextValue = useMemo(() => ({
     billingData,
     setBillingData,
     shippingData,
     setShippingData,
-  }), [billingData, setBillingData, shippingData, setShippingData]);
+  }), [billingData, shippingData]);
 
   return (
     <CheckoutContext.Provider value={contextValue}>
@@ -26,6 +46,7 @@ export const CheckoutProvider: React.FC<{ children: ReactNode }> = ({ children }
     </CheckoutContext.Provider>
   );
 };
+
 
 export const useCheckout = () => {
   const context = useContext(CheckoutContext);

@@ -14,10 +14,11 @@ export type BillingFormHandle = {
 
 type BillingFormProps = {
   onChange: (data: Record<string, string>) => void;
+  initialValues?: Record<string, string>;
 };
 
-const BillingForm = forwardRef<BillingFormHandle, BillingFormProps>(({ onChange }, ref) => {
-  const { errors, handleChange, validate } = useBillingForm(onChange);
+const BillingForm = forwardRef<BillingFormHandle, BillingFormProps>(({ onChange, initialValues }, ref) => {
+  const { errors, handleChange, validate, formData } = useBillingForm(onChange, initialValues || {});
   useImperativeHandle(ref, () => ({ validate }));
 
   return (
@@ -25,19 +26,19 @@ const BillingForm = forwardRef<BillingFormHandle, BillingFormProps>(({ onChange 
       <h2>{t('checkout.billing.title')}</h2>
       <form>
         <div className="form-row">
-          <FormField id="firstName" label={t('checkout.billing.fields.firstName')} onChange={handleChange} error={errors.firstName} />
-          <FormField id="lastName" label={t('checkout.billing.fields.lastName')} onChange={handleChange} error={errors.lastName} />
+          <FormField id="firstName" value={formData.firstName || ''} label={t('checkout.billing.fields.firstName')} onChange={handleChange} error={errors.firstName} />
+          <FormField id="lastName" value={formData.lastName || ''} label={t('checkout.billing.fields.lastName')} onChange={handleChange} error={errors.lastName} />
         </div>
         <div className="form-row">
-          <CountryDropdown id="country" label={t('checkout.billing.fields.country')} onChange={handleChange} error={errors.country} />
-          <FormField id="address" label={t('checkout.billing.fields.address')} onChange={handleChange} error={errors.address} />
+          <CountryDropdown id="country" value={formData.country || ''} label={t('checkout.billing.fields.country')} onChange={handleChange} error={errors.country} />
+          <FormField id="address" value={formData.address || ''} label={t('checkout.billing.fields.address')} onChange={handleChange} error={errors.address} />
         </div>
         <div className="form-row">
-          <FormField id="phone" label={t('checkout.shipping.fields.phone')} onChange={handleChange} error={errors.phone} />
+          <FormField id="phone" value={formData.phone || ''} label={t('checkout.shipping.fields.phone')} onChange={handleChange} error={errors.phone} />
         </div>
         <div className="form-row">
-          <FormField id="city" label={t('checkout.billing.fields.city')} onChange={handleChange} error={errors.city} />
-          <FormField id="postcode" label={t('checkout.billing.fields.postcode')} onChange={handleChange} error={errors.postcode} />
+          <FormField id="city" value={formData.city || ''} label={t('checkout.billing.fields.city')} onChange={handleChange} error={errors.city} />
+          <FormField id="postcode" value={formData.postcode || ''} label={t('checkout.billing.fields.postcode')} onChange={handleChange} error={errors.postcode} />
         </div>
       </form>
     </div>

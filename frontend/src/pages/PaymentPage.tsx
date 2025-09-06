@@ -1,32 +1,19 @@
 import OrderSummary from "../components/checkout/payment/OrderSummary";
 import CheckoutLayout from "../layouts/CheckoutLayout";
-import { useCart } from "../context/CartContext";
 import StripeProviderWrapper from "../components/checkout/payment/StripeProviderWrapper";
 import CreditCardForm from "../components/checkout/payment/CreditCardForm";
 import { useState } from "react";
 import './PaymentPage.css';
 import PayPalForm from "../components/checkout/payment/PayPalForm";
 import { useCheckout } from "../context/CheckoutContext";
-
 import { useTranslation } from 'react-i18next';
+import { useCheckoutSummary } from "../hooks/useCheckoutSummary";
 
 const PaymentPage = () => {
   const { t } = useTranslation();
-  const { state } = useCart();
   const { shippingData } = useCheckout();
   const [paymentMethod, setPaymentMethod] = useState<'creditCard' | 'paypal'>('creditCard');
-
-  const enrichedItems = state.items.map(item => ({
-    ...item,
-    subTitle: t('checkout.cart.columns.immediateResults'),
-    subtotal: (item.price * item.quantity),
-    title: item.name,
-    product: item.name,
-  }));
-
-  const subtotalValue = state.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const shippingCost = 0;
-  const total = (subtotalValue + shippingCost);
+  const { enrichedItems, subtotalValue, shippingCost, total } = useCheckoutSummary();
 
   return (
     <CheckoutLayout>

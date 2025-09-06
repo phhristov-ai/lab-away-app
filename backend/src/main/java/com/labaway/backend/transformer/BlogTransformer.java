@@ -60,8 +60,8 @@ public class BlogTransformer {
     private BlogTranslation createTranslation(TranslationDto dto, Blog blog) {
         return BlogTranslation.builder()
                 .language(dto.getLanguage())
-                .title(dto.getTitle())
-                .content(dto.getContent())
+                .title(dto.getTitle().trim())
+                .content(dto.getContent().trim())
                 .readingTime(estimateReadingTime(dto.getContent()))
                 .blog(blog)
                 .build();

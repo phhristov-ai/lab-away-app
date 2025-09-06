@@ -3,7 +3,7 @@ import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAdmin } from '../context/AdminContext';
 import { Category, fetchCategories } from '../services/categoriesService';
-import { deleteBlogPost, fetchBlogPost, saveBlogPost, updateBlogPost } from '../services/blogPostService';
+import { BlogPostType, deleteBlogPost, fetchBlogPost, fetchRandomBlogs, saveBlogPost, updateBlogPost } from '../services/blogPostService';
 
 export function useBlogPost() {
   const { slug } = useParams<{ slug: string }>();
@@ -22,7 +22,7 @@ export function useBlogPost() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
-
+  const [randomPosts, setRandomPosts] = useState<BlogPostType[]>([]);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const handleDeleteClick = () => {
     setShowConfirmDelete(true);
@@ -142,8 +142,6 @@ export function useBlogPost() {
     }
   };
 
-
-
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -163,6 +161,20 @@ export function useBlogPost() {
       throw err;
     }
   };
+
+  useEffect(() => {
+    const loadRandomPosts = async () => {
+      try {
+        const posts = await fetchRandomBlogs(i18n.language);
+        setRandomPosts(posts);
+      } catch (error) {
+        console.error('Failed to fetch random posts:', error);
+      }
+    };
+
+    loadRandomPosts();
+  }, [i18n.language]);
+
 
   return {
     slug,
@@ -186,6 +198,7 @@ export function useBlogPost() {
     handleDeleteClick,
     handleConfirmDelete,
     setShowConfirmDelete,
-    i18n
+    i18n,
+    randomPosts
   };
 }
