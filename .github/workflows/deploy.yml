@@ -31,6 +31,7 @@ jobs:
         working-directory: ./frontend
         env:
           REACT_APP_PAYPAL_CLIENT_ID: ${{ secrets.REACT_APP_PAYPAL_CLIENT_ID }}
+          REACT_APP_API_BASE_URL: ${{ secrets.REACT_APP_API_BASE_URL }}
         run: |
           npm install --legacy-peer-deps
           CI='' npm run build
