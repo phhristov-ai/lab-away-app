@@ -1,7 +1,7 @@
-package com.labaway.integration.dto;
+package com.labaway.integration.dto.blog;
 
+import com.labaway.integration.dto.category.CategoryDto;
 import groovy.transform.builder.Builder;
-import io.cucumber.java.it.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 

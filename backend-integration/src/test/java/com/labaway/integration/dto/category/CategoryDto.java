@@ -1,4 +1,4 @@
-package com.labaway.integration.dto;
+package com.labaway.integration.dto.category;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
