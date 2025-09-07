@@ -52,7 +52,6 @@ public class BlogController {
         }
     }
 
-
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/{slug}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BlogResponseDto> updateBlog(

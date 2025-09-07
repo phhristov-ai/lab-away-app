@@ -4,6 +4,7 @@ import com.labaway.integration.dto.category.CategoryDto;
 import groovy.transform.builder.Builder;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.Instant;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class BlogResponseDto {
 
     private String slug;

@@ -12,8 +12,6 @@ import java.util.UUID;
 
 public interface BlogRepository extends JpaRepository<Blog, UUID> {
     Optional<Blog> findBySlug(String slug);
-    void deleteBySlug(String slug);
-
     @Query(value = "SELECT * FROM blog_preview_view WHERE language = :language", nativeQuery = true)
     List<BlogPreviewProjection> findAllBlogsForPreview(@Param("language") String language);
 

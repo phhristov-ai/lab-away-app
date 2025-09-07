@@ -13,8 +13,8 @@ import java.util.UUID;
 @Service
 public class S3Service {
 
-    private final AmazonS3 amazonS3;
-    private final AwsProperties awsProperties;
+    protected final AmazonS3 amazonS3;
+    protected final AwsProperties awsProperties;
 
     public S3Service(AmazonS3 amazonS3, AwsProperties awsProperties) {
         this.amazonS3 = amazonS3;

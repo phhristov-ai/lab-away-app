@@ -78,8 +78,6 @@ public class ProductTransformer {
         }
     }
 
-
-
     private String generateSlug(String name) {
         if (name == null || name.isBlank()) {
             return "";

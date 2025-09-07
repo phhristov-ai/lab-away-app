@@ -56,7 +56,7 @@ public class BlogService {
         blog.setSlug(slug);
         uploadImageIfPresent(blog, file);
 
-        Blog savedBlog = blogRepository.save(blog);
+        Blog savedBlog =  blogRepository.saveAndFlush(blog);
         return blogTransformer.toDto(savedBlog, lang);
     }
 
