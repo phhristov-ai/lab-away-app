@@ -11,7 +11,8 @@ type ShippingInfo = {
   address: string;
   phone: string;
   city: string;
-  country: string;
+  countryName: string;
+  countryCode: string;
   email: string;
 };
 

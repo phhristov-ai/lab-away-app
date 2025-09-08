@@ -5,6 +5,7 @@ import { useCart } from "../../../context/CartContext";
 import './CartItemRow.css';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '../../../utils/format';
+import { Link } from 'react-router-dom';
 
 type Props = {
   item: CartItem & {
@@ -34,9 +35,19 @@ const CartItemRow: React.FC<Props> = ({ item }) => {
       <td data-label="Product">
         <div className="product-cell">
           <button className="remove-button" onClick={handleRemoveItem}>×</button>
-          <img src={item.image} alt={item.product} className="product-image" />
+          <Link to={`/product/${item.slug}`}>
+            <img
+              src={item.image}
+              alt={item.product}
+              className="product-image"
+            />
+          </Link>
           <div className="product-info">
-            <span className="product-title">{item.title}</span>
+            <Link to={`/product/${item.slug}`} className="product-title-link">
+              <span className="product-title" >
+                {item.title}
+              </span>
+            </Link>
           </div>
         </div>
       </td>

@@ -1,44 +1,45 @@
 .order-summary {
-    background-color: var(--background-color);
-    border-radius: 8px;
-  }
-  
-  .order-summary-title {
-    font-size: 20px;
-    margin-bottom: 16px;
-  }
-  
-  .order-summary-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .order-summary-table td {
-    padding: 5px;
-  }
-  
-  .order-summary-price {
-    text-align: right;
-    white-space: nowrap;
-  }
-  
-  .order-summary-item td {
-    border-bottom: 1px solid #e0e0e0;
-  }
-  
-  .order-summary-section td {
-    padding-top: 16px;
-    font-weight: bold;
-  }
-  
-  .order-summary-totals td {
-    padding-top: 10px;
-  }
-  
-  .order-summary-total td {
-    font-weight: bold;
-    padding-top: 12px;
-  }
-  
-  
-  
+  background-color: var(--background-color);
+  border-radius: 8px;
+  width: 300px;
+  max-width: 300px;
+  box-sizing: border-box;
+  padding: 2rem;
+}
+
+.order-summary-title {
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+
+.order-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.order-summary-table td {
+  padding: 5px;
+}
+
+.order-summary-price {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.order-summary-item td {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.order-summary-section td {
+  padding-top: 16px;
+  font-weight: bold;
+}
+
+.order-summary-totals td {
+  padding-top: 10px;
+}
+
+.order-summary-total td {
+  font-weight: bold;
+  padding-top: 12px;
+}

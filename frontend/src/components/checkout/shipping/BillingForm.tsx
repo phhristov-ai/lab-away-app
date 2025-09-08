@@ -7,6 +7,7 @@ import {
 } from 'react';
 import { useBillingForm } from '../../../hooks/useBillingForm';
 import { t } from 'i18next';
+import { useShippingForm } from '../../../hooks/useShippingForm';
 
 export type BillingFormHandle = {
   validate: () => boolean;
@@ -18,7 +19,7 @@ type BillingFormProps = {
 };
 
 const BillingForm = forwardRef<BillingFormHandle, BillingFormProps>(({ onChange, initialValues }, ref) => {
-  const { errors, handleChange, validate, formData } = useBillingForm(onChange, initialValues || {});
+  const { errors, handleChange, validate, formData, handleCountryChange, countryOptions } = useBillingForm(onChange, initialValues || {});
   useImperativeHandle(ref, () => ({ validate }));
 
   return (
@@ -30,7 +31,14 @@ const BillingForm = forwardRef<BillingFormHandle, BillingFormProps>(({ onChange,
           <FormField id="lastName" value={formData.lastName || ''} label={t('checkout.billing.fields.lastName')} onChange={handleChange} error={errors.lastName} />
         </div>
         <div className="form-row">
-          <CountryDropdown id="country" value={formData.country || ''} label={t('checkout.billing.fields.country')} onChange={handleChange} error={errors.country} />
+          <CountryDropdown
+            id="countryCode"
+            value={formData.countryCode}
+            label={t('checkout.billing.fields.country')}
+            error={errors.countryCode}
+            options={countryOptions}
+            onChange={handleCountryChange}
+          />
           <FormField id="address" value={formData.address || ''} label={t('checkout.billing.fields.address')} onChange={handleChange} error={errors.address} />
         </div>
         <div className="form-row">

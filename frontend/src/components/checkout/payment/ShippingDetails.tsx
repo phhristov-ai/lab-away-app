@@ -6,12 +6,13 @@ type Props = {
     address: string;
     phone: string;
     city: string;
-    country: string;
+    countryName: string;
     email: string;
+    countryCode: string;
   };
   
   const ShippingDetails: React.FC<Props> = ({
-    name, address, phone, city, country, email,
+    name, address, phone, city, countryName, countryCode, email,
   }) => {
     const { t } = useTranslation();
     return (
@@ -25,8 +26,9 @@ type Props = {
             {address}<br />
             {phone}<br />
             {city}<br />
-            {country}
+            {countryName}
           </td>
+          <td></td>
           <td className="shipping-right">
             <div className="email-centered">{email}</div>
           </td>

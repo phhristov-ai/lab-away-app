@@ -155,7 +155,7 @@
       "description": "Description",
       "amount": "Amount",
       "subtotal": "Subtotal",
-      "vatNotePrefix": "(includes VAT)"
+      "vatNotePrefix": "(incl. VAT)"
     },
     "payment": {
       "title": "Payment",

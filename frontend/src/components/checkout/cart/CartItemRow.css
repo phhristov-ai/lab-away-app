@@ -19,6 +19,23 @@
 .remove-button:hover {
   background-color: #000;
   color: #fff;
+  cursor: pointer;
+}
+
+.product-image {
+    cursor: pointer;
+}
+
+ .product-title-link {
+  text-decoration: none;
+  color: #000;
+  cursor: pointer;
+
+}
+
+.product-title {
+  cursor: pointer;
+  font-weight: normal;
 }
 
 @media (max-width: 768px) {

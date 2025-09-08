@@ -51,7 +51,7 @@ const SuccessPage: React.FC = () => {
           <h3 className="success-header">{t('successPage.shippingAddress.heading')}</h3>
 
           <ul className="info-row">
-            <li><span className="label">{t('successPage.shippingAddress.country')}:</span> {shippingAddress?.country}</li>
+            <li><span className="label">{t('successPage.shippingAddress.country')}:</span> {shippingAddress?.countryName}</li>
             <li><span className="label">{t('successPage.shippingAddress.address')}:</span> {shippingAddress?.address}</li>
             <li><span className="label">{t('successPage.shippingAddress.city')}:</span> {shippingAddress?.city}</li>
             <li><span className="label">{t('successPage.shippingAddress.postcode')}:</span> {shippingAddress?.postcode}</li>

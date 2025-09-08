@@ -1,7 +1,6 @@
 import React from 'react';
 import QuantitySelector from '../../product/QuantitySelector';
-import { useTranslation } from 'react-i18next';
-import { formatCurrency } from '../../../utils/format';
+import { Link } from 'react-router-dom';
 
 type Props = {
   item: CartItem;
@@ -9,14 +8,18 @@ type Props = {
 };
 
 const OrderItemRow: React.FC<Props> = ({ item, onQuantityChange }) => {
-  const { i18n } = useTranslation();
   return (
     <tr className="order-summary-item">
       <td>
-        <img src={item.image} alt={item.product} className="product-image" />
+        <Link to={`/product/${item.slug}`}>
+          <img src={item.image} alt={item.product} className="product-image" />
+        </Link>
       </td>
       <td>
-        {item.title}<br />
+        <Link to={`/product/${item.slug}`} className="product-title-link">
+          {item.title}
+        </Link>
+        <br />
         <small>{item.subTitle}</small>
       </td>
       <td>
@@ -25,7 +28,6 @@ const OrderItemRow: React.FC<Props> = ({ item, onQuantityChange }) => {
           onChange={(newQuantity) => onQuantityChange(item.slug, newQuantity)}
         />
       </td>
-      <td className="order-summary-price">{formatCurrency(item.price, i18n.language)}</td>
     </tr>
   );
 };

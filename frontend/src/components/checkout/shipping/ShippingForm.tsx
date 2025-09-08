@@ -6,7 +6,6 @@ import FormField from './FormField';
 import './ShippingForm.css';
 import PhoneField from './PhoneField';
 
-
 type ShippingFormProps = {
   onToggleShipping: (checked: boolean) => void;
   onChange: (data: Record<string, string>) => void;
@@ -26,15 +25,16 @@ const ShippingForm = forwardRef<ShippingFormHandle, ShippingFormProps>(
       formData,
       useDifferentBilling,
       handleCheckboxChange,
+      handleCountryChange,
+      countryOptions
     } = useShippingForm(onChange, initialValues);
-    
+
     useImperativeHandle(ref, () => ({
       validate,
     }));
-
-      useEffect(() => {
-        onToggleShipping(useDifferentBilling);
-      }, [useDifferentBilling, onToggleShipping]);
+    useEffect(() => {
+      onToggleShipping(useDifferentBilling);
+    }, [useDifferentBilling, onToggleShipping]);
 
     return (
       <div className="address-form">
@@ -56,7 +56,14 @@ const ShippingForm = forwardRef<ShippingFormHandle, ShippingFormProps>(
             />
           </div>
           <div className="form-row">
-            <CountryDropdown id="country" value={formData.country || ''} label={t('checkout.shipping.fields.country')} onChange={handleChange} error={errors.country} />
+            <CountryDropdown
+              id="countryCode"
+              label={t('checkout.shipping.fields.country')}
+              value={formData.countryCode}
+              error={errors.countryCode}
+              options={countryOptions}
+              onChange={handleCountryChange}
+            />
             <FormField id="address" value={formData.address || ''} label={t('checkout.shipping.fields.address')} onChange={handleChange} error={errors.address} />
           </div>
           <div className="form-row">

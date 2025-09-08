@@ -1,16 +1,19 @@
 import React from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { getEUCountryOptions } from './getEUCountryOptions';
+import i18n from '../i18n/i18n';
 
 type FormData = Record<string, string>;
 type Errors = Record<string, string>;
 
-const requiredFields = ['firstName', 'lastName', 'country', 'email', 'phone', 'address', 'city', 'postcode'];
+const requiredFields = ['firstName', 'lastName', 'countryCode', 'email', 'phone', 'address', 'city', 'postcode'];
 
 export function useShippingForm(onChange: (data: FormData) => void, initialValues: Record<string, string>) {
   const { t } = useTranslation();
   const [formData, setFormData] = useState<FormData>(initialValues);
   const [errors, setErrors] = useState<Errors>({});
+  const countryOptions = getEUCountryOptions(i18n.language);
 
   type SyntheticOrFakeEvent =
     | React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -36,7 +39,6 @@ export function useShippingForm(onChange: (data: FormData) => void, initialValue
     const updatedData = { ...formData, [id]: value };
     setFormData(updatedData);
     onChange(updatedData);
-
     if (value.trim()) {
       setErrors(prev => {
         const { [id]: removed, ...rest } = prev;
@@ -48,12 +50,32 @@ export function useShippingForm(onChange: (data: FormData) => void, initialValue
   const validate = () => {
     const newErrors: Errors = {};
     requiredFields.forEach(field => {
+      console.log(formData[field]);
       if (!formData[field]?.trim()) {
         newErrors[field] = t('form.errors.required');
       }
     });
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  const handleCountryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedCode = e.target.value;
+    const selectedCountry = countryOptions.find((c) => c.code === selectedCode);
+    const selectedName = selectedCountry ? selectedCountry.name : '';
+
+    const updatedData = {
+      ...formData,
+      countryCode: selectedCode,
+      countryName: selectedName,
+    };
+    setFormData(updatedData);
+    onChange(updatedData);
+
+    setErrors(prevErrors => {
+      const { countryCode, countryName, ...rest } = prevErrors;
+      return rest;
+    });
   };
 
   return {
@@ -63,5 +85,7 @@ export function useShippingForm(onChange: (data: FormData) => void, initialValue
     validate,
     useDifferentBilling,
     handleCheckboxChange,
+    handleCountryChange,
+    countryOptions
   };
 }

@@ -55,7 +55,8 @@ const ShippingPage = () => {
               address: shippingData.address || '',
               phone: shippingData.phone || '',
               city: `${shippingData.postcode || ''} ${shippingData.city || ''}`,
-              country: shippingData.country || '',
+              countryName: shippingData.countryName || '',
+              countryCode: shippingData.countryCode || '',
               email: shippingData.email || '',
             }}
             subtotal={subtotalValue}

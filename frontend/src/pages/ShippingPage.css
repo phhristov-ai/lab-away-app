@@ -18,13 +18,12 @@
 }
 
 .summary-section {
-  background-color: #fafafa;
-  border-left: 1px solid #e0e0e0;
+  background-color: var(--background-color);
   padding: 1.5rem;
   border-radius: 8px;
   height: fit-content;
   position: sticky;
-  top: 2rem; /* Optional: make it stick as user scrolls */
+  top: 2rem;
 }
 
   
