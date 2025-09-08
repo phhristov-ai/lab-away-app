@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import './ShippingDetails.css';
 
 type Props = {
     name: string;
@@ -29,7 +30,7 @@ type Props = {
             {countryName}
           </td>
           <td></td>
-          <td className="shipping-right">
+          <td colSpan={2} className="shipping-right">
             <div className="email-centered">{email}</div>
           </td>
         </tr>

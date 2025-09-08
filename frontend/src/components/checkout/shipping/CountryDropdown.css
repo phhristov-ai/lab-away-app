@@ -4,4 +4,9 @@
 
 #countryCode {
     cursor: pointer;
+    padding: 1.5rem 2rem;
+}
+
+.react-tel-input .country-list {
+    z-index: 100;
 }

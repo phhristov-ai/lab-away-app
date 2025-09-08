@@ -27,7 +27,7 @@
 
 .form-group input,
 .form-group select {
-  padding: 1.5rem;
+  padding: 1.5rem 1rem;
   border: 1px solid #ccc;
   margin-right: 2rem;
   border-radius: 1rem;
@@ -48,6 +48,8 @@
   border: 1px solid #ccc;
   margin-right: 2rem;
   border-radius: 1rem;
+  width: unset !important;
+  padding-left: unset !important;
 }
 
 .react-tel-input .flag-dropdown {
@@ -83,3 +85,4 @@ textarea:focus,
     margin-right: 0;
   }
 }
+
