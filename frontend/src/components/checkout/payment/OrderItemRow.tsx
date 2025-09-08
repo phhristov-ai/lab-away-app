@@ -22,6 +22,7 @@ const OrderItemRow: React.FC<Props> = ({ item, onQuantityChange }) => {
         <br />
         <small>{item.subTitle}</small>
       </td>
+      <td></td>
       <td>
         <QuantitySelector
           value={item.quantity}

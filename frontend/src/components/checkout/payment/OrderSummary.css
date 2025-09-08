@@ -30,6 +30,10 @@
   border-bottom: 1px solid #e0e0e0;
 }
 
+.order-summary-item small {
+  font-size: 12px;
+}
+
 .order-summary-section td {
   padding-top: 16px;
   font-weight: bold;

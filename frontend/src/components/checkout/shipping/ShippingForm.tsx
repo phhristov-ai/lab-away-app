@@ -47,6 +47,8 @@ const ShippingForm = forwardRef<ShippingFormHandle, ShippingFormProps>(
           </div>
           <div className="form-row">
             <FormField id="email" value={formData.email || ''} label={t('checkout.email')} onChange={handleChange} error={errors.email} />
+          </div>
+          <div className="form-row">
             <PhoneField
               id="phone"
               value={formData.phone || ''}

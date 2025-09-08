@@ -15,15 +15,18 @@ const SummaryTotals: React.FC<Props> = ({ subtotal, shippingCost, total }) => {
       <tr className="order-summary-totals">
         <td><strong>{t('checkout.summary.subtotal')}</strong></td>
         <td></td>
+        <td></td>
         <td className="order-summary-price">{formatCurrency(subtotal, i18n.language)}</td>
       </tr>
       <tr className="order-summary-totals">
         <td><strong>{t('checkout.summary.shipping')}</strong></td>
         <td></td>
+        <td></td>
         <td className="order-summary-price">{formatCurrency(shippingCost, i18n.language)}</td>
       </tr>
       <tr className="order-summary-total">
         <td><strong>{t('checkout.summary.total')}</strong></td>
+        <td></td>
         <td></td>
         <td className="order-summary-price">{formatCurrency(total, i18n.language)}</td>
       </tr>

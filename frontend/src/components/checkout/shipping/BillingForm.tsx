@@ -7,7 +7,7 @@ import {
 } from 'react';
 import { useBillingForm } from '../../../hooks/useBillingForm';
 import { t } from 'i18next';
-import { useShippingForm } from '../../../hooks/useShippingForm';
+import PhoneField from './PhoneField';
 
 export type BillingFormHandle = {
   validate: () => boolean;
@@ -42,7 +42,13 @@ const BillingForm = forwardRef<BillingFormHandle, BillingFormProps>(({ onChange,
           <FormField id="address" value={formData.address || ''} label={t('checkout.billing.fields.address')} onChange={handleChange} error={errors.address} />
         </div>
         <div className="form-row">
-          <FormField id="phone" value={formData.phone || ''} label={t('checkout.shipping.fields.phone')} onChange={handleChange} error={errors.phone} />
+          <PhoneField
+            id="phone"
+            value={formData.phone || ''}
+            label={t('checkout.shipping.fields.phone')}
+            onChange={handleChange}
+            error={errors.phone}
+          />
         </div>
         <div className="form-row">
           <FormField id="city" value={formData.city || ''} label={t('checkout.billing.fields.city')} onChange={handleChange} error={errors.city} />
