@@ -36,7 +36,7 @@ const ShippingPage = () => {
             initialValues={shippingData}
           />
           {showBilling && (
-            <BillingForm ref={billingFormRef} onChange={setBillingData} initialValues={billingData}/>
+            <BillingForm ref={billingFormRef} onChange={setBillingData} initialValues={billingData} />
           )}
           <div className="align-right">
             <CustomButton
@@ -46,23 +46,24 @@ const ShippingPage = () => {
             />
           </div>
         </div>
-
-        <div className="summary-section">
-          <OrderSummary
-            items={enrichedItems}
-            shipping={{
-              name: `${shippingData.firstName || ''} ${shippingData.lastName || ''}`,
-              address: shippingData.address || '',
-              phone: shippingData.phone || '',
-              city: `${shippingData.postcode || ''} ${shippingData.city || ''}`,
-              countryName: shippingData.countryName || '',
-              countryCode: shippingData.countryCode || '',
-              email: shippingData.email || '',
-            }}
-            subtotal={subtotalValue}
-            shippingCost={shippingCost}
-            total={total}
-          />
+        <div className="summary-wrapper">
+          <div className="summary-section">
+            <OrderSummary
+              items={enrichedItems}
+              shipping={{
+                name: `${shippingData.firstName || ''} ${shippingData.lastName || ''}`,
+                address: shippingData.address || '',
+                phone: shippingData.phone || '',
+                city: `${shippingData.postcode || ''} ${shippingData.city || ''}`,
+                countryName: shippingData.countryName || '',
+                countryCode: shippingData.countryCode || '',
+                email: shippingData.email || '',
+              }}
+              subtotal={subtotalValue}
+              shippingCost={shippingCost}
+              total={total}
+            />
+          </div>
         </div>
       </div>
     </CheckoutLayout>
