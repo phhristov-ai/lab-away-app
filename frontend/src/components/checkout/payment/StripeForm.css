@@ -1,24 +1,20 @@
 .stripe-form {
     margin: auto;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
     width: 100%;
     border-radius: 1rem;
     padding: 1rem;
+    background-color: var(--background-color);
   }
   
   .input-label {
     display: block;
     font-size: 0.9rem;
-    color: #666;
+    color: #000;
+    font-weight: 600;
     margin-bottom: 0.4rem;
   }
   
-  .stripe-input {
-    padding: 0.6rem 0.75rem;
-    border-bottom: 2px solid #B7B6BC;
-    transition: border-color 0.2s ease;
-  }
-  
+
   .stripe-input.StripeElement--focus {
     border-color: #0070f3;
     background-color: #fff;
@@ -53,3 +49,23 @@
   cursor: pointer;
 }
   
+
+.stripe-input-wrapper {
+  position: relative;
+  width: 100%;
+  border: 1px solid #F0F0FA;
+}
+
+.stripe-input {
+  padding-right: 48px; /* Space for the icon on the right */
+}
+
+.card-brand-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 24px;
+  width: auto;
+  pointer-events: none;
+}

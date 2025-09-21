@@ -1,4 +1,3 @@
-// useProductInfo.ts
 import { useTranslation } from 'react-i18next';
 import { useCallback } from 'react';
 import { useAdmin } from '../context/AdminContext';

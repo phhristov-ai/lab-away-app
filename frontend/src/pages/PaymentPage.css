@@ -3,22 +3,22 @@
     gap: 2rem;
     flex-wrap: wrap;
   }
-  
+
   .payment-left {
-    flex: 2;
+    flex: 1;
     min-width: 300px;
   }
-  
+
   .order-summary-container {
     flex: 1;
   }
-  
+
   .payment-methods {
     display: flex;
     gap: 1rem;
     margin-bottom: 1.5rem;
   }
-  
+
   .payment-method {
     flex: 1;
     background-color: #fff;
@@ -33,17 +33,35 @@
     display: none;
     margin-right: 0.5rem;
   }
-  
+
 
   .payment-method.selected {
     border-color: #222;
     background-color: #e6f0ff;
   }
 
-.payment-form {
+  .payment-form {
     margin-top: 1rem;
-}
+  }
 
-.order-summary-item td {
-  font-size: 20px;
-}
+  .order-summary-item td {
+    font-size: 20px;
+  }
+
+  .label-with-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 100%;
+  }
+
+  .paypal-icons {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 100%;
+  }
+
+  .paypal-icon {
+    height: 24px;
+  }

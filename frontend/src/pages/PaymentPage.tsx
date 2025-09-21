@@ -8,6 +8,9 @@ import PayPalForm from "../components/checkout/payment/PayPalForm";
 import { useCheckout } from "../context/CheckoutContext";
 import { useTranslation } from 'react-i18next';
 import { useCheckoutSummary } from "../hooks/useCheckoutSummary";
+import cardIcon from '../assets/icons/payment/card.svg';
+import paypal1 from '../assets/icons/payment/PayPal1.png';
+import paypal2 from '../assets/icons/payment/PayPal2.png';
 
 const PaymentPage = () => {
   const { t } = useTranslation();
@@ -30,7 +33,10 @@ const PaymentPage = () => {
                   checked={paymentMethod === 'creditCard'}
                   onChange={() => setPaymentMethod('creditCard')}
                 />
-                <span>{t('checkout.payment.creditCard.methodLabel')}</span>
+                <span className="label-with-icon">
+                  <img src={cardIcon} alt="Card icon" className="icon-before-label" />
+                  {t('checkout.payment.creditCard.methodLabel')}
+                </span>
               </label>
               <label className={`payment-method ${paymentMethod === 'paypal' ? 'selected' : ''}`}>
                 <input
@@ -40,7 +46,10 @@ const PaymentPage = () => {
                   checked={paymentMethod === 'paypal'}
                   onChange={() => setPaymentMethod('paypal')}
                 />
-                <span>{t('checkout.payment.paypal.methodLabel')}</span>
+                <span className="paypal-icons">
+                  <img src={paypal1} alt="PayPal icon 1" className="paypal-icon" />
+                  <img src={paypal2} alt="PayPal icon 2" className="paypal-icon" />
+                </span>
               </label>
             </div>
 

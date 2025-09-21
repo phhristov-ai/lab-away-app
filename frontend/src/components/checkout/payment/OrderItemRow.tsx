@@ -15,14 +15,13 @@ const OrderItemRow: React.FC<Props> = ({ item, onQuantityChange }) => {
           <img src={item.image} alt={item.product} className="product-image" />
         </Link>
       </td>
-      <td>
+      <td colSpan={2}>
         <Link to={`/product/${item.slug}`} className="product-title-link">
           {item.title}
         </Link>
         <br />
         <small>{item.subTitle}</small>
       </td>
-      <td></td>
       <td>
         <QuantitySelector
           value={item.quantity}

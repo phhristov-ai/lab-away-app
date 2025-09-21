@@ -4,10 +4,11 @@ export const cardStyle = {
       color: '#000',
       fontSize: '16px',
       backgroundColor: '#fff',
+      lineHeight: '24px',
       fontWeight: 400,
       fontFamily: '"Roboto", sans-serif',
       '::placeholder': {
-        color: '#888',
+        color: '#DBE2E8',
       },
     },
     invalid: {

@@ -7,10 +7,8 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 20px;
+  gap: 100px;
   background-color: var(--background-color);
-  margin-left: calc(-4 * var(--spacing-lg));
-  margin-right: calc(-4 * var(--spacing-lg));
   padding: 20px var(--spacing-lg);
   box-sizing: border-box;
   width: auto;

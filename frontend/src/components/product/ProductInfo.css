@@ -14,13 +14,16 @@
   visibility: hidden;
 }
 
-
 .main-image {
     width: 100%;
 }
 
 .price {
     font-size: 18px; 
+}
+
+.price-text {
+  font-weight: 600;
 }
 
 .product-actions {
