@@ -15,3 +15,29 @@
   padding: 0;
   flex: 1;
 }
+
+@media (max-width: 768px) {
+  .footer-about-with-logo {
+    display: block; /* disable flex */
+    padding: 0px;
+    position: relative;
+  }
+
+  .footer-about-with-logo > :first-child {
+    float: left;
+    margin-right: 16px;
+    margin-bottom: 8px;
+  }
+
+  .footer-about-with-logo > :last-child {
+    display: block;
+    /* no margin-left here */
+  }
+
+  /* clearfix */
+  .footer-about-with-logo::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}

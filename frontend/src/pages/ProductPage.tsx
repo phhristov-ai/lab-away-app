@@ -14,6 +14,7 @@ import AdminActionButtons from '../components/admin/AdminActionButtons';
 import { useProductPage } from '../hooks/useProductPage';
 import { t } from 'i18next';
 import CategorySelect from '../components/admin/CategorySelect';
+import ProductDescription from '../components/product/ProductDescription';
 
 const ProductPage: React.FC = () => {
   const {
@@ -21,6 +22,8 @@ const ProductPage: React.FC = () => {
     product,
     title,
     setTitle,
+    description,
+    setDescription,
     price,
     setPrice,
     isFullProduct,
@@ -92,7 +95,11 @@ const ProductPage: React.FC = () => {
             />
           )}
           <VerticalFeatureList items={featureItems} />
-          <p className="product-long-desc">{isFullProduct(product) ? product.description : ''}</p>
+          <ProductDescription
+            description={isFullProduct(product) ? description : ''}
+            isAdmin={isAdmin}
+            onDescriptionChange={setDescription}
+          />
         </div>
       </div>
 

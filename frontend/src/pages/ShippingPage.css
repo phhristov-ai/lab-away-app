@@ -2,8 +2,6 @@
   text-align: right;
 }
 
-
-/* ShippingPage.css */
 .shipping-page-grid {
   display: grid;
   grid-template-columns: 48% 48%;
@@ -31,4 +29,18 @@
 
 .summary-wrapper {
   position: relative;
+}
+
+@media (max-width: 768px) {
+  .summary-wrapper {
+    display: none;
+  }
+
+  .shipping-page-grid {
+    display: block;
+  }
+
+  .custom-button {
+    width: auto;
+  }
 }

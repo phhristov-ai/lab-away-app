@@ -41,6 +41,7 @@ export const useProductPage = () => {
     const [allCategories, setAllCategories] = useState<Category[]>([]);
     const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
     const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
     const [price, setPrice] = useState(0);
     const [showConfirmDelete, setShowConfirmDelete] = useState(false);
     const handleDeleteClick = () => {
@@ -127,6 +128,7 @@ export const useProductPage = () => {
                 setProduct((prev: any) => ({ ...prev, ...fullProduct }));
                 setTitle(fullProduct.name);
                 setPrice(fullProduct.price);
+                setDescription(fullProduct.description)
             } catch (error) {
                 console.error('Error fetching product by slug:', error);
             }
@@ -162,7 +164,7 @@ export const useProductPage = () => {
                 translation: {
                     language,
                     name: title,
-                    description: 'Description', //TODO to fix later
+                    description: description,
                 },
                 imageUrls: existingImageUrls,
             };
@@ -233,6 +235,8 @@ export const useProductPage = () => {
         setProduct,
         title,
         setTitle,
+        description,
+        setDescription,
         price,
         setPrice,
         isFullProduct,
