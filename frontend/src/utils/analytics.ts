@@ -7,6 +7,7 @@ type GAItem = {
 };
 
 export function trackGAEvent(eventName: string, eventData: Record<string, any>) {
+  console.log('[GA Event]', eventName, eventData); // 👈 Add this line
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', eventName, eventData);
   } else {

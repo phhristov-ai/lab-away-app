@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '../../../utils/format';
+import { t } from 'i18next';
 
 type CartTotalsProps = {
   subtotal: number;
@@ -46,7 +47,11 @@ const CartTotals: React.FC<CartTotalsProps> = ({
           </tr>
           <tr>
             <td>{labels.shipping}</td>
-            <td>{formatCurrency(shipping, locale)}</td>
+            <td>
+              {shipping === 0
+                ? t('checkout.cart.freeShipping')
+                : formatCurrency(shipping, locale)}
+            </td>
           </tr>
           <tr>
             <td>{labels.total}</td>

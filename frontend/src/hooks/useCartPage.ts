@@ -33,6 +33,7 @@ export const useCartPage = () => {
         if (enrichedItems.length > 0) {
             trackGAEvent('view_cart', {
                 currency: 'EUR', // or your currency
+                debug_mode: 'true',
                 value: total,
                 items: enrichedItems.map(item => ({
                     item_id: item.slug,
