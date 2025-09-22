@@ -19,7 +19,7 @@ i18n
       caches: ['localStorage'],
     },
     react: {
-      useSuspense: false,
+      useSuspense: true,
     },
   });
 

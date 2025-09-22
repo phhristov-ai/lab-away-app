@@ -1,13 +1,12 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import { useShopPage } from '../hooks/useShopPage';
 import ShopHeader from '../components/shop/ShopHeader';
 import FilterBar from '../components/shop/FilterBar';
 import ProductGrid from '../components/shop/ProductGrid';
+import ProductGridSkeleton from '../components/shop/ProductGridSkeleton';
 
 
 const ShopPage: React.FC = () => {
-  const { t } = useTranslation();
   const {
     categories,
     selectedCategory,
@@ -16,15 +15,24 @@ const ShopPage: React.FC = () => {
     loading,
   } = useShopPage();
 
+  const categoriesLoaded = categories.length > 0;
+
   return (
     <div className="shop-page">
       <ShopHeader />
-      <FilterBar
-        categories={categories}
-        selectedCategory={selectedCategory}
-        onSelectCategory={setSelectedCategory}
-      />
-      {loading ? <p>Loading...</p> : <ProductGrid products={filteredProducts} showCreateNew />}
+
+      {categoriesLoaded && (
+        <FilterBar
+          categories={categories}
+          selectedCategory={selectedCategory}
+          onSelectCategory={setSelectedCategory}
+        />
+      )}
+      {loading ? (
+        <ProductGridSkeleton />
+      ) : (
+        <ProductGrid products={filteredProducts} showCreateNew />
+      )}
     </div>
   );
 };

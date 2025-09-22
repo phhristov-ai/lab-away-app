@@ -1,0 +1,11 @@
+.scroll-anchor {
+    position: relative;
+    top: -120px;
+    height: 0;
+}
+
+@media (max-width: 768px) {
+    .scroll-anchor  {
+    top: -60px;
+    }
+}

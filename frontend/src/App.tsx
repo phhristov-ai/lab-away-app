@@ -24,10 +24,10 @@ import Navbar from './components/header/Navbar';
 import { AdminProvider } from './context/AdminContext';
 import AdminLoginPage from './pages/AdminLoginPage';
 import CookieConsentFooter from './components/common/CookieConsentFooter';
-import { useState } from 'react';
 import GDPRPopup from './components/common/GDPRPopup';
 import { ConsentProvider } from './context/consent/ConsentProvider';
 import ScrollToTopButton from './components/common/ScrollToTopButton';
+import { useState } from 'react';
 
 function App() {
 
