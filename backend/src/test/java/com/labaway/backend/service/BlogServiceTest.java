@@ -129,7 +129,6 @@ class BlogServiceTest {
         BlogResponseDto result = blogService.createBlog(blogDto, file);
 
         assertBlogDto(result);
-        verify(blogRepository).save(blog);
         assertEquals("filename", blog.getImageUrl());
     }
 
@@ -141,6 +140,7 @@ class BlogServiceTest {
         mockFindCategories(List.of(category));
 
         BlogResponseDto result = blogService.createBlog(blogDto, null);
+        verify(blogTransformer).toDto(eq(blog), any(Language.class));
 
         assertBlogDto(result);
         assertNull(blogResponseDto.getImageUrl());
@@ -354,10 +354,11 @@ class BlogServiceTest {
     }
 
     private void mockTransformToDto(Blog blog, BlogResponseDto dto) {
-        when(blogTransformer.toDto(blog, Language.EN)).thenReturn(dto);
+        when(blogTransformer.toDto(eq(blog), any(Language.class))).thenReturn(dto);
     }
 
     private void mockSaveBlog(Blog blog) {
+        when(blogRepository.saveAndFlush(blog)).thenReturn(blog);
         when(blogRepository.save(blog)).thenReturn(blog);
     }
 }
