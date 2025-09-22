@@ -21,9 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service
-@Profile("test")
-@Primary
+//@Service
+//@Profile("test")
+//@Primary
 public class TestS3Service extends S3Service {
     private final List<String> uploadedKeys = new ArrayList<>();
     private final Map<String, byte[]> cachedFiles = new HashMap<>();
