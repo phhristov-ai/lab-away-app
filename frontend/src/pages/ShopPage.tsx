@@ -14,7 +14,7 @@ const ShopPage: React.FC = () => {
     filteredProducts,
     loading,
   } = useShopPage();
-
+  console.log('Rendering ShopPage');
   const categoriesLoaded = categories.length > 0;
 
   return (

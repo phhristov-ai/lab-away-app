@@ -56,13 +56,17 @@ const CreditCardForm = () => {
             <label className="input-label">
               {t('checkout.payment.creditCard.expiryDate')}
             </label>
-            <CardExpiryElement className="stripe-input" options={cardStyle} />
+            <div className="stripe-input-wrapper">
+              <CardExpiryElement className="stripe-input" options={cardStyle} />
+            </div>
           </div>
           <div className="form-group half-width">
             <label className="input-label">
               {t('checkout.payment.creditCard.cvc')}
             </label>
-            <CardCvcElement className="stripe-input" options={cardStyle} />
+            <div className="stripe-input-wrapper">
+              <CardCvcElement className="stripe-input" options={cardStyle} />
+            </div>
           </div>
         </div>
       </div>

@@ -1,6 +1,5 @@
 .stripe-form {
     margin: auto;
-    width: 100%;
     border-radius: 1rem;
     padding: 1rem;
     background-color: var(--background-color);
@@ -43,17 +42,20 @@
   font-size: 14px;
   height: 55px;
   line-height: 35px;
+  border: none;
 }
 
 .place-order-button:hover {
   cursor: pointer;
+  border: 1px solid black;
 }
   
 
 .stripe-input-wrapper {
   position: relative;
-  width: 100%;
   border: 1px solid #F0F0FA;
+  background-color: #fff;
+  padding: 10px;
 }
 
 .stripe-input {

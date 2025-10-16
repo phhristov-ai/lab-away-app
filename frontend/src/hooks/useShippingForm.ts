@@ -1,4 +1,3 @@
-import React from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getEUCountryOptions } from './getEUCountryOptions';
@@ -7,7 +6,7 @@ import i18n from '../i18n/i18n';
 type FormData = Record<string, string>;
 type Errors = Record<string, string>;
 
-const requiredFields = ['firstName', 'lastName', 'countryCode', 'email', 'phone', 'address', 'city', 'postcode'];
+const requiredFields = ['fullName', 'countryCode', 'email', 'phone', 'address', 'city', 'postcode'];
 
 export function useShippingForm(onChange: (data: FormData) => void, initialValues: Record<string, string>) {
   const { t } = useTranslation();

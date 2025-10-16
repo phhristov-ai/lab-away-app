@@ -36,7 +36,9 @@ const Footer = () => {
   ];
 
 
-  const isCheckoutPage = ['/checkout', '/payment', '/success', '/cart'].includes(location.pathname);
+  const isCheckoutPage = ['/checkout', '/payment', '/success', '/cart'].some(path =>
+    location.pathname.includes(path)
+  );
 
   if (isCheckoutPage) {
     return <ShortFooter />;

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { HashLink } from 'react-router-hash-link';
 import './NavLinks.css';
 import { useEffect } from 'react';
+import i18n from '../../i18n/i18n';
 
 const NavLinks = ({ isMobileSidebarOpen = false, onClose }: { isMobileSidebarOpen?: boolean; onClose?: () => void }) => {
   const { t } = useTranslation();
@@ -32,7 +33,7 @@ const NavLinks = ({ isMobileSidebarOpen = false, onClose }: { isMobileSidebarOpe
       <li>
         <HashLink
           smooth
-          to="/#how-it-works-anchor"
+          to={`/${i18n.language}#how-it-works-anchor`}
           scroll={(el: { scrollIntoView: (arg0: { behavior: string; block: string; }) => void; }) => {
             setTimeout(() => {
               el.scrollIntoView({ behavior: 'smooth', block: 'start' });

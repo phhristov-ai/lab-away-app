@@ -22,7 +22,11 @@ const SummaryTotals: React.FC<Props> = ({ subtotal, shippingCost, total }) => {
         <td><strong>{t('checkout.summary.shipping')}</strong></td>
         <td></td>
         <td></td>
-        <td className="order-summary-price">{formatCurrency(shippingCost, i18n.language)}</td>
+        <td className="order-summary-price">
+          {shippingCost === 0
+            ? t('checkout.cart.freeShipping')
+            : formatCurrency(shippingCost, i18n.language)}
+        </td>
       </tr>
       <tr className="order-summary-total">
         <td><strong>{t('checkout.summary.total')}</strong></td>

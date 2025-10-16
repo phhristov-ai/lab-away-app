@@ -7,8 +7,7 @@ type FormData = Record<string, string>;
 type Errors = Record<string, string>;
 
 const requiredFields = [
-  'firstName',
-  'lastName',
+  'fullName',
   'phone',
   'countryCode',
   'address',

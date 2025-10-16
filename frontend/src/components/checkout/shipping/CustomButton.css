@@ -1,36 +1,40 @@
 .custom-button {
-    padding: 10px 25px;
-    border: none;
-    font-weight: 600;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-    width: 20%;
-    background-color: var(--primary-color); 
-    color: #000;
-    border-radius: 20px;
-    margin-top: 20px;
-    min-height: 46px;
-  }
-  
-  .custom-button.primary:hover {
-    border: 1px solid #000;
-  }
-  
-  /* Secondary button */
-  .custom-button.secondary {
-    background-color: #f0f0f0;
-    color: #333;
-  }
-  
-  .custom-button.secondary:hover {
-    background-color: #ddd;
-  }
-  
-  .custom-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
+  padding: 10px 25px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  width: 20%;
+  background-color: var(--primary-color);
+  color: #000;
+  border-radius: 20px;
+  margin-top: 20px;
+  min-height: 46px;
+}
+
+.custom-button.full-width {
+  width: 100%;
+}
+
+.custom-button.primary:hover {
+  border: 1px solid #000;
+}
+
+/* Secondary button */
+.custom-button.secondary {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.custom-button.secondary:hover {
+  background-color: #ddd;
+}
+
+.custom-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
 .custom-button.third {
   padding: 10px 20px;
@@ -46,4 +50,3 @@
 .custom-button.third:hover {
   color: #000;
 }
-  

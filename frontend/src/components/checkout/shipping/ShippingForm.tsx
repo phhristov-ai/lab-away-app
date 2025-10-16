@@ -41,23 +41,10 @@ const ShippingForm = forwardRef<ShippingFormHandle, ShippingFormProps>(
         <h2>{t('checkout.shipping.title')}</h2>
         <form>
           <div className="form-row">
-            <FormField id="firstName" value={formData.firstName || ''} label={t('checkout.shipping.fields.firstName')} onChange={handleChange} error={errors.firstName} />
-            <FormField id="lastName" value={formData.lastName || ''} label={t('checkout.shipping.fields.lastName')} onChange={handleChange} error={errors.lastName} />
-
-          </div>
-          <div className="form-row">
             <FormField id="email" value={formData.email || ''} label={t('checkout.email')} onChange={handleChange} error={errors.email} />
           </div>
           <div className="form-row">
-            <PhoneField
-              id="phone"
-              value={formData.phone || ''}
-              label={t('checkout.shipping.fields.phone')}
-              onChange={handleChange}
-              error={errors.phone}
-            />
-          </div>
-          <div className="form-row">
+            <FormField id="fullName" value={formData.fullName || ''} label={t('checkout.shipping.fields.fullName')} onChange={handleChange} error={errors.fullName} />
             <CountryDropdown
               id="countryCode"
               label={t('checkout.shipping.fields.country')}
@@ -66,11 +53,21 @@ const ShippingForm = forwardRef<ShippingFormHandle, ShippingFormProps>(
               options={countryOptions}
               onChange={handleCountryChange}
             />
+          </div>
+
+          <div className="form-row">
+            <PhoneField
+              id="phone"
+              value={formData.phone || ''}
+              label={t('checkout.shipping.fields.phone')}
+              onChange={handleChange}
+              error={errors.phone}
+            />
             <FormField id="address" value={formData.address || ''} label={t('checkout.shipping.fields.address')} onChange={handleChange} error={errors.address} />
           </div>
           <div className="form-row">
-            <FormField id="city" value={formData.city || ''} label={t('checkout.shipping.fields.city')} onChange={handleChange} error={errors.city} />
             <FormField id="postcode" value={formData.postcode || ''} label={t('checkout.shipping.fields.postcode')} onChange={handleChange} error={errors.postcode} />
+            <FormField id="city" value={formData.city || ''} label={t('checkout.shipping.fields.city')} onChange={handleChange} error={errors.city} />
           </div>
           <div className="checkbox-group">
             <input

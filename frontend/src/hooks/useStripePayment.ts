@@ -14,7 +14,7 @@ export const useStripePayment = () => {
       payment_method: {
         card: cardNumberElement,
         billing_details: {
-          name: `${billingData.firstName} ${billingData.lastName}`,
+          name: `${billingData.fullName}`,
           email: billingData.email,
           phone: billingData.phone,
           address: {

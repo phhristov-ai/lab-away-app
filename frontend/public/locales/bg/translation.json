@@ -89,11 +89,10 @@
     "billing": {
       "title": "Данни за фактуриране",
       "fields": {
-        "firstName": "Име",
-        "lastName": "Фамилия",
+        "fullName": "Име",
         "email": "Имейл адрес",
         "phone": "Телефон",
-        "country": "Държава / Регион *",
+        "country": "Държава / Регион",
         "address": "Адрес",
         "city": "Град",
         "postcode": "Пощенски код"
@@ -103,9 +102,8 @@
     "shipping": {
       "title": "Данни за доставка",
       "fields": {
-        "firstName": "Име",
-        "lastName": "Фамилия",
-        "country": "Държава / Регион *",
+        "fullName": "Име",
+        "country": "Държава / Регион",
         "address": "Адрес",
         "city": "Град",
         "postcode": "Пощенски код"

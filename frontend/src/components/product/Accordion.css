@@ -9,7 +9,7 @@
 
 .accordion-title {
   width: 100%;
-  background: #f7f7f7;
+  background-color: var(--background-color);
   padding: 16px;
   font-size: 16px;
   text-align: left;

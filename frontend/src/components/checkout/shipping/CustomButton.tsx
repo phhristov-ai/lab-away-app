@@ -7,6 +7,7 @@ type CustomButtonProps = {
   type?: 'button' | 'submit' | 'reset';
   variant?: 'primary' | 'secondary' | 'third'; 
   disabled?: boolean;
+  fullWidth?: boolean;
 };
 
 const CustomButton: React.FC<CustomButtonProps> = ({
@@ -15,11 +16,12 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   type = 'button',
   variant = 'primary',
   disabled = false,
+  fullWidth = false
 }) => {
   return (
     <button
       type={type}
-      className={`custom-button ${variant}`}
+      className={`custom-button ${variant} ${fullWidth ? 'full-width' : ''}`}
       onClick={onClick}
       disabled={disabled}
     >

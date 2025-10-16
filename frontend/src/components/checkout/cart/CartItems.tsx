@@ -27,7 +27,6 @@ const CartItems: React.FC<CartItemsProps> = ({ items }) => {
             <th></th>
             <th></th>
             <th></th>
-            <th></th>
           </tr>
         </thead>
         <tbody>

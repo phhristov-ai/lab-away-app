@@ -89,11 +89,10 @@
     "billing": {
       "title": "Rechnungsdetails",
       "fields": {
-        "firstName": "Vorname",
-        "lastName": "Nachname",
+        "fullName": "Name",
         "email": "E-Mail-Adresse",
         "phone": "Telefon",
-        "country": "Land / Region *",
+        "country": "Land / Region",
         "address": "Straßenadresse",
         "city": "Stadt",
         "postcode": "Postleitzahl"
@@ -103,9 +102,8 @@
     "shipping": {
       "title": "Versanddetails",
       "fields": {
-        "firstName": "Vorname",
-        "lastName": "Nachname",
-        "country": "Land / Region *",
+        "fullName": "Name",
+        "country": "Land / Region",
         "address": "Straßenadresse",
         "city": "Stadt",
         "postcode": "Postleitzahl"

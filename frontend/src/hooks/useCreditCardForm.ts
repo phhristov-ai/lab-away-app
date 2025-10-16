@@ -13,6 +13,13 @@ export enum PaymentProvider {
   PAYPAL = 'PAYPAL',
 }
 
+function splitFullName(fullName = '') {
+  const parts = fullName.trim().split(/\s+/);
+  const firstName = parts[0] || '';
+  const lastName = parts.length > 1 ? parts.slice(1).join(' ') : '';
+  return { firstName, lastName };
+}
+
 export const useCreditCardForm = () => {
   const stripe = useStripe();
   const { createOrder } = useCreateOrder();
@@ -30,8 +37,7 @@ export const useCreditCardForm = () => {
         customerEmail: shippingData.email,
         paymentProvider: PaymentProvider.STRIPE,
         billingAddress: {
-          firstName: billingData.firstName,
-          lastName: billingData.lastName,
+          ...splitFullName(billingData.fullName),
           address: billingData.address,
           city: billingData.city,
           country: billingData.country,
@@ -39,8 +45,7 @@ export const useCreditCardForm = () => {
           phone: billingData.phone
         },
         shippingAddress: {
-          firstName: shippingData.firstName,
-          lastName: shippingData.lastName,
+          ...splitFullName(shippingData.fullName),
           address: shippingData.address,
           city: shippingData.city,
           country: shippingData.country,
@@ -94,7 +99,7 @@ export const useCreditCardForm = () => {
       console.error('❌ Error during checkout:', error);
     }
   };
-  
+
   return {
     stripe,
     t,

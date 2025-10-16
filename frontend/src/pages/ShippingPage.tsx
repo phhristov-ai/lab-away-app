@@ -21,6 +21,7 @@ const ShippingPage = () => {
     shippingFormRef,
   } = useShippingPage();
 
+  const isMobile = () => window.innerWidth <= 768;
   const { t } = useTranslation();
   const { shippingData, billingData } = useCheckout();
   const { enrichedItems, subtotalValue, shippingCost, total } = useCheckoutSummary();
@@ -39,11 +40,14 @@ const ShippingPage = () => {
             <BillingForm ref={billingFormRef} onChange={setBillingData} initialValues={billingData} />
           )}
           <div className="align-right">
-            <CustomButton
-              label={t('checkout.actions.next')}
-              onClick={handleNextClick}
-              variant="primary"
-            />
+            {isMobile() && (
+              <CustomButton
+                label={t('checkout.actions.next')}
+                onClick={handleNextClick}
+                variant="primary"
+                fullWidth={true}
+              />
+            )}
           </div>
         </div>
         <div className="summary-wrapper">
@@ -51,7 +55,7 @@ const ShippingPage = () => {
             <OrderSummary
               items={enrichedItems}
               shipping={{
-                name: `${shippingData.firstName || ''} ${shippingData.lastName || ''}`,
+                name: `${shippingData.fullName || ''}`,
                 address: shippingData.address || '',
                 phone: shippingData.phone || '',
                 city: `${shippingData.postcode || ''} ${shippingData.city || ''}`,
@@ -62,6 +66,8 @@ const ShippingPage = () => {
               subtotal={subtotalValue}
               shippingCost={shippingCost}
               total={total}
+              showNextButton={true}
+              onNextClick={handleNextClick}
             />
           </div>
         </div>

@@ -5,6 +5,7 @@ import OrderItemRow from './OrderItemRow';
 import ShippingDetails from './ShippingDetails';
 import SummaryTotals from './SummaryTotals';
 import { useTranslation } from 'react-i18next';
+import CustomButton from '../shipping/CustomButton';
 
 type ShippingInfo = {
   name: string;
@@ -22,10 +23,12 @@ type Props = {
   subtotal: number;
   shippingCost: number;
   total: number;
+  showNextButton?: boolean;
+  onNextClick?: () => void;
 };
 
 const OrderSummary: React.FC<Props> = ({
-  items, shipping, subtotal, shippingCost, total,
+  items, shipping, subtotal, shippingCost, total, showNextButton, onNextClick
 }) => {
   const { dispatch } = useCart();
   const { t } = useTranslation();
@@ -48,6 +51,17 @@ const OrderSummary: React.FC<Props> = ({
           <SummaryTotals subtotal={subtotal} shippingCost={shippingCost} total={total} />
         </tbody>
       </table>
+
+      {showNextButton && (
+        <div className="align-right" style={{ marginTop: '1rem' }}>
+          <CustomButton
+            label={t('checkout.actions.next')}
+            onClick={onNextClick}
+            variant="primary"
+            fullWidth={true}
+          />
+        </div>
+      )}
     </div>
   );
 };

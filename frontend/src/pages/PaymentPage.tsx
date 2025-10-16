@@ -67,7 +67,7 @@ const PaymentPage = () => {
             <OrderSummary
               items={enrichedItems}
               shipping={{
-                name: `${shippingData.firstName} ${shippingData.lastName}`,
+                name: `${shippingData.fullName}`,
                 address: shippingData.address,
                 phone: shippingData.phone,
                 city: `${shippingData.postcode} ${shippingData.city}`,

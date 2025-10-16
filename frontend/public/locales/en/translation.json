@@ -116,10 +116,9 @@
     "billing": {
       "title": "Billing Details",
       "fields": {
-        "firstName": "First name",
-        "lastName": "Last name",
+        "fullName": "Full name",
         "phone": "Phone",
-        "country": "Country / Region *",
+        "country": "Country / Region",
         "address": "Street address",
         "city": "Town / City",
         "postcode": "Postcode / ZIP"
@@ -128,9 +127,8 @@
     "shipping": {
       "title": "Shipping Details",
       "fields": {
-        "firstName": "First name",
-        "lastName": "Last name",
-        "country": "Country / Region *",
+        "fullName": "Full name",
+        "country": "Country / Region",
         "address": "Street address",
         "phone": "Phone",
         "city": "Town / City",

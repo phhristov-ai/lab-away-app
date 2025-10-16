@@ -20,7 +20,14 @@ const OrderItemRow: React.FC<Props> = ({ item, onQuantityChange }) => {
           {item.title}
         </Link>
         <br />
-        <small>{item.subTitle}</small>
+        <small>
+          <img
+            src="/static/media/clock.73a198ac8c0a3163c5ed.webp"
+            alt=""
+            className="feature-icon"
+          />
+          {item.subTitle}
+        </small>
       </td>
       <td>
         <QuantitySelector

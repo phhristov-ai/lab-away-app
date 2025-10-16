@@ -27,10 +27,7 @@ const BillingForm = forwardRef<BillingFormHandle, BillingFormProps>(({ onChange,
       <h2>{t('checkout.billing.title')}</h2>
       <form>
         <div className="form-row">
-          <FormField id="firstName" value={formData.firstName || ''} label={t('checkout.billing.fields.firstName')} onChange={handleChange} error={errors.firstName} />
-          <FormField id="lastName" value={formData.lastName || ''} label={t('checkout.billing.fields.lastName')} onChange={handleChange} error={errors.lastName} />
-        </div>
-        <div className="form-row">
+          <FormField id="fullName" value={formData.fullName || ''} label={t('checkout.billing.fields.fullName')} onChange={handleChange} error={errors.fullName} />
           <CountryDropdown
             id="countryCode"
             value={formData.countryCode}
@@ -39,7 +36,6 @@ const BillingForm = forwardRef<BillingFormHandle, BillingFormProps>(({ onChange,
             options={countryOptions}
             onChange={handleCountryChange}
           />
-          <FormField id="address" value={formData.address || ''} label={t('checkout.billing.fields.address')} onChange={handleChange} error={errors.address} />
         </div>
         <div className="form-row">
           <PhoneField
@@ -49,10 +45,14 @@ const BillingForm = forwardRef<BillingFormHandle, BillingFormProps>(({ onChange,
             onChange={handleChange}
             error={errors.phone}
           />
+          <FormField id="address" value={formData.address || ''} label={t('checkout.billing.fields.address')} onChange={handleChange} error={errors.address} />
         </div>
         <div className="form-row">
-          <FormField id="city" value={formData.city || ''} label={t('checkout.billing.fields.city')} onChange={handleChange} error={errors.city} />
+
+        </div>
+        <div className="form-row">
           <FormField id="postcode" value={formData.postcode || ''} label={t('checkout.billing.fields.postcode')} onChange={handleChange} error={errors.postcode} />
+          <FormField id="city" value={formData.city || ''} label={t('checkout.billing.fields.city')} onChange={handleChange} error={errors.city} />
         </div>
       </form>
     </div>

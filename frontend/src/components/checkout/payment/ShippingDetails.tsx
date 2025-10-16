@@ -22,14 +22,13 @@ type Props = {
           <td colSpan={2}><strong>{t('checkout.shipping.title')}</strong></td>
         </tr>
         <tr>
-          <td className="shipping-left">
+          <td className="shipping-left" colSpan={2}>
             {name}<br />
             {address}<br />
-            {phone}<br />
+            +{phone}<br />
             {city}<br />
             {countryName}
           </td>
-          <td></td>
           <td colSpan={2} className="shipping-right">
             <div className="email-centered">{email}</div>
           </td>
