@@ -59,24 +59,25 @@ export function useBillingForm(onChange: (data: FormData) => void, initialValues
     return Object.keys(newErrors).length === 0;
   };
 
-    const handleCountryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const selectedCode = e.target.value;
-      const selectedCountry = countryOptions.find((c) => c.code === selectedCode);
-      const selectedName = selectedCountry ? selectedCountry.name : '';
-  
-      const updatedData = {
-        ...formData,
-        countryCode: selectedCode,
-        countryName: selectedName,
-      };
-      setFormData(updatedData);
-      onChange(updatedData);
-  
-      setErrors(prevErrors => {
-        const { countryCode, countryName, ...rest } = prevErrors;
-        return rest;
-      });
-    };
+  const handleBillingCountryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedCode = e.target.value;
+    const selectedCountry = countryOptions.find((c) => c.code === selectedCode);
+    const selectedName = selectedCountry ? selectedCountry.name : '';
 
-  return { formData, errors, handleChange, validate, handleCountryChange, countryOptions};
+    const updatedData = {
+      ...formData,
+      countryCode: selectedCode,
+      countryName: selectedName,
+      phone: '',
+    };
+    setFormData(updatedData);
+    onChange(updatedData);
+
+    setErrors(prevErrors => {
+      const { countryCode, countryName, ...rest } = prevErrors;
+      return rest;
+    });
+  };
+
+  return { formData, errors, handleChange, validate, handleBillingCountryChange, countryOptions };
 }

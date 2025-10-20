@@ -25,7 +25,7 @@ const ShippingForm = forwardRef<ShippingFormHandle, ShippingFormProps>(
       formData,
       useDifferentBilling,
       handleCheckboxChange,
-      handleCountryChange,
+      handleShippingCountryChange,
       countryOptions
     } = useShippingForm(onChange, initialValues);
 
@@ -38,7 +38,7 @@ const ShippingForm = forwardRef<ShippingFormHandle, ShippingFormProps>(
 
     return (
       <div className="address-form">
-        <h2>{t('checkout.shipping.title')}</h2>
+        <h2 className="section-title">{t('checkout.shipping.title')}</h2>
         <form>
           <div className="form-row">
             <FormField id="email" value={formData.email || ''} label={t('checkout.email')} onChange={handleChange} error={errors.email} />
@@ -51,7 +51,7 @@ const ShippingForm = forwardRef<ShippingFormHandle, ShippingFormProps>(
               value={formData.countryCode}
               error={errors.countryCode}
               options={countryOptions}
-              onChange={handleCountryChange}
+              onChange={handleShippingCountryChange}
             />
           </div>
 
@@ -62,6 +62,7 @@ const ShippingForm = forwardRef<ShippingFormHandle, ShippingFormProps>(
               label={t('checkout.shipping.fields.phone')}
               onChange={handleChange}
               error={errors.phone}
+              countryCode={formData.countryCode}
             />
             <FormField id="address" value={formData.address || ''} label={t('checkout.shipping.fields.address')} onChange={handleChange} error={errors.address} />
           </div>

@@ -4,7 +4,7 @@ import { ProductImage } from '../types/ProductImage';
 export function useGallery(images: ProductImage[], setImages: React.Dispatch<React.SetStateAction<ProductImage[]>>) {
   const [currentIndex, setCurrentIndex] = useState(() => {
     const mainIndex = images.findIndex((img) => img.main);
-    return mainIndex !== -1 ? mainIndex : 0;
+    return mainIndex === -1 ? 0 : mainIndex;
   });
 
   const [isDragging, setIsDragging] = useState(false);
@@ -15,7 +15,7 @@ export function useGallery(images: ProductImage[], setImages: React.Dispatch<Rea
     if (mainIndex !== -1 && mainIndex !== currentIndex) {
       setCurrentIndex(mainIndex);
     }
-  }, [images]);
+  }, [images, currentIndex]);
 
   const goToPrev = useCallback(() => {
     setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));

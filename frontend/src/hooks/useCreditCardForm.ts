@@ -40,7 +40,7 @@ export const useCreditCardForm = () => {
           ...splitFullName(billingData.fullName),
           address: billingData.address,
           city: billingData.city,
-          country: billingData.country,
+          country: billingData.countryCode,
           postCode: billingData.postcode,
           phone: billingData.phone
         },
@@ -48,7 +48,7 @@ export const useCreditCardForm = () => {
           ...splitFullName(shippingData.fullName),
           address: shippingData.address,
           city: shippingData.city,
-          country: shippingData.country,
+          country: shippingData.countryCode,
           postCode: shippingData.postcode,
           phone: shippingData.phone,
 
@@ -61,13 +61,7 @@ export const useCreditCardForm = () => {
         language: i18n.language,
       };
 
-      // 2. Create order
       const order = await createOrder(orderData);
-      console.log('✅ Order created:', order);
-
-      console.log('🔐 clientSecret:', order.clientSecret);
-
-      // 4. Confirm payment with Stripe
       const result = await confirmPayment(order.clientSecret, billingData);
 
       if (result.error) {
@@ -76,9 +70,6 @@ export const useCreditCardForm = () => {
       }
 
       if (result.paymentIntent?.status === 'succeeded') {
-        console.log('✅ Payment successful');
-
-        // 5. Optionally confirm the order in backend
         await fetch(`${process.env.REACT_APP_API_BASE_URL}/orders/confirm/${order.orderNumber}`, {
           method: 'POST',
         });
@@ -90,7 +81,7 @@ export const useCreditCardForm = () => {
             orderNumber: order.orderNumber,
             email: billingData.email,
             total: order.total,
-            paymentMethod: 'Cash on delivery',
+            paymentMethod: 'Credit Card',
             shippingAddress: shippingData,
           },
         });

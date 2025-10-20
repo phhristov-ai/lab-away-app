@@ -8,15 +8,17 @@ type PhoneFieldProps = {
   value: string;
   onChange: (e: { target: { id: string; value: string } }) => void;
   error?: string;
+  countryCode?: string;
 };
 
-const PhoneField: React.FC<PhoneFieldProps> = ({ id, label, value, onChange, error }) => {
+const PhoneField: React.FC<PhoneFieldProps> = ({ id, label, value, onChange, error, countryCode }) => {
   return (
     <div className={`form-group ${error ? 'has-error' : ''}`}>
       <label htmlFor={id}>{label}</label>
 
       <PhoneInput
-        country="de"
+        key={countryCode}
+        country={countryCode?.toLowerCase() || 'de'}
         value={value}
         onChange={(val) => {
           onChange({ target: { id, value: val } });
@@ -30,7 +32,7 @@ const PhoneField: React.FC<PhoneFieldProps> = ({ id, label, value, onChange, err
         placeholder="Enter phone number"
         inputClass="input-cell"
         specialLabel=""
-        autoFormat={false}  
+        autoFormat={false}
       />
 
       {error && <p className="error-message">{error}</p>}

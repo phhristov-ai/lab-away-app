@@ -26,7 +26,6 @@ function App() {
 
   const handleOpenSettings = () => {
     setShowSettings(true);
-    console.log('Cookie settings popup should open');
   };
 
   return (

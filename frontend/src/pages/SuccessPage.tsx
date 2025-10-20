@@ -25,8 +25,6 @@ const SuccessPage: React.FC = () => {
   });
 
   if (!orderNumber) {
-    console.log(orderNumber);
-    console.log(total + " TOTAL");
     return <p>{t('successPage.invalid')}</p>;
   }
 

@@ -2,17 +2,18 @@ import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import i18n from '../i18n/i18n';
 
-const supportedLanguages = ['en', 'de', 'bg'];
+const supportedLanguages = new Set(['en', 'de', 'bg']);
 
 const LanguagePrefixer = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
   const path = location.pathname;
 
   const pathLang = path.split('/')[1];
-  const hasLang = supportedLanguages.includes(pathLang);
+  const hasLang = supportedLanguages.has(pathLang);
 
-  const currentLang = i18n.language || 'en';
+  const currentLang = i18n.language?.split('-')[0] || 'en';
 
   useEffect(() => {
     if (!hasLang) {

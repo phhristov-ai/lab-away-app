@@ -49,7 +49,6 @@ export function useShippingForm(onChange: (data: FormData) => void, initialValue
   const validate = () => {
     const newErrors: Errors = {};
     requiredFields.forEach(field => {
-      console.log(formData[field]);
       if (!formData[field]?.trim()) {
         newErrors[field] = t('form.errors.required');
       }
@@ -58,15 +57,16 @@ export function useShippingForm(onChange: (data: FormData) => void, initialValue
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleCountryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleShippingCountryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedCode = e.target.value;
     const selectedCountry = countryOptions.find((c) => c.code === selectedCode);
     const selectedName = selectedCountry ? selectedCountry.name : '';
-
+    
     const updatedData = {
       ...formData,
       countryCode: selectedCode,
       countryName: selectedName,
+      phone: '',
     };
     setFormData(updatedData);
     onChange(updatedData);
@@ -84,7 +84,7 @@ export function useShippingForm(onChange: (data: FormData) => void, initialValue
     validate,
     useDifferentBilling,
     handleCheckboxChange,
-    handleCountryChange,
+    handleShippingCountryChange,
     countryOptions
   };
 }

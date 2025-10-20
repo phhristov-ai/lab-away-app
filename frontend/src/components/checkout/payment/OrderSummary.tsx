@@ -38,7 +38,7 @@ const OrderSummary: React.FC<Props> = ({
 
   return (
     <div className="order-summary">
-      <h2 className="order-summary-title">
+      <h2 className="section-title">
         {t('checkout.summary.title')}
       </h2>
 

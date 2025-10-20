@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 interface Link {
   label: string;
@@ -17,11 +18,10 @@ const LinksList: React.FC<LinksListProps> = ({ title, links }) => {
       <ul>
         {links.map((link) => (
           <li key={link.url}>
-            <a href={link.url}>{link.label}</a>
+            <Link to={link.url}>{link.label}</Link>
           </li>
         ))}
       </ul>
-
     </div>
   );
 };

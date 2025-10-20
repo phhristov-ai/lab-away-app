@@ -137,7 +137,7 @@
       "useDifferentBilling": "Use a different billing address?"
     },
     "cart": {
-      "freeShipping" : "Free Shipping",
+      "freeShipping" : "FREE",
       "title": "Your Tests",
       "inclVat": "(incl. VAT)",
       "columns": {

@@ -19,9 +19,8 @@ type BillingFormProps = {
 };
 
 const BillingForm = forwardRef<BillingFormHandle, BillingFormProps>(({ onChange, initialValues }, ref) => {
-  const { errors, handleChange, validate, formData, handleCountryChange, countryOptions } = useBillingForm(onChange, initialValues || {});
+  const { errors, handleChange, validate, formData, handleBillingCountryChange, countryOptions } = useBillingForm(onChange, initialValues || {});
   useImperativeHandle(ref, () => ({ validate }));
-
   return (
     <div className="address-form">
       <h2>{t('checkout.billing.title')}</h2>
@@ -34,7 +33,7 @@ const BillingForm = forwardRef<BillingFormHandle, BillingFormProps>(({ onChange,
             label={t('checkout.billing.fields.country')}
             error={errors.countryCode}
             options={countryOptions}
-            onChange={handleCountryChange}
+            onChange={handleBillingCountryChange}
           />
         </div>
         <div className="form-row">
@@ -44,6 +43,7 @@ const BillingForm = forwardRef<BillingFormHandle, BillingFormProps>(({ onChange,
             label={t('checkout.shipping.fields.phone')}
             onChange={handleChange}
             error={errors.phone}
+            countryCode={formData.countryCode} 
           />
           <FormField id="address" value={formData.address || ''} label={t('checkout.billing.fields.address')} onChange={handleChange} error={errors.address} />
         </div>

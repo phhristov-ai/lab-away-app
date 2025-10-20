@@ -86,7 +86,7 @@ export const useProductPage = () => {
 
     useEffect(() => {
         setImages(getInitialImages(product));
-    }, [product]);
+    }, [product, getInitialImages]);
 
 
     const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -152,8 +152,6 @@ export const useProductPage = () => {
                 filesToUpload,
                 existingImageUrls,
             } = processImagesForPayload(images);
-
-            console.log("mainImageIndex:" + mainImageIndex);
 
             const payload: ProductPayloadDto = {
                 price,

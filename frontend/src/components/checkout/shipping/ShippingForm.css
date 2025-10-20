@@ -27,7 +27,7 @@
 
 .form-group input,
 .form-group select {
-  padding: 1.5rem 1rem;
+  padding: 1rem 1rem;
   border: 1px solid #ccc;
   border-radius: 1rem;
 }
@@ -43,7 +43,7 @@
 }
 
 .form-group .react-tel-input .form-control {
-  padding: 2rem 2rem 2rem 3rem !important;
+  padding: 1.5rem 2rem 1.5rem 3rem !important;
   border: 1px solid #ccc;
   margin-right: 2rem;
   border-radius: 1rem;
