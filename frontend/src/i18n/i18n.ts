@@ -11,6 +11,8 @@ i18n
     fallbackLng: 'en',
     ns: ['translation'],
     defaultNS: 'translation',
+    supportedLngs: ['en', 'de', 'bg'],
+    load: 'languageOnly',
     backend: {
       loadPath: '/locales/{{lng}}/{{ns}}.json',
     },

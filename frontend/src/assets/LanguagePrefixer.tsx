@@ -10,14 +10,17 @@ const LanguagePrefixer = () => {
 
   const path = location.pathname;
 
-  const pathLang = path.split('/')[1];
-  const hasLang = supportedLanguages.has(pathLang);
+  const pathLangRaw = path.split('/')[1] || '';
+  const pathLang = pathLangRaw.split('-')[0];
 
-  const currentLang = i18n.language?.split('-')[0] || 'en';
+  const hasSupportedLang = supportedLanguages.has(pathLang);
+
+  const rawLang = i18n.language || 'en';
+  const currentLang = rawLang.split('-')[0];
 
   useEffect(() => {
-    if (!hasLang) {
-      const target = `/${currentLang}${path}`;
+    if (!hasSupportedLang) {
+      const target = `/${currentLang}${path.startsWith('/') ? '' : '/'}${path.slice(1)}`;
 
       if (location.pathname !== target) {
         navigate(target, {
@@ -25,8 +28,18 @@ const LanguagePrefixer = () => {
           state: location.state,
         });
       }
+    } else if (pathLang !== pathLangRaw) {
+      const restOfPath = path.split('/').slice(2).join('/');
+      const normalizedPath = `/${pathLang}/${restOfPath}`;
+
+      if (location.pathname !== normalizedPath) {
+        navigate(normalizedPath, {
+          replace: true,
+          state: location.state,
+        });
+      }
     }
-  }, [hasLang, currentLang, path, navigate, location.pathname, location.state]);
+  }, [hasSupportedLang, currentLang, path, pathLang, pathLangRaw, navigate, location.pathname, location.state]);
 
   return null;
 };
