@@ -19,10 +19,10 @@ const ShippingDetails: React.FC<Props> = ({
   return (
     <>
       <tr className="order-summary-section">
-        <td colSpan={2}><strong>{t('checkout.shipping.title')}</strong></td>
+        <td colSpan={3}><strong>{t('checkout.shipping.title')}</strong></td>
       </tr>
       <tr>
-        <td className="shipping-left" colSpan={2}>
+        <td className="shipping-left" colSpan={3}>
           {name}<br />
           {address}<br />
           {phone ? `+${phone}` : null}<br />

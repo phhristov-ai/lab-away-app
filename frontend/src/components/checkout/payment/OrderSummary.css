@@ -47,3 +47,7 @@
   font-weight: bold;
   padding-top: 12px;
 }
+
+.remove-button-container {
+  text-align: center;
+}

@@ -1,6 +1,7 @@
 import React from 'react';
 import QuantitySelector from '../../product/QuantitySelector';
 import { Link } from 'react-router-dom';
+import { useCart } from "../../../context/CartContext";
 
 type Props = {
   item: CartItem;
@@ -8,9 +9,15 @@ type Props = {
 };
 
 const OrderItemRow: React.FC<Props> = ({ item, onQuantityChange }) => {
+  const { dispatch } = useCart();
+
+  const handleRemoveItem = () => {
+    dispatch({ type: 'REMOVE_ITEM', payload: { slug: item.slug } });
+  };
+
   return (
     <tr className="order-summary-item">
-      <td>
+      <td colSpan={2}>
         <Link to={`/product/${item.slug}`}>
           <img src={item.image} alt={item.product} className="product-image" />
         </Link>
@@ -34,6 +41,9 @@ const OrderItemRow: React.FC<Props> = ({ item, onQuantityChange }) => {
           value={item.quantity}
           onChange={(newQuantity) => onQuantityChange(item.slug, newQuantity)}
         />
+      </td>
+      <td className="remove-button-container">
+        <button className="remove-button" onClick={handleRemoveItem}>×</button>
       </td>
     </tr>
   );

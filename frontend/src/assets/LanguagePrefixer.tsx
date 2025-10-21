@@ -15,18 +15,21 @@ const LanguagePrefixer = () => {
 
   const hasSupportedLang = supportedLanguages.has(pathLang);
 
-  const rawLang = i18n.language || 'en';
-  const currentLang = rawLang.split('-')[0];
+  const currentLang = (i18n.language || 'en').split('-')[0];
 
   useEffect(() => {
     if (!hasSupportedLang) {
-      const target = `/${currentLang}${path.startsWith('/') ? '' : '/'}${path.slice(1)}`;
+      const pathWithoutLeadingSlash = path.startsWith('/') ? path.slice(1) : path;
+      const alreadyPrefixed = pathWithoutLeadingSlash.startsWith(`${currentLang}/`);
 
-      if (location.pathname !== target) {
-        navigate(target, {
-          replace: true,
-          state: location.state,
-        });
+      if (!alreadyPrefixed) {
+        const target = `/${currentLang}/${pathWithoutLeadingSlash}`;
+        if (location.pathname !== target) {
+          navigate(target, {
+            replace: true,
+            state: location.state,
+          });
+        }
       }
     } else if (pathLang !== pathLangRaw) {
       const restOfPath = path.split('/').slice(2).join('/');
@@ -39,7 +42,16 @@ const LanguagePrefixer = () => {
         });
       }
     }
-  }, [hasSupportedLang, currentLang, path, pathLang, pathLangRaw, navigate, location.pathname, location.state]);
+  }, [
+    hasSupportedLang,
+    currentLang,
+    path,
+    pathLang,
+    pathLangRaw,
+    navigate,
+    location.pathname,
+    location.state,
+  ]);
 
   return null;
 };

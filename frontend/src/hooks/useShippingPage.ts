@@ -4,17 +4,24 @@ import { useCheckout } from '../context/CheckoutContext';
 import { trackGAEvent } from '../utils/analytics';
 import { BillingFormHandle } from '../components/checkout/shipping/BillingForm';
 import { ShippingFormHandle } from '../components/checkout/shipping/ShippingForm';
+import { useCheckoutSummary } from './useCheckoutSummary';
 
 export function useShippingPage() {
   const { shippingData, setShippingData, setBillingData } = useCheckout();
   const [showBilling, setShowBilling] = useState(false);
   const navigate = useNavigate();
-
+  const { enrichedItems } = useCheckoutSummary();
   const billingFormRef = useRef<BillingFormHandle>(null);
   const shippingFormRef = useRef<ShippingFormHandle>(null);
 
   useEffect(() => {
-    // Track when billing page is viewed
+    if (enrichedItems.length === 0) {
+      navigate('/');
+    }
+  }, [enrichedItems, navigate]);
+
+  useEffect(() => {
+    // Track when shipping page is viewed
     trackGAEvent('begin_checkout', {
       step: 2,
       description: 'Shipping page viewed',

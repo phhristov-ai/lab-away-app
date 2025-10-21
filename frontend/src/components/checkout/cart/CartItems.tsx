@@ -23,10 +23,7 @@ const CartItems: React.FC<CartItemsProps> = ({ items }) => {
       <table>
         <thead>
           <tr>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
+            <th colSpan={4}></th>
           </tr>
         </thead>
         <tbody>

@@ -2,21 +2,26 @@ import OrderSummary from "../components/checkout/payment/OrderSummary";
 import CheckoutLayout from "../layouts/CheckoutLayout";
 import StripeProviderWrapper from "../components/checkout/payment/StripeProviderWrapper";
 import CreditCardForm from "../components/checkout/payment/CreditCardForm";
-import { useState } from "react";
 import './PaymentPage.css';
 import PayPalForm from "../components/checkout/payment/PayPalForm";
 import { useCheckout } from "../context/CheckoutContext";
 import { useTranslation } from 'react-i18next';
-import { useCheckoutSummary } from "../hooks/useCheckoutSummary";
 import cardIcon from '../assets/icons/payment/card.svg';
 import paypal1 from '../assets/icons/payment/PayPal1.png';
 import paypal2 from '../assets/icons/payment/PayPal2.png';
+import { usePaymentPage } from "../hooks/usePaymentPage";
 
 const PaymentPage = () => {
   const { t } = useTranslation();
   const { shippingData } = useCheckout();
-  const [paymentMethod, setPaymentMethod] = useState<'creditCard' | 'paypal'>('creditCard');
-  const { enrichedItems, subtotalValue, shippingCost, total } = useCheckoutSummary();
+  const {
+    paymentMethod,
+    setPaymentMethod,
+    enrichedItems,
+    subtotalValue,
+    shippingCost,
+    total,
+  } = usePaymentPage();
 
   return (
     <CheckoutLayout>
