@@ -1,56 +1,53 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { ConsentState, ConsentContextType } from './types';
 import {
-    loadGoogleAnalytics,
-    removeGoogleAnalytics,
-    loadGoogleAds,
-    removeGoogleAds,
-    getStoredConsent,
-    saveConsent,
+  loadGoogleAds,
+  removeGoogleAds,
+  getStoredConsent,
+  saveConsent,
+  ensureGoogleAnalytics,
 } from './consentUtils';
 
 const defaultConsent: ConsentState = {
-    necessary: true,
-    analytics: false,
-    marketing: false,
+  necessary: true,
+  analytics: true,
+  marketing: true,
 };
 
 const ConsentContext = createContext<ConsentContextType>({
-    consent: defaultConsent,
-    updateConsent: () => { },
+  consent: defaultConsent,
+  updateConsent: () => {},
 });
 
 export const ConsentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [consent, setConsent] = useState<ConsentState>(() => getStoredConsent() || defaultConsent);
+  const [consent, setConsent] = useState<ConsentState>(() => getStoredConsent() || defaultConsent);
 
-    useEffect(() => {
-        saveConsent(consent);
+  useEffect(() => {
+    saveConsent(consent);
+    ensureGoogleAnalytics();
 
-        if (consent.analytics) loadGoogleAnalytics();
-        else removeGoogleAnalytics();
+    if (consent.marketing) loadGoogleAds();
+  }, []);
 
-        if (consent.marketing) loadGoogleAds();
-        else removeGoogleAds();
-    }, [consent]);
+  useEffect(() => {
+    console.log('[Consent Updated]', consent);
+    saveConsent(consent);
 
-    const updateConsent = (newConsent: Partial<ConsentState>) => {
-        setConsent((prev) => ({
-            ...prev,
-            ...newConsent,
-            necessary: true,
-        }));
-    };
+    if (consent.marketing) loadGoogleAds();
+    else removeGoogleAds();
+  }, [consent.marketing]);
 
-    const contextValue = useMemo(
-        () => ({ consent, updateConsent }),
-        [consent, updateConsent]
-    );
+  const updateConsent = (newConsent: Partial<ConsentState>) => {
+    setConsent((prev) => ({
+      ...prev,
+      ...newConsent,
+      necessary: true,
+    }));
+  };
 
-    return (
-        <ConsentContext.Provider value={contextValue}>
-            {children}
-        </ConsentContext.Provider>
-    );
+  const contextValue = useMemo(() => ({ consent, updateConsent }), [consent]);
+
+  return <ConsentContext.Provider value={contextValue}>{children}</ConsentContext.Provider>;
 };
 
 export const useConsent = () => useContext(ConsentContext);

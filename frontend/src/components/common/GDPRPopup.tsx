@@ -33,7 +33,6 @@ const GDPRPopup: React.FC<GDPRPopupProps> = ({ onClose }) => {
                     &times;
                 </button>
 
-                {/* Desktop Sidebar */}
                 <div className="gdpr-sidebar">
                     <div className="gdpr-logo-container">
                         <img src={gdprLogo} alt="GDPR Logo" className="gdpr-logo" />
@@ -64,7 +63,6 @@ const GDPRPopup: React.FC<GDPRPopupProps> = ({ onClose }) => {
                             </p>
                         </div>
                         )}
-                        {/* Mobile collapsible title */}
                         <div
                             className={`gdpr-mobile-title ${showNecessaryMobile ? 'open' : ''}`}
                             onClick={() => setShowNecessaryMobile((prev) => !prev)}
@@ -72,7 +70,6 @@ const GDPRPopup: React.FC<GDPRPopupProps> = ({ onClose }) => {
                             Strictly Necessary Cookies
                         </div>
 
-                        {/* Desktop tab OR mobile collapsible */}
                         {(activeTab === 'necessary' || showNecessaryMobile) && (
                             <div
                                 className={`gdpr-section-collapsible ${showNecessaryMobile ? 'active' : ''
