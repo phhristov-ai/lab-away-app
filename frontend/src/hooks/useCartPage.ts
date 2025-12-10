@@ -15,6 +15,7 @@ export const useCartPage = () => {
         subtotal: item.price * item.quantity,
         title: item.name,
         product: item.name,
+        categories: item.categories
     }));
 
     const subtotalValue = state.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -39,7 +40,8 @@ export const useCartPage = () => {
                     item_id: item.slug,
                     item_name: item.name,
                     price: item.price,
-                    quantity: item.quantity
+                    quantity: item.quantity,
+                    cagegories: item.categories
                 })),
             });
         }

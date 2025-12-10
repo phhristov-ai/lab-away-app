@@ -4,15 +4,17 @@ import AddToCartButton from '../product/AddToCartButton';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '../../utils/format';
 import { useNavigate } from 'react-router-dom';
+import { Category } from '../../services/categoriesService';
 
 type ProductDetailsProps = {
   name: string;
   price: number;
   image: string;
   slug: string;
+  categories: Category[];
 };
 
-const ProductDetails: React.FC<ProductDetailsProps> = ({ name, price, image, slug }) => {
+const ProductDetails: React.FC<ProductDetailsProps> = ({ name, price, image, slug, categories }) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
 
@@ -32,6 +34,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ name, price, image, slu
         image={image}
         price={price}
         quantity={1}
+        categories={categories}
       />
     </div>
   );

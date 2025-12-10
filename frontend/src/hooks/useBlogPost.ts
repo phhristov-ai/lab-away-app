@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useAdmin } from '../context/AdminContext';
 import { Category, fetchCategories } from '../services/categoriesService';
 import { BlogPostType, deleteBlogPost, fetchBlogPost, fetchRandomBlogs, saveBlogPost, updateBlogPost } from '../services/blogPostService';
+import { trackScrollBlogPost, trackViewBlogPost } from '../utils/analytics';
 
 export function useBlogPost() {
   const { slug } = useParams<{ slug: string }>();
@@ -36,6 +37,12 @@ export function useBlogPost() {
       setShowConfirmDelete(false);
     }
   };
+
+  useEffect(() => {
+    if (post?.slug && isFullPostLoaded && !isAdmin) {
+      trackViewBlogPost(post.slug, post.title, post.categories, post.author);
+    }
+  }, [post, isFullPostLoaded, isAdmin]);
 
   useEffect(() => {
     if (slug === 'new' && isAdmin) {
@@ -176,6 +183,50 @@ export function useBlogPost() {
   }, [i18n.language]);
 
 
+
+  function useBlogScrollTracking(slug: string, title: string) {
+    useEffect(() => {
+      console.log(title);
+      console.log(slug);
+
+      if (!title) return;
+
+      const scrollDepths = [25, 50, 75, 100];
+      const triggered = new Set<number>();
+
+      function handleScroll() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPercent = (scrollTop / docHeight) * 100;
+
+        scrollDepths.forEach((depth) => {
+          if (scrollPercent >= depth && !triggered.has(depth)) {
+            triggered.add(depth);
+            trackScrollBlogPost(slug, title, depth);
+          }
+        });
+
+        // Stop listening once all thresholds are reached
+        if (triggered.size === scrollDepths.length) {
+          window.removeEventListener('scroll', handleScroll);
+        }
+      }
+
+      // Debounce to prevent excessive firing
+      let timeout: ReturnType<typeof setTimeout>;
+      const onScroll = () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(handleScroll, 200);
+      };
+
+      window.addEventListener('scroll', onScroll);
+      return () => {
+        window.removeEventListener('scroll', onScroll);
+        clearTimeout(timeout);
+      };
+    }, [slug, title]);
+  }
+
   return {
     slug,
     post,
@@ -199,6 +250,7 @@ export function useBlogPost() {
     handleConfirmDelete,
     setShowConfirmDelete,
     i18n,
-    randomPosts
+    randomPosts,
+    useBlogScrollTracking
   };
 }

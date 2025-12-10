@@ -1,4 +1,6 @@
-type CartItem = {
+import { Category } from "../services/categoriesService";
+
+export type CartItem = {
   name: string;
   price: number;
   quantity: number;
@@ -9,4 +11,5 @@ type CartItem = {
   image: string;
   subTitle?: string;
   slug: string;
+  categories: Category[];
 };

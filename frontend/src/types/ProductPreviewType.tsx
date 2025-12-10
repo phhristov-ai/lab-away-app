@@ -6,4 +6,5 @@ export type ProductPreviewType = {
   thumbnailUrl: string;
   slug: string;
   categories: Category[];
+  onClick?: () => void;
 };

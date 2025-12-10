@@ -159,23 +159,291 @@
   },
   "delivery": {
     "title": "Lieferung und Versand",
-    "paragraph": "Wir bieten schnelle und zuverlässige Lieferoptionen, damit Ihre Bestellung sicher und pünktlich ankommt."
+    "sections": {
+      "areaTitle": "Liefergebiet",
+      "areaText": "Wir liefern derzeit ausschließlich innerhalb Europas. Bestellungen aus Ländern außerhalb Europas können nicht bearbeitet werden.",
+
+      "shippingTitle": "Versandkosten",
+      "shippingText": "Wir bieten kostenlosen Versand für alle Bestellungen innerhalb Europas an. Es fallen keine Versand- oder Bearbeitungsgebühren an.",
+
+      "timesTitle": "Lieferzeiten",
+      "timesText": "Unsere Testkits für zu Hause kommen in der Regel 1–2 Werktage nach Bestellbestätigung an. Bitte beachten Sie, dass an Sonn- und Feiertagen keine Lieferung erfolgt.",
+
+      "combinedTitle": "Bestellungen mit unterschiedlichen Lieferzeiten",
+      "combinedText": "Wenn Sie Artikel mit unterschiedlichen Lieferzeiten bestellt haben, versenden wir die Waren in einer Lieferung, sofern keine andere Vereinbarung getroffen wurde. In diesem Fall richtet sich die Lieferzeit nach dem Artikel mit der längsten Lieferzeit in Ihrer Bestellung.",
+
+      "contactTitle": "Fragen?",
+      "contactText": "Wenn Sie Fragen haben, können Sie uns gerne kontaktieren."
+    }
   },
   "privacy": {
-    "title": "Datenschutzrichtlinie",
-    "paragraph": "Ihre Privatsphäre ist uns wichtig. Wir verpflichten uns, Ihre persönlichen Daten zu schützen."
+    "title": "Datenschutzerklärung",
+
+    "section1": {
+      "title": "Allgemeiner Hinweis und verantwortliche Stelle",
+      "paragraphs": [
+        "Die für die Verarbeitung personenbezogener Daten auf dieser Website verantwortliche Stelle ist Gryphone Health Solutions EOOD.",
+        "Adresse: Evlogi Georgiev Str. 34, 9000 Varna, Bulgarien",
+        "E-Mail: sales@lab-away.com",
+        "Die verantwortliche Stelle entscheidet allein oder gemeinsam mit anderen über die Zwecke und Mittel der Verarbeitung personenbezogener Daten (z. B. Name, Kontaktdaten)."
+      ]
+    },
+
+    "section2": {
+      "title": "Einwilligung und Widerruf",
+      "paragraphs": [
+        "Einige Datenverarbeitungen erfordern Ihre ausdrückliche Einwilligung.",
+        "Sie können Ihre Einwilligung jederzeit widerrufen. Eine formlose E-Mail ist ausreichend.",
+        "Die Rechtmäßigkeit der Verarbeitung vor dem Widerruf bleibt unberührt."
+      ]
+    },
+
+    "section3": {
+      "title": "Rechte der betroffenen Personen",
+      "paragraphs": [
+        "Sie haben folgende Rechte in Bezug auf Ihre personenbezogenen Daten:"
+      ],
+      "list": [
+        "Recht, eine Beschwerde bei einer Aufsichtsbehörde einzureichen",
+        "Recht auf Datenübertragbarkeit (Erhalt Ihrer Daten oder Übermittlung an einen anderen Verantwortlichen)",
+        "Recht auf Auskunft, Berichtigung, Sperrung oder Löschung Ihrer Daten"
+      ]
+    },
+
+    "section4": {
+      "title": "Datenübermittlung und Serverprotokolle",
+      "paragraphs": [
+        "Serverprotokolle erfassen automatisch Informationen, die von Ihrem Browser gesendet werden, einschließlich:"
+      ],
+      "list": [
+        "Aufgerufene Seiten-URL",
+        "Datum und Uhrzeit des Zugriffs",
+        "Browsertyp und -version",
+        "Betriebssystem",
+        "Referrer-URL",
+        "Host-Name und IP-Adresse"
+      ],
+      "paragraphsAfterList": [
+        "Diese Daten werden ausschließlich zu Sicherheits- und Betriebszwecken verwendet.",
+        "Eine Zusammenführung mit anderen Datenquellen erfolgt nicht."
+      ]
+    },
+
+    "section5": {
+      "title": "Bestellabwicklung & Zahlungen",
+      "paragraphs": [
+        "Personenbezogene Daten werden nur an Dritte weitergegeben, wenn dies zur Erfüllung eines Vertrags erforderlich ist (z. B. Zahlungsanbieter, Versand).",
+        "Zahlungsanbieter: Stripe und PayPal.",
+        "Wir speichern keine Zahlungsdaten selbst.",
+        "Rechtsgrundlage für die Verarbeitung: Art. 6(1)(b) DSGVO."
+      ]
+    },
+
+    "section6": {
+      "title": "Registrierung und Kontaktformulare",
+      "paragraphs": [
+        "Die Registrierung auf der Website oder die Nutzung von Kontaktformularen ist freiwillig.",
+        "Die eingegebenen Daten werden ausschließlich zur Bearbeitung Ihrer Anfrage oder Dienstleistung verwendet.",
+        "Sie können Ihre Einwilligung jederzeit per E-Mail oder durch Abmeldung widerrufen."
+      ],
+      "list": [
+        "Alle Pflichtfelder müssen ausgefüllt werden.",
+        "Ihre Daten werden nur für den vorgesehenen Zweck verwendet.",
+        "Die Einwilligung kann jederzeit widerrufen werden."
+      ]
+    },
+
+    "section7": {
+      "title": "Cookies",
+      "paragraphs": [
+        "Diese Website verwendet Cookies, um die Benutzererfahrung und Sicherheit zu verbessern.",
+        "Einige Cookies sind Sitzungscookies und werden automatisch gelöscht, andere bleiben bestehen, bis Sie sie löschen.",
+        "Nicht-essenzielle Cookies werden nur nach Ihrer Einwilligung aktiviert.",
+        "Die Einwilligung kann jederzeit über das Cookie-Banner widerrufen werden."
+      ],
+      "list": [
+        "Sitzungscookies sind temporär und werden automatisch gelöscht.",
+        "Persistente Cookies bleiben bestehen, bis sie vom Nutzer gelöscht werden.",
+        "Nicht-essenzielle Cookies erfordern eine Einwilligung."
+      ]
+    },
+
+    "section8": {
+      "title": "Google Analytics 4 (GA4)",
+      "paragraphs": [
+        "Wir verwenden Google Analytics 4, um die Nutzung der Website zu analysieren.",
+        "IP-Anonymisierung ist aktiviert. Die Verarbeitung erfolgt nur nach Ihrer Einwilligung."
+      ],
+      "list": [
+        "Seitenaufrufe",
+        "Benutzerinteraktionen (Klicks, Scrolls usw.)",
+        "Geräteinformationen",
+        "Anonymisierte IP-Adressen"
+      ]
+    },
+
+    "section9": {
+      "title": "Google Ads & Facebook Pixel",
+      "paragraphs": [
+        "Wir verwenden Google Ads und Facebook Pixel für Werbung und Conversion-Tracking.",
+        "Tracking wird nur nach ausdrücklicher Einwilligung aktiviert.",
+        "Cookies werden gesetzt, um die Werbeleistung zu messen."
+      ]
+    },
+
+    "section10": {
+      "title": "Newsletter",
+      "paragraphs": [
+        "Die Newsletter-Anmeldung ist freiwillig.",
+        "Wir speichern Ihre E-Mail-Adresse und den Zeitstempel der Einwilligung.",
+        "Sie können sich jederzeit über den Link in jeder E-Mail abmelden."
+      ]
+    },
+
+    "section11": {
+      "title": "Web Fonts",
+      "paragraphs": [
+        "Wir verwenden Google Web Fonts, um die Website einheitlich darzustellen.",
+        "Die Fonts werden von Google-Servern in den USA geladen.",
+        "Nur Ihre IP-Adresse und die besuchten Seiten werden an Google übertragen.",
+        "Rechtsgrundlage: Art. 6(1)(f) DSGVO."
+      ]
+    },
+
+    "section12": {
+      "title": "Datenaufbewahrung",
+      "paragraphs": [
+        "Gesammelte Daten werden nur so lange aufbewahrt, wie es für den Zweck erforderlich ist.",
+        "Gesetzliche Aufbewahrungsfristen werden, soweit zutreffend, eingehalten.",
+        "Nach Widerruf der Einwilligung werden nicht-essenzielle Daten gelöscht."
+      ]
+    },
+
+    "section13": {
+      "title": "Änderungen der Datenschutzerklärung",
+      "paragraphs": [
+        "Wir können die Datenschutzerklärung aus rechtlichen oder technischen Gründen aktualisieren.",
+        "Wichtige Änderungen werden, falls erforderlich, per E-Mail mitgeteilt."
+      ]
+    }
   },
   "terms": {
-    "title": "Geschäftsbedingungen",
-    "paragraph": "Bitte lesen Sie unsere Geschäftsbedingungen sorgfältig, bevor Sie unsere Dienste nutzen."
-  },
-  "contact": {
-    "title": "Kontakt",
-    "paragraph": "Haben Sie Fragen? Kontaktieren Sie unser Support-Team per E-Mail oder Telefon."
+    "title": "Allgemeine Geschäftsbedingungen",
+
+    "section1": {
+      "title": "§1 Geltungsbereich und Begriffsbestimmungen",
+      "paragraphs": [
+        "Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für alle Bestellungen, die Verbraucher über lab-away.com aufgeben.",
+        "Ein Verbraucher ist jede natürliche Person, die ein Rechtsgeschäft zu Zwecken abschließt, die überwiegend weder ihrer gewerblichen noch ihrer selbständigen beruflichen Tätigkeit zugerechnet werden können (§13 BGB)."
+      ]
+    },
+
+    "section2": {
+      "title": "§2 Eigentumsvorbehalt",
+      "paragraphs": [
+        "Gryphone Health Solutions EOOD behält sich das Eigentum an allen Waren bis zur vollständigen Zahlung des Kaufpreises vor."
+      ]
+    },
+
+    "section3": {
+      "title": "§3 Preise, Versandkosten und Zahlung",
+      "paragraphs": [
+        "Alle Preise enthalten die gesetzliche Mehrwertsteuer sowie sonstige Preisbestandteile. Zusätzliche Versandkosten können anfallen.",
+        "Folgende Zahlungsmethoden stehen zur Verfügung:"
+      ],
+      "list": [
+        "SOFORT Banking",
+        "PayPal",
+        "Kreditkarte über PayPal (Visa, Mastercard, AMEX)",
+        "iDeal",
+        "KBC/CBC",
+        "Banküberweisung",
+        "ING Home’Pay",
+        "Bancontact"
+      ],
+      "paragraphsAfterList": [
+        "Bei Auswahl der Vorauszahlung ist der Kaufpreis unmittelbar nach Vertragsschluss zu entrichten."
+      ]
+    },
+
+    "section4": {
+      "title": "§4 Lieferung",
+      "paragraphs": [
+        "Sofern nicht anders angegeben, sind alle Produkte sofort versandbereit und werden innerhalb von 5 Werktagen geliefert.",
+        "Bei Vorauszahlung beginnt die Lieferzeit am Tag nach Eingang der Zahlungsanweisung bei der Bank.",
+        "An Sonn- und Feiertagen erfolgt keine Lieferung.",
+        "Die Gefahr des zufälligen Untergangs oder der zufälligen Verschlechterung geht erst mit Übergabe der Ware auf den Käufer über."
+      ]
+    },
+
+    "section5": {
+      "title": "§5 Vertragsschluss",
+      "paragraphs": [
+        "Bestellungen über lab-away.com werden mit Gryphone Health Solutions EOOD abgeschlossen.",
+        "Produktdarstellungen stellen kein rechtlich bindendes Angebot dar, sondern eine unverbindliche Aufforderung zur Abgabe einer Bestellung.",
+        "Der Vertrag kommt zustande, sobald der Verbraucher den Bestellvorgang erfolgreich abschließt und eine Bestellbestätigung per E-Mail erhält.",
+        "Der Bestellvorgang erfolgt in folgenden Schritten:"
+      ],
+      "list": [
+        "Produkte auswählen",
+        "Auf die Schaltfläche „Bestellen“ klicken",
+        "Warenkorb prüfen",
+        "Auf „Zur Kasse“ klicken",
+        "Login (optional; anonyme Bestellung möglich)",
+        "Erforderliche Informationen eingeben",
+        "Sichere Zahlung abschließen"
+      ],
+      "paragraphsAfterList": [
+        "Vor verbindlicher Abgabe der Bestellung kann der Verbraucher seine Eingaben über die Zurück-Funktion des Browsers korrigieren oder den Vorgang durch Schließen des Browsers abbrechen."
+      ]
+    },
+
+    "section6": {
+      "title": "§6 Widerrufsrecht (14 Tage für Verbraucher)",
+      "paragraphs": [
+        "Verbraucher können den Vertrag innerhalb von 14 Tagen ohne Angabe von Gründen widerrufen.",
+        "Die Widerrufsfrist beginnt an dem Tag, an dem die Waren empfangen wurden.",
+        "Um den Widerruf auszuüben, senden Sie eine eindeutige Erklärung (z. B. per E-Mail an <email></email>) unter Verwendung des bereitgestellten Musterformulars (optional)."
+      ],
+      "subTitle": "Folgen des Widerrufs:",
+      "list": [
+        "Erstattung aller erhaltenen Zahlungen einschließlich Standardlieferkosten innerhalb von 14 Tagen.",
+        "Erstattung über dasselbe Zahlungsmittel, das für die ursprüngliche Transaktion verwendet wurde, sofern nicht ausdrücklich anders vereinbart.",
+        "Rücksendung oder Übergabe der Waren muss innerhalb von 14 Tagen erfolgen; der Verbraucher trägt die direkten Kosten der Rücksendung.",
+        "Bei geöffneten oder über das übliche Prüfen hinaus benutzten Waren kann ein Wertersatz verlangt werden."
+      ]
+    },
+
+    "section7": {
+      "title": "§7 Muster-Widerrufsformular",
+      "form": [
+        "An: Gryphone Health Solutions EOOD",
+        "E-Mail: <email></email>",
+        "",
+        "Ich/Wir (*) widerrufe(n) hiermit den von mir/uns (*) abgeschlossenen Vertrag über den Kauf der folgenden Waren (*) / die Erbringung der folgenden Dienstleistungen (*): ___________________________",
+        "Bestellt am (*) / Erhalten am (*): ___________________________",
+        "Name des/der Verbraucher(s): ___________________________",
+        "Anschrift des/der Verbraucher(s): ___________________________",
+        "Unterschrift des/der Verbraucher(s) (nur bei Mitteilung auf Papier): ___________________________",
+        "Datum: ___________________________",
+        "",
+        "(*) Nichtzutreffendes streichen"
+      ]
+    }
   },
   "imprint": {
     "title": "Impressum",
-    "paragraph": "Diese Seite enthält die rechtlichen Details und Unternehmensinformationen."
+    "description": "ist ein Produkt von:",
+    "company": {
+      "name": "Gryphone Health Solutions LLC",
+      "registration": "Firmenregistrierung (UIC): {{UIC}}",
+      "vatId": "USt-IdNr.: {{VAT_ID}}"
+    },
+    "legalNotice": {
+      "title": "Online-Streitbeilegung",
+      "text1": "Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (ODR) bereit:",
+      "text2": "Gryphone Health Solutions LLC ist nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen, und nimmt an solchen Verfahren nicht teil."
+    }
   },
   "newsletter": {
     "title": "Newsletter Anmeldung"

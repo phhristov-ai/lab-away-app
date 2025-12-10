@@ -71,3 +71,7 @@
   width: auto;
   pointer-events: none;
 }
+
+.card-error-message {
+  color: red;
+}

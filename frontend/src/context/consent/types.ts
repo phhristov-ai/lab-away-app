@@ -1,7 +1,6 @@
 export interface ConsentState {
-  necessary: boolean;
-  analytics: boolean;
-  marketing: boolean;
+
+  hasInteracted: boolean;
 }
 
 export interface ConsentContextType {

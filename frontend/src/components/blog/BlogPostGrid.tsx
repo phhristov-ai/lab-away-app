@@ -29,18 +29,6 @@ const BlogPostGrid: React.FC<BlogPostGridProps> = ({ blogPosts }) => {
 
       {blogPosts.map((post) => (
         <div key={post.slug} className="blog-post-item">
-          <Link
-            to={`/blog/${post.slug}`}
-            state={{
-              title: post.title,
-              content: post.excerpt,
-              image: post.imageUrl,
-              slug: post.slug,
-              categories: post.categories,
-              readingTime: post.readingTime,
-              date: post.createdAt,
-            }}
-          >
             <BlogPost
               title={post.title}
               content={post.excerpt}
@@ -50,7 +38,6 @@ const BlogPostGrid: React.FC<BlogPostGridProps> = ({ blogPosts }) => {
               readingTime={post.readingTime}
               date={post.createdAt}
             />
-          </Link>
         </div>
       ))}
     </div>

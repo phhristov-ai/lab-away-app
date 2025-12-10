@@ -11,6 +11,7 @@ export const useCheckoutSummary = () => {
     subtotal: item.price * item.quantity,
     title: item.name,
     product: item.name,
+    categories: item.categories
   }));
 
   const subtotalValue = state.items.reduce(

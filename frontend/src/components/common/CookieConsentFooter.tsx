@@ -1,34 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './CookieConsentFooter.css';
 import LabAwayButton from './LabAwayButton';
+import { useConsent } from '../../context/consent/ConsentProvider';
 
 interface Props {
     onOpenSettings: () => void;
 }
 
 const CookieConsentFooter: React.FC<Props> = ({ onOpenSettings }) => {
-    const [visible, setVisible] = useState<boolean>(() => {
-        // Check if user already accepted cookies
-        return localStorage.getItem('cookieConsent') !== 'accepted';
-    });
 
-    const handleAccept = () => {
-        localStorage.setItem('cookieConsent', 'accepted');
-        setVisible(false);
-    };
+  const { consent, setInteracted } = useConsent();
 
-    if (!visible) return null;
+  if (consent.hasInteracted) return null;
 
     return (
         <div className="cookie-footer">
             <div className="cookie-message">
                 We are using cookies to give you the best experience on our website. <br />
-                You can find out more about which cookies we are using or switch them off in{' '}
+                You can find out more about which cookies we use or change preferences in{" "}
                 <span className="cookie-settings-link" onClick={onOpenSettings}>
                     settings
                 </span>.
             </div>
-            <LabAwayButton className="accept-button" onClick={handleAccept}>
+            <LabAwayButton className="accept-button" onClick={setInteracted}>
                 Accept
             </LabAwayButton>
         </div>

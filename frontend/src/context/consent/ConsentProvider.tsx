@@ -1,53 +1,37 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { ConsentState, ConsentContextType } from './types';
+import { ConsentState } from './types';
 import {
-  loadGoogleAds,
-  removeGoogleAds,
   getStoredConsent,
   saveConsent,
-  ensureGoogleAnalytics,
 } from './consentUtils';
 
-const defaultConsent: ConsentState = {
-  necessary: true,
-  analytics: true,
-  marketing: true,
-};
+interface ConsentContextType {
+  consent: ConsentState;
+  setInteracted: () => void;
+}
+
+const defaultConsent: ConsentState = { hasInteracted: false };
 
 const ConsentContext = createContext<ConsentContextType>({
   consent: defaultConsent,
-  updateConsent: () => {},
+  setInteracted: () => {},
 });
 
 export const ConsentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [consent, setConsent] = useState<ConsentState>(() => getStoredConsent() || defaultConsent);
+  const [consent, setConsent] = useState<ConsentState>(getStoredConsent());
 
-  useEffect(() => {
-    saveConsent(consent);
-    ensureGoogleAnalytics();
-
-    if (consent.marketing) loadGoogleAds();
-  }, []);
-
-  useEffect(() => {
-    console.log('[Consent Updated]', consent);
-    saveConsent(consent);
-
-    if (consent.marketing) loadGoogleAds();
-    else removeGoogleAds();
-  }, [consent.marketing]);
-
-  const updateConsent = (newConsent: Partial<ConsentState>) => {
-    setConsent((prev) => ({
-      ...prev,
-      ...newConsent,
-      necessary: true,
-    }));
+  const setInteracted = () => {
+    const updated = { hasInteracted: true };
+    setConsent(updated);
+    saveConsent(updated);
   };
 
-  const contextValue = useMemo(() => ({ consent, updateConsent }), [consent]);
-
-  return <ConsentContext.Provider value={contextValue}>{children}</ConsentContext.Provider>;
+  return (
+    <ConsentContext.Provider value={{ consent, setInteracted }}>
+      {children}
+    </ConsentContext.Provider>
+  );
 };
 
 export const useConsent = () => useContext(ConsentContext);
+

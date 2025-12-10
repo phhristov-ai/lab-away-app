@@ -77,6 +77,7 @@ const ProductPage: React.FC = () => {
                 ? product.images[0]?.imageUrl
                 : product.thumbnailUrl
             }
+            categories={product.categories}
             slug={product.slug}
             onTitleChange={setTitle}
             onPriceChange={setPrice}

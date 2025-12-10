@@ -6,6 +6,8 @@ import ShippingDetails from './ShippingDetails';
 import SummaryTotals from './SummaryTotals';
 import { useTranslation } from 'react-i18next';
 import CustomButton from '../shipping/CustomButton';
+import { Category } from '../../../services/categoriesService';
+import { CartItem } from '../../../types/CartItem';
 
 type ShippingInfo = {
   name: string;
@@ -32,8 +34,8 @@ const OrderSummary: React.FC<Props> = ({
 }) => {
   const { dispatch } = useCart();
   const { t } = useTranslation();
-  const handleQuantityChange = (slug: string, quantity: number) => {
-    dispatch({ type: 'UPDATE_QUANTITY', payload: { slug, quantity } });
+  const handleQuantityChange = (slug: string, quantity: number, categories: Category[]) => {
+    dispatch({ type: 'UPDATE_QUANTITY', payload: { slug, quantity, categories } });
   };
 
   return (
@@ -45,7 +47,11 @@ const OrderSummary: React.FC<Props> = ({
       <table className="order-summary-table">
         <tbody>
           {items.map((item) => (
-            <OrderItemRow key={item.slug} item={item} onQuantityChange={handleQuantityChange} />
+            <OrderItemRow
+              key={item.slug}
+              item={item}
+              onQuantityChange={handleQuantityChange}
+            />
           ))}
           <ShippingDetails {...shipping} />
           <SummaryTotals subtotal={subtotal} shippingCost={shippingCost} total={total} />

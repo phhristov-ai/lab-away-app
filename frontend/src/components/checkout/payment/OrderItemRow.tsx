@@ -2,17 +2,19 @@ import React from 'react';
 import QuantitySelector from '../../product/QuantitySelector';
 import { Link } from 'react-router-dom';
 import { useCart } from "../../../context/CartContext";
+import { CartItem } from '../../../types/CartItem';
+import { Category } from '../../../services/categoriesService';
 
 type Props = {
   item: CartItem;
-  onQuantityChange: (slug: string, quantity: number) => void;
+  onQuantityChange: (slug: string, quantity: number, categories: Category[]) => void;
 };
 
 const OrderItemRow: React.FC<Props> = ({ item, onQuantityChange }) => {
   const { dispatch } = useCart();
 
   const handleRemoveItem = () => {
-    dispatch({ type: 'REMOVE_ITEM', payload: { slug: item.slug } });
+    dispatch({ type: 'REMOVE_ITEM', payload: { slug: item.slug, categories: item.categories } });
   };
 
   return (
@@ -39,7 +41,7 @@ const OrderItemRow: React.FC<Props> = ({ item, onQuantityChange }) => {
       <td>
         <QuantitySelector
           value={item.quantity}
-          onChange={(newQuantity) => onQuantityChange(item.slug, newQuantity)}
+          onChange={(newQuantity) => onQuantityChange(item.slug, newQuantity, item.categories)}
         />
       </td>
       <td className="remove-button-container">

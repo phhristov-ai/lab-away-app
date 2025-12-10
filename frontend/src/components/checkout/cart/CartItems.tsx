@@ -2,6 +2,8 @@ import React from 'react';
 import CartItemRow from './CartItemRow';
 import './CartItems.css';
 import { useTranslation } from 'react-i18next';
+import { Category } from '../../../services/categoriesService';
+import { CartItem } from '../../../types/CartItem';
 
 type CartItemsProps = {
   items: (CartItem & {
@@ -11,6 +13,7 @@ type CartItemsProps = {
     subtotal?: number;
     inclVat?: string;
     slug?: string;
+    categories : Category[];
   })[];
 };
 

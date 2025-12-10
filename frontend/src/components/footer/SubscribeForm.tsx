@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import './SubscribeForm.css';
+import { trackSubscribe } from '../../utils/analytics';
 
 const SubscribeForm = () => {
   const { t } = useTranslation();
@@ -12,6 +13,7 @@ const SubscribeForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    trackSubscribe('email_form');
     alert(t('footer.subscribe.form.alert', { email }));
   };
 

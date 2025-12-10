@@ -7,23 +7,23 @@ declare global {
   }
 }
 
-export function getStoredConsent(): ConsentState | null {
-  const stored = localStorage.getItem('cookieConsent');
-  if (!stored) return null;
+export function getStoredConsent(): ConsentState {
+  const stored = localStorage.getItem("cookieConsent");
+  if (!stored) return { hasInteracted: false };
 
   try {
     const parsed = JSON.parse(stored);
-    if (parsed && typeof parsed === 'object' && 'necessary' in parsed) {
-      return parsed;
-    }
-  } catch (error) {
-    console.warn('Invalid cookieConsent in localStorage:', error);
+    return {
+      hasInteracted: typeof parsed.hasInteracted === "boolean" ? parsed.hasInteracted : false,
+    };
+  } catch {
+    return { hasInteracted: false };
   }
-  return null;
 }
 
+
 export function saveConsent(consent: ConsentState) {
-  localStorage.setItem('cookieConsent', JSON.stringify(consent));
+  localStorage.setItem("cookieConsent", JSON.stringify(consent));
 }
 
 export function ensureGoogleAnalytics() {

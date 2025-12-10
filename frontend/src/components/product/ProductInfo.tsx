@@ -6,12 +6,14 @@ import { useTranslation } from 'react-i18next';
 import '../../pages/BlogPostPage.css';
 import { useProductInfo } from '../../hooks/useProductInfo';
 import { useNavigate } from 'react-router-dom';
+import { Category } from '../../services/categoriesService';
 
 type ProductInfoProps = {
   title: string;
   price: number;
   image: string;
   slug: string;
+  categories: Category[];
   onTitleChange?: (newTitle: string) => void;
   onPriceChange?: (newPrice: number) => void;
 };
@@ -21,6 +23,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
   price,
   image,
   slug,
+  categories,
   onTitleChange,
   onPriceChange,
 }) => {
@@ -53,6 +56,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
           quantity={quantity}
           slug={slug}
           variant="secondary"
+          categories={categories}
         />
       </div>
     </div>

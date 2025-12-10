@@ -1,13 +1,8 @@
 import React, { createContext, useReducer, useContext, ReactNode, useMemo } from 'react';
 import { trackAddToCart, trackGAEvent, trackRemoveFromCart } from '../utils/analytics';
+import { Category } from '../services/categoriesService';
+import { CartItem } from '../types/CartItem';
 
-type CartItem = {
-  slug: string;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
-};
 
 type CartState = {
   items: CartItem[];
@@ -15,10 +10,9 @@ type CartState = {
 
 type CartAction =
   | { type: 'ADD_ITEM'; payload: CartItem }
-  | { type: 'REMOVE_ITEM'; payload: { slug: string } }
-  | { type: 'CLEAR_CART' }
-  | { type: 'UPDATE_QUANTITY'; payload: { slug: string; quantity: number } };
-
+  | { type: 'REMOVE_ITEM'; payload: { slug: string; categories: Category[] } }
+  | { type: 'CLEAR_CART'; payload: { reason: 'user' | 'purchase' | 'system' } }
+  | { type: 'UPDATE_QUANTITY'; payload: { slug: string; quantity: number; categories: Category[] } };
 
 const initialState: CartState = { items: [] };
 
@@ -29,7 +23,7 @@ function cartReducer(state: CartState, action: CartAction): CartState {
     case 'REMOVE_ITEM':
       return handleRemoveItem(state, action.payload.slug);
     case 'CLEAR_CART':
-      return handleClearCart(state);
+      return handleClearCart(state, action.payload.reason);
     case 'UPDATE_QUANTITY':
       return handleUpdateQuantity(state, action.payload.slug, action.payload.quantity);
     default:
@@ -45,7 +39,8 @@ function handleAddItem(state: CartState, payload: CartItem): CartState {
     item_name: payload.name,
     price: payload.price,
     quantity: payload.quantity,
-    item_category: 'Products',
+    item_category: payload.categories[0].name,
+    item_category2: payload.categories[1].name,
   });
 
   if (existing) {
@@ -62,12 +57,15 @@ function handleAddItem(state: CartState, payload: CartItem): CartState {
 
 function handleRemoveItem(state: CartState, slug: string): CartState {
   const removedItem = state.items.find(item => item.slug === slug);
+  console.log(removedItem);
   if (removedItem) {
     trackRemoveFromCart({
       item_id: removedItem.slug,
       item_name: removedItem.name,
       price: removedItem.price,
       quantity: removedItem.quantity,
+      item_category: removedItem.categories[0].name,
+      item_category2: removedItem.categories[1].name,
     });
   }
   return {
@@ -75,14 +73,16 @@ function handleRemoveItem(state: CartState, slug: string): CartState {
   };
 }
 
-function handleClearCart(state: CartState): CartState {
-  if (state.items.length > 0) {
+function handleClearCart(state: CartState, reason: 'user' | 'purchase' | 'system'): CartState {
+  if (state.items.length > 0 && reason === 'user') {
     trackGAEvent('clear_cart', {
       items: state.items.map(item => ({
         item_id: item.slug,
         item_name: item.name,
         price: item.price,
         quantity: item.quantity,
+        item_category: item.categories[0].name,
+        item_category2: item.categories[1].name,
       })),
     });
   }
@@ -98,6 +98,8 @@ function handleUpdateQuantity(state: CartState, slug: string, quantity: number):
       price: item.price,
       old_quantity: item.quantity,
       new_quantity: quantity,
+      item_category: item.categories[0]?.name,
+      item_category2: item.categories[1]?.name,
     });
   }
 

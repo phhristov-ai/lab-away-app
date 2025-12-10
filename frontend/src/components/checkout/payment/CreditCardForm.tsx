@@ -15,7 +15,7 @@ const cardBrandIcons: Record<string, string | undefined> = {
 };
 
 const CreditCardForm = () => {
-  const { stripe, t, handleSubmit, cardStyle } = useCreditCardForm();
+  const { stripe, t, handleSubmit, cardStyle, error } = useCreditCardForm();
   const [cardBrand, setCardBrand] = useState('default');
 
   const handleCardNumberChange = (event: { brand: SetStateAction<string>; }) => {
@@ -31,6 +31,7 @@ const CreditCardForm = () => {
   return (
     <form onSubmit={handleSubmit}>
       <div className="stripe-form">
+        {error && <div className="card-error-message">{error}</div>}
         <div className="form-group card-number-with-icon">
           <label className="input-label">
             {t('checkout.payment.creditCard.cardNumber')}

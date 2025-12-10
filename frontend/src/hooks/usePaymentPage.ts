@@ -8,11 +8,13 @@ export const usePaymentPage = () => {
 
   const [paymentMethod, setPaymentMethod] = useState<'creditCard' | 'paypal'>('creditCard');
 
-  useEffect(() => {
+/*  useEffect(() => {
     if (enrichedItems.length === 0) {
       navigate('/');
     }
   }, [enrichedItems, navigate]);
+
+  */
 
   return {
     paymentMethod,

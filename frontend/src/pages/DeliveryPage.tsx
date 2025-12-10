@@ -1,5 +1,6 @@
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import './TextStyles.css';
+import { SUPPORT_EMAIL } from '../config/constants';
 
 const DeliveryPage = () => {
   const { t } = useTranslation();
@@ -7,14 +8,34 @@ const DeliveryPage = () => {
   return (
     <div>
       <h1>{t('delivery.title')}</h1>
-      <p className="pre-line-text">
-        <Trans
-          i18nKey="delivery.deliveryInfo"
-          components={{
-            email: <a href="mailto:sales@lab-away.com">sales@lab-away.com</a>
-          }}
-        />
-      </p>
+
+      <section>
+        <h3>{t('delivery.sections.areaTitle')}</h3>
+        <p>{t('delivery.sections.areaText')}</p>
+      </section>
+
+      <section>
+        <h3>{t('delivery.sections.shippingTitle')}</h3>
+        <p>{t('delivery.sections.shippingText')}</p>
+      </section>
+
+      <section>
+        <h3>{t('delivery.sections.timesTitle')}</h3>
+        <p>{t('delivery.sections.timesText')}</p>
+      </section>
+
+      <section>
+        <h3>{t('delivery.sections.combinedTitle')}</h3>
+        <p>{t('delivery.sections.combinedText')}</p>
+      </section>
+
+      <section>
+        <h3>{t('delivery.sections.contactTitle')}</h3>
+        <p>
+          {t('delivery.sections.contactText')}{' '}
+          <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
+        </p>
+      </section>
     </div>
   );
 };

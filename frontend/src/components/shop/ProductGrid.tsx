@@ -8,10 +8,11 @@ import { Link } from 'react-router-dom';
 type ProductGridProps = {
   products: ProductPreviewType[];
   showCreateNew?: boolean;
+  onProductClick?: (product: ProductPreviewType) => void;
 };
 
-const ProductGrid: React.FC<ProductGridProps> = ({ products, showCreateNew = false }) => {
-    const { isAdmin } = useAdmin();
+const ProductGrid: React.FC<ProductGridProps> = ({ products, showCreateNew = false, onProductClick }) => {
+  const { isAdmin } = useAdmin();
 
   return (
     <div className="product-grid">
@@ -35,6 +36,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, showCreateNew = fal
             thumbnailUrl={product.thumbnailUrl}
             slug={product.slug}
             categories={product.categories}
+            onClick={() => onProductClick?.(product)}
           />
         </div>
       ))}

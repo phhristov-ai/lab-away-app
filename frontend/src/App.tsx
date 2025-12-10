@@ -19,13 +19,21 @@ import LanguagePrefixer from './assets/LanguagePrefixer';
 import { supportedLanguages } from './utils/langMatcher';
 import { languageSpecificRoutes } from './components/languageSpecificRoutes';
 import i18n from './i18n/i18n';
+import { ConsentState } from './context/consent/types';
 
 function App() {
 
-  const [showSettings, setShowSettings] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
 
   const handleOpenSettings = () => {
-    setShowSettings(true);
+    setShowPopup(true);
+  };
+
+  const handleConsentUpdate = (consent: ConsentState) => {
+    console.log("User interacted:", consent);
+    setHasInteracted(true);    // mark consent given
+    setShowPopup(false);       // hide popup
   };
 
   return (
@@ -54,8 +62,16 @@ function App() {
               </div>
 
               <Footer />
-              <CookieConsentFooter onOpenSettings={handleOpenSettings} />
-              {showSettings && <GDPRPopup onClose={() => setShowSettings(false)} />}
+              {!hasInteracted && (
+                <CookieConsentFooter onOpenSettings={handleOpenSettings} />
+              )}
+
+              {showPopup && (
+                <GDPRPopup
+                  onClose={() => setShowPopup(false)}
+                  onConsentUpdate={handleConsentUpdate}
+                />
+              )}
               <ScrollToTopButton />
             </AdminProvider>
           </CartProvider>

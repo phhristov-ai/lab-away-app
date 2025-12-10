@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import flagUS from '../../assets/icons/European-Union.Flag.svg';
 import flagDE from '../../assets/icons/Germany.svg';
-import flagBG from '../../assets/icons/Bulgaria.Flag.svg';
+// import flagBG from '../../assets/icons/Bulgaria.Flag.svg';
 
 const LanguageDropdown = () => {
   const { i18n } = useTranslation();
@@ -12,8 +12,8 @@ const LanguageDropdown = () => {
 
   const languages = [
     { code: 'en', flag: flagUS, alt: 'English' },
-    { code: 'de', flag: flagDE, alt: 'German' },
-    { code: 'bg', flag: flagBG, alt: 'Bulgarian' },
+    { code: 'de', flag: flagDE, alt: 'German' }
+  //  { code: 'bg', flag: flagBG, alt: 'Bulgarian' },
   ];
 
   const changeLanguage = (newLang: string) => {

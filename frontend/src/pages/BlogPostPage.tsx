@@ -6,6 +6,7 @@ import { formatDate } from '../utils/format';
 import AdminActionButtons from '../components/admin/AdminActionButtons';
 import CategorySelect from '../components/admin/CategorySelect';
 import BlogPostGrid from '../components/blog/BlogPostGrid';
+import { trackClickBlogToProduct } from '../utils/analytics';
 
 const BlogPostPage: React.FC = () => {
   const {
@@ -31,8 +32,11 @@ const BlogPostPage: React.FC = () => {
     handleConfirmDelete,
     setShowConfirmDelete,
     i18n,
-    randomPosts
+    randomPosts,
+    useBlogScrollTracking
   } = useBlogPost();
+
+  useBlogScrollTracking(post.id, post.title);
 
   if (slug === "new" && !isAdmin) {
     return <div>Access denied.</div>;
@@ -119,9 +123,9 @@ const BlogPostPage: React.FC = () => {
             className="blog-post-content"
             dangerouslySetInnerHTML={{ __html: post?.content ?? location.state?.content }}
           />
-          <BlogPostGrid blogPosts={randomPosts} />
+            <BlogPostGrid blogPosts={randomPosts} />
           </div>
-          )}
+        )}
 
         {isAdmin && (
           <AdminActionButtons
@@ -140,7 +144,11 @@ const BlogPostPage: React.FC = () => {
       </div>
       {!isAdmin && post && (
         <aside className="blog-post-sidebar">
-          <RandomProducts direction="column" categorySlug={post.categories?.[0]?.slug} />
+          <RandomProducts direction="column"
+            categorySlug={post.categories?.[0]?.slug}
+            handleProductClick={(product) =>
+              trackClickBlogToProduct(post.slug, post.title, product.slug, product.name)
+            } />
         </aside>
       )}
     </div>

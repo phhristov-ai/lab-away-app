@@ -9,9 +9,10 @@ import ProductGridSkeleton from "../shop/ProductGridSkeleton";
 type RandomProductsProps = {
   direction?: 'row' | 'column';
   categorySlug?: string;
+  handleProductClick?: (product: ProductPreviewType) => void;
 };
 
-const RandomProducts: React.FC<RandomProductsProps> = ({ direction = 'row', categorySlug }) => {
+const RandomProducts: React.FC<RandomProductsProps> = ({ direction = 'row', categorySlug, handleProductClick }) => {
   const [products, setProducts] = useState<ProductPreviewType[]>([]);
   const [loading, setLoading] = useState(true);
   const { i18n } = useTranslation();
@@ -46,7 +47,7 @@ const RandomProducts: React.FC<RandomProductsProps> = ({ direction = 'row', cate
 
   return (
     <div className={`random-products-section ${direction}`}>
-      <ProductGrid products={products} />
+      <ProductGrid products={products} onProductClick={handleProductClick} />
     </div>
   );
 };

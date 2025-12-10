@@ -6,6 +6,8 @@ import './CartItemRow.css';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '../../../utils/format';
 import { Link } from 'react-router-dom';
+import { Category } from '../../../services/categoriesService';
+import { CartItem } from '../../../types/CartItem';
 
 type Props = {
   item: CartItem & {
@@ -15,6 +17,7 @@ type Props = {
     subtotal?: number;
     inclVat?: string;
     slug: string;
+    categories: Category[];
   };
 };
 
@@ -23,11 +26,11 @@ const CartItemRow: React.FC<Props> = ({ item }) => {
   const { i18n } = useTranslation();
 
   const handleQuantityChange = (quantity: number) => {
-    dispatch({ type: 'UPDATE_QUANTITY', payload: { slug: item.slug, quantity } });
+    dispatch({ type: 'UPDATE_QUANTITY', payload: { slug: item.slug, quantity : quantity, categories : item.categories } });
   };
 
   const handleRemoveItem = () => {
-    dispatch({ type: 'REMOVE_ITEM', payload: { slug: item.slug } });
+    dispatch({ type: 'REMOVE_ITEM', payload: { slug: item.slug, categories : item.categories } });
   };
 
   return (

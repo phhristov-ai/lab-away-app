@@ -2,25 +2,29 @@ import React, { useState } from 'react';
 import './GDPRPopup.css';
 import gdprLogo from '../../assets/icons/gdpr-logo.our_.blue_.updated.png';
 import LabAwayButton from './LabAwayButton';
-import { useConsent } from '../../context/consent/ConsentProvider';
 import CookieToggle from './CookieToggle';
+import { ConsentState } from '../../context/consent/types';
 
 interface GDPRPopupProps {
     onClose: () => void;
 }
 
-const GDPRPopup: React.FC<GDPRPopupProps> = ({ onClose }) => {
+interface GDPRPopupProps {
+  onClose: () => void;
+  onConsentUpdate: (consent: ConsentState) => void;
+}
+
+const GDPRPopup: React.FC<GDPRPopupProps> = ({ onClose, onConsentUpdate }) => {
     const [activeTab, setActiveTab] = useState<'overview' | 'necessary'>('overview');
     const [showNecessaryMobile, setShowNecessaryMobile] = useState(false);
-    const { consent, updateConsent } = useConsent();
 
-    const handleEnableAll = () => {
-        updateConsent({ analytics: true, marketing: true });
-        onClose();
-    };
+    const [analyticsEnabled, setAnalyticsEnabled] = useState(false);
+    const [marketingEnabled, setMarketingEnabled] = useState(false);
 
-    const handleSaveSettings = () => {
-        onClose();
+    const handleInteraction = () => {
+        const updatedConsent: ConsentState = { hasInteracted: true };
+        onConsentUpdate(updatedConsent);
+        onClose(); 
     };
 
     return (
@@ -81,13 +85,13 @@ const GDPRPopup: React.FC<GDPRPopupProps> = ({ onClose }) => {
                                 </p>
                                 <CookieToggle
                                     label="Analytics Cookies"
-                                    value={consent.analytics}
-                                    onChange={(value) => updateConsent({ analytics: value })}
+                                    value={analyticsEnabled}
+                                    onChange={() => setAnalyticsEnabled(prev => !prev)}
                                 />
                                 <CookieToggle
                                     label="Marketing Cookies"
-                                    value={consent.marketing}
-                                    onChange={(value) => updateConsent({ marketing: value })}
+                                    value={marketingEnabled}
+                                    onChange={() => setMarketingEnabled(prev => !prev)}
                                 />
                             </div>
                         )}
@@ -96,10 +100,10 @@ const GDPRPopup: React.FC<GDPRPopupProps> = ({ onClose }) => {
                     <div className="gdpr-buttons-container">
                         <hr className="gdpr-separator" />
                         <div className="gdpr-buttons">
-                            <LabAwayButton className="enable-button" onClick={handleEnableAll}>
+                            <LabAwayButton className="enable-button" onClick={handleInteraction}>
                                 Enable All
                             </LabAwayButton>
-                            <LabAwayButton className="save-button" onClick={handleSaveSettings}>
+                            <LabAwayButton className="save-button" onClick={handleInteraction}>
                                 Save Settings
                             </LabAwayButton>
                         </div>
@@ -111,3 +115,4 @@ const GDPRPopup: React.FC<GDPRPopupProps> = ({ onClose }) => {
 };
 
 export default GDPRPopup;
+

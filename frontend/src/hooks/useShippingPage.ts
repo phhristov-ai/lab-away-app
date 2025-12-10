@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCheckout } from '../context/CheckoutContext';
-import { trackGAEvent } from '../utils/analytics';
+import { GAItem, trackAddShippingInfo, trackGAEvent } from '../utils/analytics';
 import { BillingFormHandle } from '../components/checkout/shipping/BillingForm';
 import { ShippingFormHandle } from '../components/checkout/shipping/ShippingForm';
 import { useCheckoutSummary } from './useCheckoutSummary';
@@ -32,10 +32,20 @@ export function useShippingPage() {
     setShowBilling(checked);
   };
 
+  const gaItems: GAItem[] = enrichedItems.map((item) => ({
+    item_id: item.slug, 
+    item_name: item.name,
+    price: item.price,
+    quantity: item.quantity,
+    item_category: item.categories?.[0]?.name,
+    item_category2: item.categories?.[1]?.name,
+  }));
+
+
   const handleNextClick = () => {
     const isShippingValid = shippingFormRef.current?.validate() ?? false;
     const isBillingValid = !showBilling || (billingFormRef.current?.validate() ?? false);
-
+    trackAddShippingInfo(gaItems);
     if (!isBillingValid || !isShippingValid) return;
 
     if (!showBilling) {

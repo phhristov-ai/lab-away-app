@@ -55,7 +55,8 @@ export const useProductPage = () => {
                 item_name: product.name,
                 price: product.price,
                 quantity: 1,
-                item_category: product.categories?.[0]?.name || 'Products',
+                item_category: product?.categories[0]?.name,
+                item_category2: product?.categories[1]?.name,
             });
         }
     }, [product]);

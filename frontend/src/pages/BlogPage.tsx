@@ -4,11 +4,16 @@ import { BlogPostType, fetchBlogPosts } from '../services/blogPostService';
 import { useTranslation } from 'react-i18next';
 import './BlogPage.css';
 import BlogPostGridSkeleton from '../components/blog/BlogPostGridSkeleton';
+import { trackViewBlog } from '../utils/analytics';
 
 const BlogPage: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [posts, setPosts] = useState<BlogPostType[]>([]);
   const [loading, setLoading] = React.useState(true);
+
+  useEffect(() => {
+    trackViewBlog();
+  }, []);
 
   useEffect(() => {
     if (!i18n.language) return;
