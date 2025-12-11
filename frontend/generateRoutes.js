@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { axiosInstanceServer } = require('./src/services/axiosInstance.server');
 
-const LANGUAGES = ['en', 'de', 'bg'];
+const LANGUAGES = ['en', 'de'];
 
 (async () => {
   try {

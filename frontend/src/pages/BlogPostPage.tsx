@@ -36,7 +36,11 @@ const BlogPostPage: React.FC = () => {
     useBlogScrollTracking
   } = useBlogPost();
 
-  useBlogScrollTracking(post.id, post.title);
+  useBlogScrollTracking(post?.slug ?? "", post?.title ?? "");
+
+  if (!post) {
+    return <div>Loading...</div>;
+  }
 
   if (slug === "new" && !isAdmin) {
     return <div>Access denied.</div>;

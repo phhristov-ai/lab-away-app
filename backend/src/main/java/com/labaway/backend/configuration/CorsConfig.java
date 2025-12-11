@@ -21,7 +21,8 @@ public class CorsConfig {
                 "https://lab-away.com",
                 "http://lab-away.com.s3-website.eu-north-1.amazonaws.com",
                 "https://lab-away.com.s3-website.eu-north-1.amazonaws.com",
-                "http://localhost:3000"
+                "http://localhost:3000",
+                "http://localhost:45678"
         ));
         config.addAllowedHeader("*");
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));

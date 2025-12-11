@@ -42,8 +42,6 @@
   line-height: 1.6;
   font-size: 1.1rem;
   color: #333;
-  white-space: pre-wrap;
-
 }
 
 @media (max-width: 768px) {

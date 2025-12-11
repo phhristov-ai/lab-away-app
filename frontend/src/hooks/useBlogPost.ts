@@ -7,7 +7,7 @@ import { BlogPostType, deleteBlogPost, fetchBlogPost, fetchRandomBlogs, saveBlog
 import { trackScrollBlogPost, trackViewBlogPost } from '../utils/analytics';
 
 export function useBlogPost() {
-  const { slug } = useParams<{ slug: string }>();
+  const { slug } = useParams();
   const location = useLocation();
   const { i18n } = useTranslation();
   const { isAdmin } = useAdmin();
@@ -189,7 +189,7 @@ export function useBlogPost() {
       console.log(title);
       console.log(slug);
 
-      if (!title) return;
+      if (!slug || !title) return;
 
       const scrollDepths = [25, 50, 75, 100];
       const triggered = new Set<number>();

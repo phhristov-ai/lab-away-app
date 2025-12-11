@@ -38,7 +38,11 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "generate-routes": "node generateRoutes.js",
+    "prerender": "npx react-snap",
+    "upload": "node prerenderAndUpload.js",
+    "prerender-all": "npm run generate-routes && npm run build && npm run prerender && npm run upload"
   },
   "eslintConfig": {
     "extends": [
@@ -133,26 +137,9 @@
       "/de/product/vitamin-d-test",
       "/de/product/chlamydia-test",
       "/de/product/fertility-tests",
-      "/bg/",
-      "/bg/shop",
-      "/bg/blog",
-      "/bg/delivery",
-      "/bg/privacy-policy",
-      "/bg/terms-and-conditions",
-      "/bg/contact",
-      "/bg/imprint",
-      "/bg/product/drug-tests",
-      "/bg/product/cocaine-test",
-      "/bg/product/gonorrhea-test",
-      "/bg/product/ovulation-test",
-      "/bg/product/stistd-tests",
-      "/bg/product/herpes-test",
-      "/bg/product/amphetamines-test",
-      "/bg/product/marijuana-test",
-      "/bg/product/fentanyl-test",
-      "/bg/product/vitamin-d-test",
-      "/bg/product/chlamydia-test",
-      "/bg/product/fertility-tests"
+      "/de/blog/the-effect-of-the-covid19-pandemic-on-stds",
+      "/de/blog/what-is-hepatitis-b-everything-you-need-to-know-about-the-sexually-transmitted-disease",
+      "/de/blog/a-deadly-combo-alcohol-plus-other-drugs-ups-number-of-impaired-drivers"
     ]
   }
 }
