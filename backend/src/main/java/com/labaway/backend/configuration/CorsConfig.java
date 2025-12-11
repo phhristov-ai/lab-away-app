@@ -16,14 +16,15 @@ public class CorsConfig {
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of(
+
+        config.setAllowedOriginPatterns(List.of(
                 "https://www.lab-away.com",
                 "https://lab-away.com",
                 "http://lab-away.com.s3-website.eu-north-1.amazonaws.com",
                 "https://lab-away.com.s3-website.eu-north-1.amazonaws.com",
-                "http://localhost:3000",
-                "http://localhost:45678"
+                "http://localhost:*"
         ));
+
         config.addAllowedHeader("*");
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setExposedHeaders(List.of("Authorization"));
@@ -32,5 +33,4 @@ public class CorsConfig {
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
-
 }
