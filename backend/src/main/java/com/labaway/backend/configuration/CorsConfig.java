@@ -9,7 +9,6 @@ import org.springframework.web.filter.CorsFilter;
 
 import java.util.List;
 
-@Configuration
 public class CorsConfig {
 
     @Bean
@@ -17,12 +16,11 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
 
+        // Allow localhost for prerender/build
         config.setAllowedOriginPatterns(List.of(
+                "http://localhost:*",
                 "https://www.lab-away.com",
-                "https://lab-away.com",
-                "http://lab-away.com.s3-website.eu-north-1.amazonaws.com",
-                "https://lab-away.com.s3-website.eu-north-1.amazonaws.com",
-                "http://localhost:*"
+                "https://lab-away.com"
         ));
 
         config.addAllowedHeader("*");
@@ -31,6 +29,7 @@ public class CorsConfig {
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
+
         return new CorsFilter(source);
     }
 }
