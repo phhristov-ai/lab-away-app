@@ -19,13 +19,18 @@ public class S3PrerenderController {
     private boolean isCrawler(String userAgent) {
         if (userAgent == null) return false;
         String ua = userAgent.toLowerCase();
-        return ua.contains("googlebot") || ua.contains("bingbot") || ua.contains("yahoo") || ua.contains("baiduspider");
+        return ua.contains("googlebot")
+                || ua.contains("bingbot")
+                || ua.contains("yahoo")
+                || ua.contains("baiduspider");
     }
 
     @GetMapping({"/en/**", "/de/**"})
     public ResponseEntity<String> handleRequest(HttpServletRequest request) {
         String userAgent = request.getHeader("User-Agent");
         String path = request.getRequestURI();
+        System.out.println("User-Agent: " + userAgent);
+        System.out.println("Requested path: " + path);
 
         if (isCrawler(userAgent)) {
             try {
@@ -38,9 +43,9 @@ public class S3PrerenderController {
             }
         }
 
+        String spaFallback = "/index.html";
         return ResponseEntity.status(302)
-                .header(HttpHeaders.LOCATION, "/index.html")
+                .header(HttpHeaders.LOCATION, spaFallback)
                 .build();
     }
-
 }

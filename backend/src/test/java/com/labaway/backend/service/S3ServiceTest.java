@@ -59,24 +59,27 @@ class S3ServiceTest {
 
     @Test
     void getHtml_shouldReturnContentFromS3() throws IOException {
-        String bucketName = "test-bucket";
+        String prerenderBucket = "test-bucket-prerendered";
         String path = "/en/blog/test-page";
         String key = "en/blog/test-page/index.html";
         String htmlContent = "<html>Test Page</html>";
 
-        when(awsProperties.getS3BucketName()).thenReturn(bucketName);
+        when(awsProperties.getPrerenderedBucketName()).thenReturn(prerenderBucket);
+
         S3Object s3Object = mock(S3Object.class);
         S3ObjectInputStream s3InputStream = new S3ObjectInputStream(
                 new ByteArrayInputStream(htmlContent.getBytes(StandardCharsets.UTF_8)), null);
         when(s3Object.getObjectContent()).thenReturn(s3InputStream);
-        when(amazonS3.getObject(bucketName, key)).thenReturn(s3Object);
+
+        when(amazonS3.getObject(prerenderBucket, key)).thenReturn(s3Object);
 
         String result = s3Service.getHtml(path);
         assertEquals(htmlContent, result);
 
         String resultCached = s3Service.getHtml(path);
         assertEquals(htmlContent, resultCached);
-        verify(amazonS3, times(1)).getObject(bucketName, key);
+
+        verify(amazonS3, times(1)).getObject(prerenderBucket, key);
     }
 
     private MockMultipartFile createMockFile(String filename, String content) {

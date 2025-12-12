@@ -14,4 +14,5 @@ public class AwsProperties {
     private String secretAccessKey;
     private String s3BucketName;
     private String region;
+    private String prerenderedBucketName;
 }

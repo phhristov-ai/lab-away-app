@@ -12,12 +12,6 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
-import com.amazonaws.services.s3.model.S3Object;
-import org.springframework.stereotype.Service;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -63,7 +57,9 @@ public class S3Service {
         }
 
         String key = path.substring(1) + "/index.html";
-        S3Object s3Object = amazonS3.getObject(awsProperties.getS3BucketName(), key);
+        String prerenderBucket = awsProperties.getPrerenderedBucketName();
+        S3Object s3Object = amazonS3.getObject(prerenderBucket, key);
+
         try (InputStream inputStream = s3Object.getObjectContent()) {
             String html = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
             cache.put(path, new CachedPage(html, CACHE_TTL_SECONDS));
