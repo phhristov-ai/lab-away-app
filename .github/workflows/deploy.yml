@@ -36,6 +36,15 @@ jobs:
         run: |
           npm install --legacy-peer-deps
           CI='' npm run build
+          
+      # Run prerendering
+        - name: Prerender frontend
+          working-directory: ./frontend
+          env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          run: |
+           npm run prerender-all
 
       # Upload frontend build to S3
       - name: Upload frontend to S3
