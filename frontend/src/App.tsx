@@ -20,6 +20,7 @@ import { supportedLanguages } from './utils/langMatcher';
 import { languageSpecificRoutes } from './components/languageSpecificRoutes';
 import i18n from './i18n/i18n';
 import { ConsentState } from './context/consent/types';
+import NotFound from './pages/NotFound';
 
 function App() {
 
@@ -57,7 +58,7 @@ function App() {
                   ))}
 
                   <Route path="/admin" element={<AdminLoginPage />} />
-                  <Route path="*" element={<LanguagePrefixer />} />
+                  <Route path="*" element={<NotFound />} />
                 </Routes>
               </div>
 

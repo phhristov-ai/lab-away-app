@@ -43,7 +43,7 @@
     "prerender": "node prerender.js",
     "upload": "node prerenderAndUpload.js",
     "wait-server": "node waitForServer.js",
-  "prerender-ci": "npm run generate-routes && concurrently -k -s first -n server,prerender \"npm run start-prerender-server\" \"node waitForServer.js && npm run prerender\""
+    "prerender-ci": "npm run generate-routes && concurrently -k -s first -n server,prerender \"npm run start-prerender-server\" \"node waitForServer.js && npm run prerender\""
   },
   "eslintConfig": {
     "extends": [

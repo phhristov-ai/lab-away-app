@@ -1,0 +1,21 @@
+.notfound-container {
+  text-align: center;
+  padding: 100px 20px;
+  font-family: Arial, sans-serif;
+}
+
+.notfound-title {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+.notfound-text {
+  font-size: 20px;
+  margin-bottom: 40px;
+}
+
+.notfound-link {
+  font-size: 18px;
+  color: var(--primary-color);
+  text-decoration: underline;
+}
