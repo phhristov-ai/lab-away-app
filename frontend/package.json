@@ -44,8 +44,7 @@
     "prerender": "node prerender.js",
     "upload": "node prerenderAndUpload.js",
     "wait-server": "node waitForServer.js",
-    "prerender-all": "npm run generate-routes && npm run build && concurrently -k -s first -n server,wait \"npm run start-prerender-server\" \"node waitForServer.js && npm run prerender && npm run stop-prerender-server && npm run upload\""
-  },
+    "prerender-ci": "npm run generate-routes && npm run start-prerender-server & node waitForServer.js && npm run prerender && npm run stop-prerender-server && npm run upload"  },
   "eslintConfig": {
     "extends": [
       "react-app",

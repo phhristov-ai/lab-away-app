@@ -44,7 +44,8 @@ jobs:
             AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
             AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           run: |
-           npm run prerender-all
+           npm ci
+           npm run prerender-ci
 
       # Upload frontend build to S3
       - name: Upload frontend to S3
