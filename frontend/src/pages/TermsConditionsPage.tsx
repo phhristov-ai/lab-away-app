@@ -1,6 +1,7 @@
 import { Trans, useTranslation } from "react-i18next";
 import './TextStyles.css'; 
 import { SUPPORT_EMAIL } from "../config/constants";
+import { Helmet } from "react-helmet";
 
 const TermsConditionsPage = () => {
   const { t } = useTranslation();
@@ -46,6 +47,15 @@ const TermsConditionsPage = () => {
 
   return (
     <div>
+
+      <Helmet>
+        <title>{t('terms.title')} | Lab-Away</title>
+        <meta name="description" content={t('terms.metaDescription') || "Read our terms and conditions for using our services."} />
+        {/* Optional: Open Graph meta tags for better social sharing */}
+        <meta property="og:title" content={t('terms.title')} />
+        <meta property="og:description" content={t('terms.metaDescription') || "Read our terms and conditions for using our services."} />
+      </Helmet>
+      
       <h1>{t('terms.title')}</h1>
 
       <section>

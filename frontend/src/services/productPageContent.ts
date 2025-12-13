@@ -4,9 +4,9 @@ import Clock from '../assets/images/clock.webp';
 import Hand from '../assets/images/hand.webp';
 import Finger from '../assets/images/finger.webp';
 import Swab from '../assets/images/swab.webp';
-import Urine from '../assets/images/urine.png';
+import Urine from '../assets/images/urine.webp';
 import Saliva from '../assets/images/saliva.webp';
-import Icon1 from '../assets/images/Icon1.png';
+import Icon1 from '../assets/images/Icon1.webp';
 import Icon2 from '../assets/images/Icon2.webp';
 import Icon3 from '../assets/images/Icon3.webp';
 

@@ -1,4 +1,4 @@
-import FeaturedImage1 from '../../assets/images/home/FeaturedImage1.jpeg';
+import FeaturedImage1 from '../../assets/images/home/FeaturedImage1.webp';
 import FeaturedImage2 from '../../assets/images/home/FeaturedImage2.webp';
 import FeaturedImage3 from '../../assets/images/home/FeaturedImage3.webp';
 import FeatureImage from './FeatureImage';

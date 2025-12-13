@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 
 const ContactPage = () => {
@@ -5,6 +6,14 @@ const ContactPage = () => {
   
   return (
     <div>
+
+      <Helmet>
+        <title>{t('contact.title')} | Lab-Away</title>
+        <meta name="description" content={t('contact.metaDescription') || "Contact us for queries, support, or business inquiries."} />
+        <meta property="og:title" content={t('contact.title')} />
+        <meta property="og:description" content={t('contact.metaDescription') || "Contact us for queries, support, or business inquiries."} />
+      </Helmet>
+
       <h1>{t('contact.title')}</h1>
       <div style={{ display: 'flex', gap: '20px' }}>
         <div style={{ flex: 1, border: '1px solid #ccc', padding: '20px', borderRadius: '8px' }}>

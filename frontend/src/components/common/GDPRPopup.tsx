@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './GDPRPopup.css';
-import gdprLogo from '../../assets/icons/gdpr-logo.our_.blue_.updated.png';
+import gdprLogo from '../../assets/icons/gdpr-logo.our_.blue_.updated.webp';
 import LabAwayButton from './LabAwayButton';
 import CookieToggle from './CookieToggle';
 import { ConsentState } from '../../context/consent/types';

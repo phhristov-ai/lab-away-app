@@ -57,6 +57,8 @@ export const useCartPage = () => {
         vatNotePrefix: t('checkout.cartTotals.vatNotePrefix'),
         vatNoteSuffix: t('checkout.cartTotals.vatNoteSuffix'),
         continue: t('checkout.actions.continue'),
+        cartTitle: t('checkout.cartTitle'),
+        cartDescription: t('checkout.cartDescription'),
     };
 
     return {

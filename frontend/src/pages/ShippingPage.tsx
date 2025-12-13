@@ -9,6 +9,7 @@ import { useShippingPage } from '../hooks/useShippingPage';
 import OrderSummary from '../components/checkout/payment/OrderSummary';
 import { useCheckout } from '../context/CheckoutContext';
 import { useCheckoutSummary } from '../hooks/useCheckoutSummary';
+import { Helmet } from 'react-helmet';
 
 const ShippingPage = () => {
   const {
@@ -26,53 +27,64 @@ const ShippingPage = () => {
   const { shippingData, billingData } = useCheckout();
   const { enrichedItems, subtotalValue, shippingCost, total } = useCheckoutSummary();
 
+  const pageTitle = t('shipping.title') || "Shipping Information";
+  const pageDescription = t('shipping.description') || "Please provide your shipping and billing information to complete your purchase.";
+
   return (
-    <CheckoutLayout>
-      <div className="shipping-page-grid">
-        <div className="form-section">
-          <ShippingForm
-            ref={shippingFormRef}
-            onToggleShipping={handleCheckboxChange}
-            onChange={setShippingData}
-            initialValues={shippingData}
-          />
-          {showBilling && (
-            <BillingForm ref={billingFormRef} onChange={setBillingData} initialValues={billingData} />
-          )}
-          <div className="align-right">
-            {isMobile() && (
-              <CustomButton
-                label={t('checkout.actions.next')}
-                onClick={handleNextClick}
-                variant="primary"
-                fullWidth={true}
-              />
-            )}
-          </div>
-        </div>
-        <div className="summary-wrapper">
-          <div className="summary-section">
-            <OrderSummary
-              items={enrichedItems}
-              shipping={{
-                name: `${shippingData.fullName || ''}`,
-                address: shippingData.address || '',
-                phone: shippingData.phone || '',
-                city: `${shippingData.postcode || ''} ${shippingData.city || ''}`,
-                countryName: shippingData.countryName || '',
-                countryCode: shippingData.countryCode || '',
-                email: shippingData.email || '',
-              }}
-              subtotal={subtotalValue}
-              shippingCost={shippingCost}
-              total={total}
-              showNextButton={true}
-              onNextClick={handleNextClick}
+    <>
+      <Helmet>
+        <title>{pageTitle} | Lab-Away</title>
+        <meta name="description" content={pageDescription} />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={pageDescription} />
+      </Helmet>
+      <CheckoutLayout>
+        <div className="shipping-page-grid">
+          <div className="form-section">
+            <ShippingForm
+              ref={shippingFormRef}
+              onToggleShipping={handleCheckboxChange}
+              onChange={setShippingData}
+              initialValues={shippingData}
             />
+            {showBilling && (
+              <BillingForm ref={billingFormRef} onChange={setBillingData} initialValues={billingData} />
+            )}
+            <div className="align-right">
+              {isMobile() && (
+                <CustomButton
+                  label={t('checkout.actions.next')}
+                  onClick={handleNextClick}
+                  variant="primary"
+                  fullWidth={true}
+                />
+              )}
+            </div>
+          </div>
+          <div className="summary-wrapper">
+            <div className="summary-section">
+              <OrderSummary
+                items={enrichedItems}
+                shipping={{
+                  name: `${shippingData.fullName || ''}`,
+                  address: shippingData.address || '',
+                  phone: shippingData.phone || '',
+                  city: `${shippingData.postcode || ''} ${shippingData.city || ''}`,
+                  countryName: shippingData.countryName || '',
+                  countryCode: shippingData.countryCode || '',
+                  email: shippingData.email || '',
+                }}
+                subtotal={subtotalValue}
+                shippingCost={shippingCost}
+                total={total}
+                showNextButton={true}
+                onNextClick={handleNextClick}
+              />
+            </div>
           </div>
         </div>
-      </div>
-    </CheckoutLayout>
+      </CheckoutLayout>
+    </>
   );
 }
 export default ShippingPage;

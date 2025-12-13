@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import './TextStyles.css'; 
+import { Helmet } from "react-helmet";
 
 const PrivacyPolicyPage = () => {
   const { t } = useTranslation();
@@ -29,6 +30,13 @@ const PrivacyPolicyPage = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>{t('privacy.title')} | Lab-Away</title>
+        <meta name="description" content={t('privacy.metaDescription') || "Privacy policy for our website and how we handle personal data."} />
+        {/* Optional: Open Graph meta tags */}
+        <meta property="og:title" content={t('privacy.title')} />
+        <meta property="og:description" content={t('privacy.metaDescription') || "Privacy policy for our website and how we handle personal data."} />
+      </Helmet>
       <h1>{t("privacy.title")}</h1>
 
       <section>

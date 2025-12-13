@@ -12,7 +12,7 @@ const s3 = new AWS.S3({
 });
 
 const bucketName = 'lab-away-prerendered';
-const BASE_URL = 'http://localhost:45679'; // Local dev or staging
+const BASE_URL = 'http://localhost:45679';
 const OUTPUT_DIR = path.join(__dirname, 'build');
 
 // ----------------- Routes to prerender -----------------

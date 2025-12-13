@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import flagEU from '../../assets/icons/org-eu-wave.svg';
+import flagEU from '../../assets/icons/org-eu-wave.webp';
 import './Navbar.css';
 
 const TopHeader = () => {

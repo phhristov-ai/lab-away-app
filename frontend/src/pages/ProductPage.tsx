@@ -15,6 +15,7 @@ import { useProductPage } from '../hooks/useProductPage';
 import { t } from 'i18next';
 import CategorySelect from '../components/admin/CategorySelect';
 import ProductDescription from '../components/product/ProductDescription';
+import { Helmet } from 'react-helmet';
 
 const ProductPage: React.FC = () => {
   const {
@@ -52,6 +53,16 @@ const ProductPage: React.FC = () => {
   return (
 
     <div key={isAdmin ? 'admin' : 'user'} className="product-page">
+
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+          <meta property="og:image" content={images[0]?.imageUrl || '/default-image.jpg'} />
+        <meta property="og:url" content={`https://mystore.com/product/${slug}`} />
+      </Helmet>
+
       <div className="product-main-section">
         <div className="product-gallery">
           <Gallery

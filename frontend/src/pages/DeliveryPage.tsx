@@ -1,12 +1,19 @@
 import { useTranslation } from 'react-i18next';
 import './TextStyles.css';
 import { SUPPORT_EMAIL } from '../config/constants';
+import { Helmet } from 'react-helmet';
 
 const DeliveryPage = () => {
   const { t } = useTranslation();
 
   return (
     <div>
+      <Helmet>
+        <title>{t('delivery.title')} | Lab-Away</title>
+        <meta name="description" content={t('delivery.metaDescription') || "Delivery and shipping details for our services."} />
+        <meta property="og:title" content={t('delivery.title')} />
+        <meta property="og:description" content={t('delivery.metaDescription') || "Delivery and shipping details for our services."} />
+      </Helmet>
       <h1>{t('delivery.title')}</h1>
 
       <section>

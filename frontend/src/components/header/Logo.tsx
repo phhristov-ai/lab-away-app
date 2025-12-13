@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import CompanyLogo from '../../assets/images/header/lab-away.logo.png';
+import CompanyLogo from '../../assets/images/header/lab-away.logo.webp';
 import './Logo.css';
 
 const Logo = () => {

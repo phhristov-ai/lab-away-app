@@ -8,4 +8,6 @@ type CartLabels = {
   vatNotePrefix: string;
   vatNoteSuffix: string;
   continue: string;
+  cartTitle?: string;
+  cartDescription?: string;
 };

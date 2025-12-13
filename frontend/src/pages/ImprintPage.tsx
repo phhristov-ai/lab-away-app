@@ -1,11 +1,18 @@
 import { useTranslation } from "react-i18next";
 import { COMPANY_ADDRESS, EU_ODR_URL, MANAGER_EMAIL, MANAGER_NAME, PHONE_NUMBER, SITE_NAME, SUPPORT_EMAIL, UIC, VAT_ID } from "../config/constants";
+import { Helmet } from "react-helmet";
 
 const ImprintPage = () => {
   const { t } = useTranslation();
 
   return (
     <div>
+      <Helmet>
+        <title>{t('imprint.title')} | Lab-Away</title>
+        <meta name="description" content={t('imprint.description') || "Imprint details for our company."} />
+        <meta property="og:title" content={t('imprint.title')} />
+        <meta property="og:description" content={t('imprint.description') || "Imprint details for our company."} />
+      </Helmet>
       <h1>{t("imprint.title")}</h1>
 
       <p>

@@ -25,7 +25,7 @@ const ScrollAnimatedArrows: React.FC = () => {
   return (
     <div id="how-it-works" className="how-it-works-container">
       <div className="how-it-works-left">
-        <h1 className="scroll-title">{t('homepage.homeTestFeature.mainTitle')}</h1>
+        <h2 className="scroll-title">{t('homepage.homeTestFeature.mainTitle')}</h2>
       </div>
       <div className="how-it-works-middle">
         <ArrowStack blueArrowHeights={blueArrowHeights} />

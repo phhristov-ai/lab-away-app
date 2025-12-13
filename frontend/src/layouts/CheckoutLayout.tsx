@@ -1,8 +1,8 @@
 import React from 'react';
 
-import OrderSummaryImg from '../assets/images/checkout/Order-Summary.png';
-import BillingShippingImg from '../assets/images/checkout/Billing-Shipping.png';
-import OrderPaymentImg from '../assets/images/checkout/Order-Payment.png';
+import OrderSummaryImg from '../assets/images/checkout/Order-Summary.webp';
+import BillingShippingImg from '../assets/images/checkout/Billing-Shipping.webp';
+import OrderPaymentImg from '../assets/images/checkout/Order-Payment.webp';
 import './CheckoutLayout.css';
 import { useLocation } from 'react-router-dom';
 import CheckoutGraph from '../components/checkout/cart/CheckoutGraph';
