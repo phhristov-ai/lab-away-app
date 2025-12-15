@@ -58,17 +58,30 @@ class BlogTransformerTest {
         verify(jsonParsingUtils).parseCategoryList("[{\"name\":\"Life\",\"slug\":\"life\"}]");
     }
 
-    private BlogPreviewProjection createMockProjection(String slug, String author, String title, String excerpt, int readingTime, String categoryJson) {
+    private BlogPreviewProjection createMockProjection(
+            String slug,
+            String author,
+            String title,
+            String excerpt,
+            int readingTime,
+            String categoryJson
+    ) {
         BlogPreviewProjection mockProjection = mock(BlogPreviewProjection.class);
+
         when(mockProjection.getSlug()).thenReturn(slug);
         when(mockProjection.getAuthor()).thenReturn(author);
-        when(mockProjection.getImageUrl()).thenReturn("http://image.jpg");
+
+        when(mockProjection.getImageUrlSmall()).thenReturn("http://image-small.jpg");
+        when(mockProjection.getImageUrlMedium()).thenReturn("http://image-medium.jpg");
+        when(mockProjection.getImageUrlLarge()).thenReturn("http://image-large.jpg");
+
         when(mockProjection.getTitle()).thenReturn(title);
         when(mockProjection.getExcerpt()).thenReturn(excerpt);
         when(mockProjection.getReadingTime()).thenReturn(readingTime);
-        when(mockProjection.getCreatedAt()).thenReturn(Instant.now().minus(Duration.ofDays(1L)));
+        when(mockProjection.getCreatedAt()).thenReturn(Instant.now().minus(Duration.ofDays(1)));
         when(mockProjection.getUpdatedAt()).thenReturn(Instant.now());
         when(mockProjection.getCategories()).thenReturn(categoryJson);
+
         return mockProjection;
     }
 
@@ -198,7 +211,9 @@ class BlogTransformerTest {
                 .id(UUID.randomUUID())
                 .slug(slug)
                 .author(author)
-                .imageUrl(imageUrl)
+                .imageUrlSmall(randomImageUrl("480"))
+                .imageUrlMedium(randomImageUrl("768"))
+                .imageUrlLarge(randomImageUrl("1200"))
                 .categories(categories)
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
@@ -214,6 +229,12 @@ class BlogTransformerTest {
 
         blog.setTranslations(new HashSet<>(Set.of(translation)));
         return blog;
+    }
+
+    private static String randomImageUrl(String size) {
+        return "https://lab-away-images.s3.eu-north-1.amazonaws.com/blog/"
+                + UUID.randomUUID()
+                + "_blog_" + size + ".webp";
     }
 
     private static Category getCategory() {

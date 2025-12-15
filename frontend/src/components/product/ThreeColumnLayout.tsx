@@ -20,7 +20,7 @@ const ThreeColumnLayout: React.FC<ThreeColumnLayoutProps> = ({ columns }) => {
         {columns.map((column) => (
           <div key={column.header} className="column">
             <div className="icon">
-              <img src={column.icon} alt={column.header} className="icon-image" />
+              <img src={column.icon} alt={column.header} className="icon-image" loading="lazy"/>
             </div>
             <div className="header">{column.header}</div>
             <div className="description">{column.description}</div>

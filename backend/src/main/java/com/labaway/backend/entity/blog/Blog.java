@@ -28,7 +28,9 @@ public class Blog {
 
     private String author;
 
-    private String imageUrl;
+    private String imageUrlSmall;
+    private String imageUrlMedium;
+    private String imageUrlLarge;
 
     @ManyToMany
     @JoinTable(

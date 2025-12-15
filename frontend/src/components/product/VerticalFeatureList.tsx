@@ -16,7 +16,7 @@ const VerticalFeatureList: React.FC<VerticalFeatureListProps> = ({ items }) => {
     <div className="vertical-feature-list">
       {items.map((item) => (
         <div className="feature-item" key={item.id}>
-          <img src={item.icon} alt="" className="feature-icon" />
+          <img src={item.icon} alt="" className="feature-icon" loading="lazy"/>
           <span className="feature-text">{item.text}</span>
         </div>
       ))}

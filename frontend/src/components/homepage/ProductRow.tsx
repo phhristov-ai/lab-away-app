@@ -16,7 +16,7 @@ const ProductRow: React.FC<ProductRowProps> = ({ products }) => {
           key={product.slug}
           name={product.name}
           price={product.price}
-          thumbnailUrl={product.thumbnailUrl}
+          images={product.images}
           slug={product.slug}
           categories={product.categories}
         />

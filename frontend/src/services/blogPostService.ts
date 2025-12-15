@@ -1,18 +1,24 @@
 import { axiosInstance } from "./api";
 import { Category } from "./categoriesService";
 
+export type BlogImageUrls = {
+  small: string;
+  medium: string;
+  large: string;
+};
+
 export type BlogPostType = {
   slug: string;
   author: string;
-  imageUrl: string;
+  imageUrls: BlogImageUrls;
   title: string;
+  content: string;
   excerpt: string;
   readingTime: number;
   createdAt: string;
   updatedAt: string;
   categories: Category[];
 };
-
 
 export const fetchBlogPosts = async (lang: string) => {
   const response = await axiosInstance.get('/blogs', {

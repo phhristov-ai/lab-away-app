@@ -54,12 +54,19 @@ const Gallery: React.FC<GalleryProps> = ({ images, setImages, isAdmin }) => {
             onDrop={handleDrop}
             aria-label="Upload image by clicking or dragging and dropping a file"
           >
-            {images[currentIndex]?.imageUrl ? (
+            {images[currentIndex]?.imageUrlSmall ? (
               <img
-                src={images[currentIndex].imageUrl}
+                src={images?.[currentIndex]?.imageUrlSmall} // fallback
+                srcSet={`
+                  ${images?.[currentIndex]?.imageUrlSmall} 480w,
+                  ${images?.[currentIndex]?.imageUrlMedium} 768w,
+                  ${images?.[currentIndex]?.imageUrlLarge} 1200w
+                `}
+                sizes="(max-width: 480px) 480px, (max-width: 768px) 768px, 1200px"
                 alt={`Slide ${currentIndex + 1}`}
                 className="gallery-image"
               />
+
             ) : (
               <span className="gallery-placeholder">Click or drag image to add</span>
             )}
@@ -87,10 +94,17 @@ const Gallery: React.FC<GalleryProps> = ({ images, setImages, isAdmin }) => {
           </div>
         ) : (
           <img
-            src={images[currentIndex].imageUrl}
+            src={images?.[currentIndex]?.imageUrlSmall} // fallback
+            srcSet={`
+              ${images?.[currentIndex]?.imageUrlSmall} 480w,
+              ${images?.[currentIndex]?.imageUrlMedium} 768w,
+              ${images?.[currentIndex]?.imageUrlLarge} 1200w
+            `}
+            sizes="(max-width: 480px) 480px, (max-width: 768px) 768px, 1200px"
             alt={`Slide ${currentIndex + 1}`}
             className="main-thumbnail-image"
           />
+
         )}
 
         <button
@@ -106,7 +120,7 @@ const Gallery: React.FC<GalleryProps> = ({ images, setImages, isAdmin }) => {
           <div className="gallery-thumbnails">
             {images.map((img, idx) => (
               <div
-                key={img.imageUrl}
+                key={img.imageUrlSmall}
                 className={`thumbnail-wrapper ${img.main ? 'main-thumbnail-image' : ''}`}
               >
                 <button
@@ -116,10 +130,17 @@ const Gallery: React.FC<GalleryProps> = ({ images, setImages, isAdmin }) => {
                   aria-label={`View image thumbnail ${idx + 1}`}
                 >
                   <img
-                    src={img.imageUrl}
+                    src={img.imageUrlSmall} // fallback for very small or unsupported browsers
+                    srcSet={`
+                      ${img.imageUrlSmall} 480w,
+                      ${img.imageUrlMedium} 768w,
+                      ${img.imageUrlLarge} 1200w
+                    `}
+                    sizes="(max-width: 480px) 480px, (max-width: 768px) 768px, 1200px"
                     alt={`Thumbnail ${idx + 1}`}
                     className="thumbnail-image"
                   />
+
                 </button>
 
                 <button
@@ -142,7 +163,7 @@ const Gallery: React.FC<GalleryProps> = ({ images, setImages, isAdmin }) => {
         count={images.length}
         currentIndex={currentIndex}
         onDotClick={goToImage}
-        keys={images.map((img) => img.imageUrl)}
+        keys={images.map((img) => img.imageUrlSmall)}
       />
     </div>
   );

@@ -1,5 +1,7 @@
 export type ProductImage = {
-  imageUrl: string;
+  imageUrlSmall: string;
+  imageUrlMedium?: string;
+  imageUrlLarge?: string;
   main: boolean;
   file?: File;
 };

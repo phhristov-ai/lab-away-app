@@ -18,7 +18,7 @@ const SocialMediaLinks = () => {
     <div className="social-media-icons">
       {socialIcons.map(({ href, src, alt }) => (
         <a key={alt} href={href} className="social-icon" target="_blank" rel="noopener noreferrer">
-          <img src={src} alt={alt} className="social-image" />
+          <img src={src} alt={alt} className="social-image" loading="lazy" />
         </a>
       ))}
     </div>

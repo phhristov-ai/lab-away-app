@@ -9,8 +9,10 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -52,6 +54,34 @@ class S3ServiceTest {
         verify(amazonS3, times(1))
                 .deleteObject(bucketName, "file-to-delete.txt");
     }
+
+    @Test
+    void uploadFileWithName_shouldUploadBytesToS3AndReturnUrl() throws Exception {
+        byte[] fileBytes = "Sample content".getBytes();
+        String fileName = "test-file.webp";
+        String bucketName = "test-bucket";
+
+        when(awsProperties.getS3BucketName()).thenReturn(bucketName);
+        when(amazonS3.getUrl(bucketName, fileName))
+                .thenReturn(new URL("https://s3.amazonaws.com/test-bucket/" + fileName));
+
+        String url = s3Service.uploadFileWithName(fileBytes, fileName);
+
+        assertEquals("https://s3.amazonaws.com/test-bucket/test-file.webp", url);
+
+        ArgumentCaptor<InputStream> inputStreamCaptor = ArgumentCaptor.forClass(InputStream.class);
+        verify(amazonS3, times(1)).putObject(
+                eq(bucketName),
+                eq(fileName),
+                inputStreamCaptor.capture(),
+                eq(null)
+        );
+
+        // Verify the InputStream contains the expected bytes
+        byte[] actualBytes = inputStreamCaptor.getValue().readAllBytes();
+        assertArrayEquals(fileBytes, actualBytes);
+    }
+
 
     private MockMultipartFile createMockFile(String filename, String content) {
         return new MockMultipartFile(

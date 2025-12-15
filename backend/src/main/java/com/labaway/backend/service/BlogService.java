@@ -1,6 +1,7 @@
 package com.labaway.backend.service;
 
 import com.labaway.backend.dto.blog.*;
+import com.labaway.backend.dto.image.ImageUrls;
 import com.labaway.backend.entity.blog.Blog;
 import com.labaway.backend.entity.category.Category;
 import com.labaway.backend.enums.Language;
@@ -8,7 +9,6 @@ import com.labaway.backend.exception.ResourceNotFoundException;
 import com.labaway.backend.entity.repository.BlogRepository;
 import com.labaway.backend.entity.repository.CategoryRepository;
 import com.labaway.backend.transformer.BlogTransformer;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +26,8 @@ public class BlogService {
     private final CategoryRepository categoryRepository;
     private final BlogTransformer blogTransformer;
     private final S3Service s3Service;
+
+    private final ImageService imageService;
 
     @Transactional(readOnly = true)
     public List<BlogPreviewDto> getAllBlogsForPreview(Language lang) {
@@ -74,20 +76,41 @@ public class BlogService {
 
     private void uploadImageIfPresent(Blog blog, MultipartFile file) throws IOException {
         if (file != null && !file.isEmpty()) {
-            String imageUrl = s3Service.uploadFile(file);
-            blog.setImageUrl(imageUrl);
+            // Use ImageService to resize and upload the image
+            ImageUrls imageUrls = imageService.processAndUploadImage(file);
+
+            blog.setImageUrlSmall(imageUrls.getSmall());
+            blog.setImageUrlMedium(imageUrls.getMedium());
+            blog.setImageUrlLarge(imageUrls.getLarge());
         }
     }
 
+
     private void replaceImageIfPresent(Blog blog, MultipartFile file) throws IOException {
         if (file != null && !file.isEmpty()) {
-            if (blog.getImageUrl() != null && !blog.getImageUrl().isEmpty()) {
-                s3Service.deleteFile(blog.getImageUrl());
+            // Delete old images if they exist
+            if (blog.getImageUrlSmall() != null && !blog.getImageUrlSmall().isEmpty()) {
+                s3Service.deleteFile(blog.getImageUrlSmall());
             }
-            String imageUrl = s3Service.uploadFile(file);
-            blog.setImageUrl(imageUrl);
+
+            if (blog.getImageUrlMedium() != null && !blog.getImageUrlMedium().isEmpty()) {
+                s3Service.deleteFile(blog.getImageUrlMedium());
+            }
+
+            if (blog.getImageUrlLarge() != null && !blog.getImageUrlLarge().isEmpty()) {
+                s3Service.deleteFile(blog.getImageUrlLarge());
+            }
+
+            // Process and upload new image versions (small, medium, large)
+            ImageUrls newImageUrls = imageService.processAndUploadImage(file);
+
+            // Set the new image URLs for all versions
+            blog.setImageUrlSmall(newImageUrls.getSmall());
+            blog.setImageUrlMedium(newImageUrls.getMedium());
+            blog.setImageUrlLarge(newImageUrls.getLarge());
         }
     }
+
 
     public List<BlogPreviewDto> getRandomBlogPreviews(Language lang) {
         return blogRepository.findRandomBlogsByLanguage(lang.name()).stream()
@@ -116,24 +139,26 @@ public class BlogService {
                 .orElseThrow(() -> new ResourceNotFoundException("Blog not found with slug: " + slug));
     }
 
-    public void updateImageUrl(String slug, String imageUrl) {
-        Blog blog = blogRepository.findBySlug(slug)
-                .orElseThrow(() -> new EntityNotFoundException("Blog not found"));
-        blog.setImageUrl(imageUrl);
-        blogRepository.save(blog);
-    }
-
     @Transactional
     public void deleteBlog(String slug) {
         Blog blog = blogRepository.findBySlug(slug)
                 .orElseThrow(() -> new ResourceNotFoundException("Blog not found with slug " + slug));
 
-        if (blog.getImageUrl() != null && !blog.getImageUrl().isEmpty()) {
-            s3Service.deleteFile(blog.getImageUrl());
+        if (blog.getImageUrlSmall() != null && !blog.getImageUrlSmall().isEmpty()) {
+            s3Service.deleteFile(blog.getImageUrlSmall());
+        }
+
+        if (blog.getImageUrlMedium() != null && !blog.getImageUrlMedium().isEmpty()) {
+            s3Service.deleteFile(blog.getImageUrlMedium());
+        }
+
+        if (blog.getImageUrlLarge() != null && !blog.getImageUrlLarge().isEmpty()) {
+            s3Service.deleteFile(blog.getImageUrlLarge());
         }
 
         blogRepository.delete(blog);
     }
+
 
 
     private String generateSlug(String name) {

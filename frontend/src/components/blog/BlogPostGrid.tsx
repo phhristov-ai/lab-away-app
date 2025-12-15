@@ -32,7 +32,7 @@ const BlogPostGrid: React.FC<BlogPostGridProps> = ({ blogPosts }) => {
             <BlogPost
               title={post.title}
               content={post.excerpt}
-              image={post.imageUrl}
+              imageUrls={post.imageUrls}
               slug={post.slug}
               categories={post.categories}
               readingTime={post.readingTime}

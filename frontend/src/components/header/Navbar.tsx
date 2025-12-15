@@ -51,7 +51,7 @@ const Navbar = () => {
             <CartIconWrapper />
             {isAdmin && (
               <button onClick={logout} className="icon-button" title="Logout">
-                <img src={logoutIcon} alt="Logout" />
+                <img src={logoutIcon} alt="Logout" loading="lazy" />
               </button>
             )}
           </div>

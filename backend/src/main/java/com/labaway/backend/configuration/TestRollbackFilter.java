@@ -1,5 +1,5 @@
 package com.labaway.backend.configuration;
-
+/*
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +15,7 @@ import java.io.IOException;
 
 @Component
 @Profile("test")
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class TestRollbackFilter extends OncePerRequestFilter {
 
     private final PlatformTransactionManager transactionManager;
@@ -42,3 +42,5 @@ public class TestRollbackFilter extends OncePerRequestFilter {
         });
     }
 }
+
+ */

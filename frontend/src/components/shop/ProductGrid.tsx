@@ -14,6 +14,7 @@ type ProductGridProps = {
 const ProductGrid: React.FC<ProductGridProps> = ({ products, showCreateNew = false, onProductClick }) => {
   const { isAdmin } = useAdmin();
 
+
   return (
     <div className="product-grid">
       {isAdmin && showCreateNew && (
@@ -33,7 +34,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, showCreateNew = fal
           <Product
             name={product.name}
             price={product.price}
-            thumbnailUrl={product.thumbnailUrl}
+            images={product.images}
             slug={product.slug}
             categories={product.categories}
             onClick={() => onProductClick?.(product)}

@@ -9,7 +9,9 @@ public class ProductImageTransformer {
 
     public ProductImageDto toDto(ProductImage image) {
         return ProductImageDto.builder()
-                .imageUrl(image.getImageUrl())
+                .imageUrlSmall(image.getImageUrlSmall())
+                .imageUrlMedium(image.getImageUrlMedium())
+                .imageUrlLarge(image.getImageUrlLarge())
                 .main(image.isMain())
                 .build();
     }

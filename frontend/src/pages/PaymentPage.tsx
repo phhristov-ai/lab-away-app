@@ -50,7 +50,7 @@ const PaymentPage = () => {
                     onChange={() => setPaymentMethod('creditCard')}
                   />
                   <span className="label-with-icon">
-                    <img src={cardIcon} alt="Card icon" className="icon-before-label" />
+                    <img src={cardIcon} alt="Card icon" className="icon-before-label" loading="lazy"/>
                     {t('checkout.payment.creditCard.methodLabel')}
                   </span>
                 </label>
@@ -63,8 +63,8 @@ const PaymentPage = () => {
                     onChange={() => setPaymentMethod('paypal')}
                   />
                   <span className="paypal-icons">
-                    <img src={paypal1} alt="PayPal icon 1" className="paypal-icon" />
-                    <img src={paypal2} alt="PayPal icon 2" className="paypal-icon" />
+                    <img src={paypal1} alt="PayPal icon 1" className="paypal-icon" loading="lazy"/>
+                    <img src={paypal2} alt="PayPal icon 2" className="paypal-icon" loading="lazy"/>
                   </span>
                 </label>
               </div>

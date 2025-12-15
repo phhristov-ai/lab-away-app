@@ -2,6 +2,7 @@ package com.labaway.backend.service;
 
 import com.labaway.backend.dto.blog.*;
 import com.labaway.backend.dto.category.CategoryDto;
+import com.labaway.backend.dto.image.ImageUrls;
 import com.labaway.backend.entity.blog.Blog;
 import com.labaway.backend.entity.blog.BlogTranslation;
 import com.labaway.backend.entity.category.Category;
@@ -11,7 +12,6 @@ import com.labaway.backend.entity.repository.CategoryRepository;
 import com.labaway.backend.enums.Language;
 import com.labaway.backend.exception.ResourceNotFoundException;
 import com.labaway.backend.transformer.BlogTransformer;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -49,6 +49,8 @@ class BlogServiceTest {
     private BlogTranslationRepository blogTranslationRepository;
     @Mock
     private S3Service s3Service;
+    @Mock
+    private ImageService imageService;
     private String slug;
     private String categorySlug;
     private Blog blog;
@@ -119,33 +121,52 @@ class BlogServiceTest {
 
     @Test
     void createBlog_savesAndReturnsMappedDto() throws IOException {
-        when(blogTransformer.fromCreateDto(blogDto)).thenReturn(blog);
         MultipartFile file = createMockImageFile();
+
+        when(blogTransformer.fromCreateDto(blogDto)).thenReturn(blog);
+        when(imageService.processAndUploadImage(file)).thenReturn(getImageUrls());
+
         mockSaveBlog(blog);
-        mockTransformToDto(blog, blogResponseDto);
         mockFindCategories(List.of(category));
-        when(s3Service.uploadFile(file)).thenReturn("filename");
+        mockTransformToDto(blog, blogResponseDto);
 
         BlogResponseDto result = blogService.createBlog(blogDto, file);
 
         assertBlogDto(result);
-        assertEquals("filename", blog.getImageUrl());
+
+        assertEquals("small.webp", blog.getImageUrlSmall());
+        assertEquals("medium.webp", blog.getImageUrlMedium());
+        assertEquals("large.webp", blog.getImageUrlLarge());
     }
 
+    private static ImageUrls getImageUrls() {
+        return ImageUrls.builder()
+                .small("small.webp")
+                .medium("medium.webp")
+                .large("large.webp")
+                .build();
+    }
+
+
     @Test
-    void createBlog_withoutImage_setsNoImageUrl() throws IOException {
+    void createBlog_withoutImage_setsNoImageUrls() throws IOException {
         when(blogTransformer.fromCreateDto(blogDto)).thenReturn(blog);
         mockSaveBlog(blog);
         mockTransformToDto(blog, blogResponseDto);
         mockFindCategories(List.of(category));
 
         BlogResponseDto result = blogService.createBlog(blogDto, null);
+
         verify(blogTransformer).toDto(eq(blog), any(Language.class));
+        verify(imageService, never()).processAndUploadImage(any());
 
         assertBlogDto(result);
-        assertNull(blogResponseDto.getImageUrl());
-        verify(s3Service, never()).uploadFile(any());
+
+        assertNull(blog.getImageUrlSmall());
+        assertNull(blog.getImageUrlMedium());
+        assertNull(blog.getImageUrlLarge());
     }
+
 
     @Test
     void createBlog_withEmptyFile_doesNotUpload() throws IOException {
@@ -160,9 +181,14 @@ class BlogServiceTest {
         BlogResponseDto result = blogService.createBlog(blogDto, emptyFile);
 
         assertBlogDto(result);
-        assertNull(blogResponseDto.getImageUrl());
-        verify(s3Service, never()).uploadFile(any());
+
+        verify(imageService, never()).processAndUploadImage(any());
+
+        assertNull(blog.getImageUrlSmall());
+        assertNull(blog.getImageUrlMedium());
+        assertNull(blog.getImageUrlLarge());
     }
+
 
     private MockMultipartFile createMockImageFile() {
         return new MockMultipartFile(
@@ -177,22 +203,37 @@ class BlogServiceTest {
     void updateBlog_shouldUpdateAndReturnDto() throws IOException {
         BlogDto updateDto = createUpdateBlogDto();
         MultipartFile file = createMockImageFile();
-        String expectedImageUrl = "filename";
+
+        ImageUrls imageUrls = ImageUrls.builder()
+                .small("small.webp")
+                .medium("medium.webp")
+                .large("large.webp")
+                .build();
+
         mockFindBlogBySlug(Optional.of(blog));
-        when(categoryRepository.findBySlugIn(updateDto.getCategorySlugs())).thenReturn(List.of(category));
-        when(s3Service.uploadFile(file)).thenReturn(expectedImageUrl);
+
+        when(categoryRepository.findBySlugIn(updateDto.getCategorySlugs()))
+                .thenReturn(List.of(category));
+        when(imageService.processAndUploadImage(file))
+                .thenReturn(imageUrls);
+
         mockSaveBlog(blog);
         mockTransformToDto(blog, blogResponseDto);
 
         BlogResponseDto result = blogService.updateBlog(slug, updateDto, file);
 
         assertBlogDto(result);
-        assertEquals(expectedImageUrl, blog.getImageUrl());
+
+        assertEquals("small.webp", blog.getImageUrlSmall());
+        assertEquals("medium.webp", blog.getImageUrlMedium());
+        assertEquals("large.webp", blog.getImageUrlLarge());
+
         verify(blogRepository).findBySlug(slug);
         verify(blogRepository).save(blog);
-        verify(s3Service).uploadFile(file);
+        verify(imageService).processAndUploadImage(file);
         verify(blogTransformer).updateEntity(blog, updateDto);
     }
+
 
     @Test
     void deleteBlog_deletesBySlug() {
@@ -230,32 +271,6 @@ class BlogServiceTest {
         verify(blogRepository).findRandomBlogsByLanguage(lang.name());
         verify(blogTransformer).mapToBlogPreviewDto(projection1);
         verify(blogTransformer).mapToBlogPreviewDto(projection2);
-    }
-
-    @Test
-    void testUpdateImageUrl_shouldUpdateBlogImage() {
-        String newImageUrl = "https://example.com/image.jpg";
-
-        when(blogRepository.findBySlug(slug)).thenReturn(Optional.of(blog));
-
-        blogService.updateImageUrl(slug, newImageUrl);
-
-        assertEquals(newImageUrl, blog.getImageUrl());
-        verify(blogRepository).findBySlug(slug);
-        verify(blogRepository).save(blog);
-    }
-
-    @Test
-    void testUpdateImageUrl_shouldThrowWhenBlogNotFound() {
-        String newImageUrl = "https://example.com/image.jpg";
-        when(blogRepository.findBySlug(slug)).thenReturn(Optional.empty());
-
-        assertThrows(EntityNotFoundException.class, () -> {
-            blogService.updateImageUrl(slug, newImageUrl);
-        });
-
-        verify(blogRepository).findBySlug(slug);
-        verify(blogRepository, never()).save(any());
     }
 
     private void setupCategory() {

@@ -1,8 +1,10 @@
 import HeroSection from '../components/homepage/HeroSection';
 import FeatureImages from '../components/homepage/FeatureImages';
 import ImageTextSection from '../components/homepage/ImageTextSection';
-import FeaturedImage4 from '../assets/images/FeaturedImage4.webp';
-import FeaturedImage5 from '../assets/images/FeaturedImage5.webp';
+import FeaturedImage4Small from '../assets/images/home/FeaturedImage4_480.webp';
+import FeaturedImage4Medium from '../assets/images/home/FeaturedImage4_768.webp';
+import FeaturedImage5Small from '../assets/images/home/FeaturedImage5_480.webp';
+import FeaturedImage5Medium from '../assets/images/home/FeaturedImage5_768.webp';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import ScrollAnimatedArrows from '../components/homepage/ScrollAnimatedArrows';
@@ -26,7 +28,6 @@ const HomePage = () => {
 
   return (
     <div>
-
       <Helmet>
         <title>Lab-Away | Home - High-Quality Home Health Test Kits</title>
         <meta 
@@ -45,14 +46,14 @@ const HomePage = () => {
             }
           `}
         </script>
-    </Helmet>
-
+      </Helmet>
 
       <HeroSection />
       <FeatureImages />
-
+      
       <ImageTextSection
-        imageSrc={FeaturedImage4}
+        smallSrc={FeaturedImage4Small}
+        mediumSrc={FeaturedImage4Medium}
         imageAlt={t('homepage.firstParagraph.alt', 'No sample')}
         title={t('homepage.firstParagraph.title')}
         text={t('homepage.firstParagraph.text')}
@@ -68,14 +69,14 @@ const HomePage = () => {
       <RandomProductRow />
 
       <ImageTextSection
-        imageSrc={FeaturedImage5}
+        smallSrc={FeaturedImage5Small}
+        mediumSrc={FeaturedImage5Medium}
         imageAlt={t('homepage.secondParagraph.text')}
         title={t('homepage.secondParagraph.title')}
         text={t('homepage.secondParagraph.text')}
         buttonText={t('homepage.hero.shopButton')}
         buttonLink="/shop"
       />
-
     </div>
   );
 };

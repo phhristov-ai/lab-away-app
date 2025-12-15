@@ -7,6 +7,13 @@ export type ProductTranslationDto = {
   description?: string;
 };
 
+export type ProductImageDto = {
+  imageUrlSmall?: string;
+  imageUrlMedium?: string;
+  imageUrlLarge?: string;
+  main: boolean;
+};
+
 export type ProductPayloadDto = {
   price: number;
   stock: number;
@@ -14,7 +21,7 @@ export type ProductPayloadDto = {
   mainImageIndex: number;
   categories: string[];
   translation: ProductTranslationDto;
-  imageUrls: string[];
+  images: ProductImageDto[];
 };
 
 export const fetchProducts = async () => {

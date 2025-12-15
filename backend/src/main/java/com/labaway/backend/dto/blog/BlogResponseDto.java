@@ -1,4 +1,4 @@
-package com.labaway.backend.dto.product.image.blog;
+package com.labaway.backend.dto.blog;
 
 import com.labaway.backend.dto.category.CategoryDto;
 import com.labaway.backend.dto.image.ImageUrls;

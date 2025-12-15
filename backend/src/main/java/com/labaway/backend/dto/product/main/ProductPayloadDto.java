@@ -1,5 +1,6 @@
 package com.labaway.backend.dto.product.main;
 
+import com.labaway.backend.dto.product.image.ProductImageDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -37,5 +38,6 @@ public class ProductPayloadDto {
     @NotNull(message = "One translation is required")
     private @Valid ProductTranslationDto translation;
 
-    private List<String> imageUrls;
+    private List<ProductImageDto> images;
+
 }

@@ -55,12 +55,12 @@ const AdminProductEditor: React.FC<AdminProductEditorProps> = ({
       <div className="image-management">
         <h4>Images</h4>
         {images.map((img, idx) => (
-          <div key={img.imageUrl + idx} style={{ marginBottom: '1rem' }}>
+          <div key={img.imageUrlSmall + idx} style={{ marginBottom: '1rem' }}>
             <input
-              value={img.imageUrl}
+              value={img.imageUrlSmall}
               onChange={(e) => {
                 const newImages = [...images];
-                newImages[idx] = { ...newImages[idx], imageUrl: e.target.value };
+                newImages[idx] = { ...newImages[idx], imageUrlSmall: e.target.value };
                 setImages(newImages);
               }}
               placeholder="Image URL"
@@ -93,7 +93,7 @@ const AdminProductEditor: React.FC<AdminProductEditorProps> = ({
             setImages([
               ...images,
               {
-                imageUrl: '',
+                imageUrlSmall: '',
                 main: images.length === 0,
               },
             ])

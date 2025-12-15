@@ -1,14 +1,14 @@
 import { TFunction } from 'i18next';
 
-import Clock from '../assets/images/clock.webp';
-import Hand from '../assets/images/hand.webp';
-import Finger from '../assets/images/finger.webp';
-import Swab from '../assets/images/swab.webp';
-import Urine from '../assets/images/urine.webp';
-import Saliva from '../assets/images/saliva.webp';
-import Icon1 from '../assets/images/Icon1.webp';
-import Icon2 from '../assets/images/Icon2.webp';
-import Icon3 from '../assets/images/Icon3.webp';
+import Clock from '../assets/images/product/clock.webp';
+import Hand from '../assets/images/product/hand.webp';
+import Finger from '../assets/images/product/finger.webp';
+import Swab from '../assets/images/product/swab.webp';
+import Urine from '../assets/images/product/urine.webp';
+import Saliva from '../assets/images/product/saliva.webp';
+import Icon1 from '../assets/images/product/Icon1.webp';
+import Icon2 from '../assets/images/product/Icon2.webp';
+import Icon3 from '../assets/images/product/Icon3.webp';
 
 export const getFaqItems = (t: TFunction) => [
   {

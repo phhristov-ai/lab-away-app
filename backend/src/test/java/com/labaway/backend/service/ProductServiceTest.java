@@ -1,6 +1,8 @@
 package com.labaway.backend.service;
 
 import com.labaway.backend.dto.category.CategoryDto;
+import com.labaway.backend.dto.image.ImageUrls;
+import com.labaway.backend.dto.product.image.ProductImageDto;
 import com.labaway.backend.dto.product.main.*;
 import com.labaway.backend.entity.category.Category;
 import com.labaway.backend.entity.product.Product;
@@ -9,7 +11,6 @@ import com.labaway.backend.entity.repository.ProductPreviewProjection;
 import com.labaway.backend.enums.Language;
 import com.labaway.backend.exception.CategoryNotFoundException;
 import com.labaway.backend.exception.ProductNotFoundException;
-import com.labaway.backend.exception.ResourceNotFoundException;
 import com.labaway.backend.entity.repository.CategoryRepository;
 import com.labaway.backend.entity.repository.ProductImageRepository;
 import com.labaway.backend.entity.repository.ProductRepository;
@@ -27,10 +28,10 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class ProductServiceTest {
@@ -41,6 +42,7 @@ class ProductServiceTest {
     @Mock private CategoryRepository categoryRepository;
     @Mock private ProductTransformer productTransformer;
     @Mock private S3Service s3Service;
+    @Mock private ImageService imageService;
     private final UUID productId = UUID.randomUUID();
     private static final String LANGUAGE_EN_CODE = "EN";
     private final String categorySlug1 = "test-cat-1";
@@ -64,31 +66,74 @@ class ProductServiceTest {
         List<Category> categories = createSampleCategories();
         Product product = createSampleProduct();
         Product savedProduct = createSampleSavedProduct("test-product");
-        ProductDto expectedDto = createSampleProductDto("test-product");
+
+        // Mocked image DTO with multiple sizes
+        ProductImageDto imageDto = ProductImageDto.builder()
+                .imageUrlSmall("http://example.com/image-small.jpg")
+                .imageUrlMedium("http://example.com/image-medium.jpg")
+                .imageUrlLarge("http://example.com/image-large.jpg")
+                .main(true)
+                .build();
+
+        ImageUrls imageUrls = new ImageUrls(
+                imageDto.getImageUrlSmall(),
+                imageDto.getImageUrlMedium(),
+                imageDto.getImageUrlLarge()
+        );
+
         MultipartFile[] mockFiles = new MultipartFile[] {
                 createMockMultipartFile("image.jpg", "image content")
         };
 
+        when(imageService.processAndUploadImage(any(MultipartFile.class))).thenReturn(imageUrls);
 
-        when(categoryRepository.findBySlugInAndLanguage(createDto.getCategories(), Language.EN)).thenReturn(categories);
+        when(categoryRepository.findBySlugInAndLanguage(createDto.getCategories(), Language.EN))
+                .thenReturn(categories);
         when(productTransformer.fromCreateDto(createDto, categories)).thenReturn(product);
         when(productRepository.save(product)).thenReturn(savedProduct);
-        when(productTransformer.toDto(savedProduct, Language.EN)).thenReturn(expectedDto);
+        when(productTransformer.toDto(savedProduct, Language.EN))
+                .thenReturn(createSampleProductDtoWithImages("test-product", List.of(imageDto)));
 
         ProductDto result = productService.createProduct(createDto, mockFiles);
 
         assertThat(result).isNotNull();
         assertThat(result.getSlug()).isEqualTo("test-product");
+        assertThat(result.getImages()).hasSize(1);
+        assertThat(result.getImages().get(0).getImageUrlSmall()).isEqualTo("http://example.com/image-small.jpg");
 
         verify(categoryRepository).findBySlugInAndLanguage(createDto.getCategories(), Language.EN);
         verify(productRepository).save(product);
+        verify(imageService, times(1)).processAndUploadImage(any(MultipartFile.class));
     }
+
+    private ProductDto createSampleProductDtoWithImages(String slug, List<ProductImageDto> images) {
+        return ProductDto.builder()
+                .slug(slug)
+                .name("Sample Product")
+                .description("Sample description")
+                .price(BigDecimal.valueOf(100))
+                .stock(10)
+                .images(images)
+                .categories(new ArrayList<>())
+                .build();
+    }
+
 
 
     @Test
     void shouldUpdateProductSuccessfully() throws IOException {
         ProductPayloadDto createDto = createSampleCreateDto();
         String slug = "test-product";
+
+        ImageUrls sampleImageUrls = ImageUrls.builder()
+                .small("http://example.com/image-small.jpg")
+                .medium("http://example.com/image-medium.jpg")
+                .large("http://example.com/image-large.jpg")
+                .build();
+
+        when(imageService.processAndUploadImage(any(MultipartFile.class)))
+                .thenReturn(sampleImageUrls);
+
 
         Product product = createSampleSavedProduct(slug);
         List<Category> categories = createSampleCategories();
@@ -106,8 +151,8 @@ class ProductServiceTest {
         assertThat(result.getName()).isEqualTo(createDto.getTranslation().getName());
 
         verifyInteractions(slug, createDto.getCategories(), product);
-        verify(s3Service, times(mockFiles.length)).uploadFile(any(MultipartFile.class));
         verify(productRepository).save(product);
+        verify(imageService, times(mockFiles.length)).processAndUploadImage(any(MultipartFile.class));
     }
 
     private MockMultipartFile createMockMultipartFile(String filename, String content) {
@@ -250,27 +295,24 @@ class ProductServiceTest {
         verifyNoMoreInteractions(productRepository);
     }
 
-    private void mockFindProductBySlug(Product product) {
-        when(productRepository.findBySlug(product.getSlug())).thenReturn(Optional.of(product));
-    }
-
-    private void mockSaveProduct(Product product) {
-        when(productRepository.save(product)).thenReturn(product);
-    }
-
-    private void mockTransformToDto(Product product, Language language, ProductDto dto) {
-        when(productTransformer.toDto(product, language)).thenReturn(dto);
-    }
-
     private ProductPreviewDto buildProductPreviewDtoFromProjection(ProductPreviewProjection proj) {
         return ProductPreviewDto.builder()
                 .name(proj.getName())
                 .slug(proj.getSlug())
                 .price(proj.getPrice())
-                .thumbnailUrl(proj.getThumbnailUrl())
+                .imageUrls(mapImageUrls(proj.getImageUrlSmall(), proj.getImageUrlMedium(), proj.getImageUrlLarge()))
                 .categories(createCategoryDtos())
                 .build();
     }
+
+    private ImageUrls mapImageUrls(String small, String medium, String large) {
+        return ImageUrls.builder()
+                .small(small)
+                .medium(medium)
+                .large(large)
+                .build();
+    }
+
 
     private List<CategoryDto> createCategoryDtos() {
         return List.of(
@@ -307,12 +349,14 @@ class ProductServiceTest {
         when(mockProjection.getName()).thenReturn(name);
         when(mockProjection.getSlug()).thenReturn(slug);
         when(mockProjection.getPrice()).thenReturn(BigDecimal.valueOf(99.99));
-        when(mockProjection.getThumbnailUrl()).thenReturn("http://example.com/image.jpg");
+
+        when(mockProjection.getImageUrlSmall()).thenReturn("http://example.com/image-small.jpg");
+        when(mockProjection.getImageUrlMedium()).thenReturn("http://example.com/image-medium.jpg");
+        when(mockProjection.getImageUrlLarge()).thenReturn("http://example.com/image-large.jpg");
+
         when(mockProjection.getCategories()).thenReturn(CATEGORIES_JSON);
         return mockProjection;
     }
-
-
 
     @Test
     void shouldDeleteProductSuccessfully() {

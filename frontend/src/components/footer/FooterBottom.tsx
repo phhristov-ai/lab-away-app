@@ -19,14 +19,62 @@ const FooterBottom = () => {
           {t('footer.copyright')}
         </div>
         <div className="footer-bottom-right">
-          <img src={visaIcon} alt={t('footer.payments.methods.visa')} />
-          <img src={mastercardIcon} alt={t('footer.payments.methods.mastercard')} />
-          <img src={paypalIcon} alt={t('footer.payments.methods.paypal')} />
-          <img src={amexIcon} alt={t('footer.payments.methods.amex')} />
-          <img src={sepaIcon} alt={t('footer.payments.methods.sepa')} />
-          <img src={giropayIcon} alt={t('footer.payments.methods.giropay')} />
-          <img src={sofortIcon} alt={t('footer.payments.methods.sofort')} />
-          <img src={dhlIcon} alt={t('footer.payments.methods.dhl')} />
+          <img
+            src={visaIcon}
+            alt={t('footer.payments.methods.visa')}
+            loading="lazy"
+            width="70"
+            height="24"
+          />
+          <img
+            src={mastercardIcon}
+            alt={t('footer.payments.methods.mastercard')}
+            loading="lazy"
+            width="38"
+            height="24"
+          />
+          <img
+            src={paypalIcon}
+            alt={t('footer.payments.methods.paypal')}
+            loading="lazy"
+            width="81"
+            height="24"
+          />
+          <img
+            src={amexIcon}
+            alt={t('footer.payments.methods.amex')}
+            loading="lazy"
+            width="62"
+            height="24"
+          />
+          <img
+            src={sepaIcon}
+            alt={t('footer.payments.methods.sepa')}
+            loading="lazy"
+            width="66"
+            height="24"
+          />
+          <img
+            src={giropayIcon}
+            alt={t('footer.payments.methods.giropay')}
+            loading="lazy"
+            width="53"
+            height="24"
+          />
+          <img
+            src={sofortIcon}
+            alt={t('footer.payments.methods.sofort')}
+            loading="lazy"
+            width="33"
+            height="24"
+          />
+          <img
+            src={dhlIcon}
+            alt={t('footer.payments.methods.dhl')}
+            loading="lazy"
+            width="37"
+            height="24"
+          />
         </div>
       </div>
     </div>

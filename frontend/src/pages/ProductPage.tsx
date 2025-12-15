@@ -6,9 +6,9 @@ import './ProductPage.css';
 import ThreeColumnLayout from '../components/product/ThreeColumnLayout';
 import Accordion from '../components/product/Accordion';
 import VerticalFeatureList from '../components/product/VerticalFeatureList';
-
 import ImageTextSection from '../components/homepage/ImageTextSection';
-import Scientist from '../assets/images/Scientist.webp';
+import ScientistImageSmall from '../assets/images/product/Scientist_480.webp';
+import ScientistImageLarge from '../assets/images/product/Scientist_768.webp';
 import RandomProductRow from '../components/common/RandomProducts';
 import AdminActionButtons from '../components/admin/AdminActionButtons';
 import { useProductPage } from '../hooks/useProductPage';
@@ -59,7 +59,7 @@ const ProductPage: React.FC = () => {
         <meta name="description" content={description} />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
-          <meta property="og:image" content={images[0]?.imageUrl || '/default-image.jpg'} />
+          <meta property="og:image" content={images[0]?.imageUrlSmall || '/default-image.jpg'} />
         <meta property="og:url" content={`https://mystore.com/product/${slug}`} />
       </Helmet>
 
@@ -83,11 +83,7 @@ const ProductPage: React.FC = () => {
           {!isAdmin && (<ProductInfo
             title={title}
             price={price}
-            image={
-              isFullProduct(product)
-                ? product.images[0]?.imageUrl
-                : product.thumbnailUrl
-            }
+            image={product.images?.[0]?.imageUrlSmall}
             categories={product.categories}
             slug={product.slug}
             onTitleChange={setTitle}
@@ -123,7 +119,8 @@ const ProductPage: React.FC = () => {
         </div>
 
         <ImageTextSection
-          imageSrc={Scientist}
+          smallSrc={ScientistImageSmall}
+          mediumSrc={ScientistImageLarge}
           imageAlt="No sample"
           title={t('productPage.banner.title')}
           text={t('productPage.banner.subtitle')}

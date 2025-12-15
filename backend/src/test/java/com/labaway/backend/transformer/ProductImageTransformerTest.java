@@ -31,10 +31,11 @@ class ProductImageTransformerTest {
         ProductImageDto dto = transformer.toDto(image);
 
         assertThat(dto).isNotNull();
-        assertThat(dto.getImageUrl()).isEqualTo("http://example.com/image.jpg");
+        assertThat(dto.getImageUrlSmall()).isEqualTo("http://example.com/image-small.jpg");
+        assertThat(dto.getImageUrlMedium()).isEqualTo("http://example.com/image-medium.jpg");
+        assertThat(dto.getImageUrlLarge()).isEqualTo("http://example.com/image-large.jpg");
         assertThat(dto.isMain()).isTrue();
     }
-
 
     private Product createSampleProduct() {
         Product product = Product.builder()
@@ -62,18 +63,12 @@ class ProductImageTransformerTest {
 
     private ProductImage createSampleImageEntity() {
         return ProductImage.builder()
-                .imageUrl("http://example.com/image.jpg")
-                .main(true)
-                .product(product)
-                .build();
-    }
-
-    private ProductImage createSampleImageEntityWithOldUrl() {
-        return ProductImage.builder()
-                .id(UUID.randomUUID())
-                .imageUrl("http://example.com/old.jpg")
+                .imageUrlSmall("http://example.com/image-small.jpg")
+                .imageUrlMedium("http://example.com/image-medium.jpg")
+                .imageUrlLarge("http://example.com/image-large.jpg")
                 .main(true)
                 .product(product)
                 .build();
     }
 }
+

@@ -1,5 +1,7 @@
 package com.labaway.backend.service;
 
+import com.labaway.backend.dto.image.ImageUrls;
+import com.labaway.backend.dto.product.image.ProductImageDto;
 import com.labaway.backend.dto.product.main.*;
 import com.labaway.backend.entity.category.Category;
 import com.labaway.backend.entity.product.Product;
@@ -30,6 +32,8 @@ public class ProductService {
     private final ProductImageRepository productImageRepository;
     private final S3Service s3Service;
 
+    private final ImageService imageService;
+
     public ProductDto createProduct(ProductPayloadDto productPayloadDto, MultipartFile[] files) throws IOException {
         List<ProductImage> productImages = processImageFiles(files, productPayloadDto.getMainImageIndex());
         Product savedProduct = prepareAndSaveProduct(productPayloadDto, productImages);
@@ -55,7 +59,7 @@ public class ProductService {
     }
 
     private void updateProductImages(Product product, ProductPayloadDto dto, MultipartFile[] files) throws IOException {
-        Set<String> retainedUrls = extractRetainedUrls(dto);
+        Set<String> retainedUrls = extractRetainedImageKeys(dto);
 
         deleteRemovedImages(product, retainedUrls);
         uploadNewImages(product, dto.getMainImageIndex(), files);
@@ -77,20 +81,37 @@ public class ProductService {
         }
     }
 
-    private Set<String> extractRetainedUrls(ProductPayloadDto dto) {
-        return dto.getImageUrls() == null ? Collections.emptySet() : new HashSet<>(dto.getImageUrls());
+    private Set<String> extractRetainedImageKeys(ProductPayloadDto dto) {
+        if (dto.getImages() == null) {
+            return Collections.emptySet();
+        }
+
+        return dto.getImages().stream()
+                .map(ProductImageDto::getImageUrlLarge)
+                .collect(Collectors.toSet());
     }
+
 
     private void deleteRemovedImages(Product product, Set<String> retainedUrls) {
         List<ProductImage> toRemove = product.getImages().stream()
-                .filter(image -> !retainedUrls.contains(image.getImageUrl()))
+                .filter(image -> !retainedUrls.contains(image.getImageUrlSmall())
+                        && !retainedUrls.contains(image.getImageUrlMedium())
+                        && !retainedUrls.contains(image.getImageUrlLarge()))
                 .collect(Collectors.toList());
 
         for (ProductImage image : toRemove) {
             try {
-                s3Service.deleteFile(image.getImageUrl());
+                if (image.getImageUrlSmall() != null && !image.getImageUrlSmall().isEmpty()) {
+                    s3Service.deleteFile(image.getImageUrlSmall());
+                }
+                if (image.getImageUrlMedium() != null && !image.getImageUrlMedium().isEmpty()) {
+                    s3Service.deleteFile(image.getImageUrlMedium());
+                }
+                if (image.getImageUrlLarge() != null && !image.getImageUrlLarge().isEmpty()) {
+                    s3Service.deleteFile(image.getImageUrlLarge());
+                }
             } catch (Exception e) {
-                System.err.println("Failed to delete S3 file: " + image.getImageUrl() + " - " + e.getMessage());
+                System.err.println("Failed to delete S3 file: " + image + " - " + e.getMessage());
             }
         }
 
@@ -140,35 +161,53 @@ public class ProductService {
     }
 
     private void deleteOldImages(Product product) {
+        if (product.getImages() == null) return;
+
         for (ProductImage oldImage : product.getImages()) {
             try {
-                s3Service.deleteFile(oldImage.getImageUrl());
+                if (oldImage.getImageUrlSmall() != null && !oldImage.getImageUrlSmall().isEmpty()) {
+                    s3Service.deleteFile(oldImage.getImageUrlSmall());
+                }
+                if (oldImage.getImageUrlMedium() != null && !oldImage.getImageUrlMedium().isEmpty()) {
+                    s3Service.deleteFile(oldImage.getImageUrlMedium());
+                }
+                if (oldImage.getImageUrlLarge() != null && !oldImage.getImageUrlLarge().isEmpty()) {
+                    s3Service.deleteFile(oldImage.getImageUrlLarge());
+                }
             } catch (Exception e) {
-                System.err.println("Failed to delete S3 file: " + oldImage.getImageUrl() + " - " + e.getMessage());
+                System.err.println("Failed to delete S3 file: " + oldImage + " - " + e.getMessage());
             }
         }
+
         productImageRepository.deleteAllByProductId(product.getId());
     }
 
+
     private List<ProductImage> processImageFiles(MultipartFile[] files, Integer mainIndex) throws IOException {
         List<ProductImage> productImages = new ArrayList<>();
-        if (files == null || mainIndex == null) {
+        if (files == null || files.length == 0) {
             return productImages;
         }
 
         for (int i = 0; i < files.length; i++) {
             MultipartFile file = files[i];
             if (file != null && !file.isEmpty()) {
-                String imageUrl = s3Service.uploadFile(file);
-                productImages.add(ProductImage.builder()
-                        .imageUrl(imageUrl)
+                ImageUrls imageUrls = imageService.processAndUploadImage(file);
+
+                ProductImage productImage = ProductImage.builder()
+                        .imageUrlSmall(imageUrls.getSmall())
+                        .imageUrlMedium(imageUrls.getMedium())
+                        .imageUrlLarge(imageUrls.getLarge())
                         .main(i == mainIndex)
-                        .build());
+                        .build();
+
+                productImages.add(productImage);
             }
         }
 
         return productImages;
     }
+
 
     public List<ProductPreviewDto> getAllProductPreviews(Language lang) {
         return productRepository.findAllProductPreviewsByLanguage(lang.name()).stream()

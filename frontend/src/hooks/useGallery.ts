@@ -15,7 +15,7 @@ export function useGallery(images: ProductImage[], setImages: React.Dispatch<Rea
     if (mainIndex !== -1 && mainIndex !== currentIndex) {
       setCurrentIndex(mainIndex);
     }
-  }, [images, currentIndex]);
+  }, [images]);
 
   const goToPrev = useCallback(() => {
     setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
@@ -36,7 +36,7 @@ export function useGallery(images: ProductImage[], setImages: React.Dispatch<Rea
     if (!files || files.length === 0) return;
 
     const newImages: ProductImage[] = Array.from(files).map((file) => ({
-      imageUrl: URL.createObjectURL(file),
+      imageUrlSmall: URL.createObjectURL(file),
       main: false,
       file,
     }));
@@ -44,19 +44,25 @@ export function useGallery(images: ProductImage[], setImages: React.Dispatch<Rea
     setImages((prevImages) => {
       const updatedImages = [...prevImages, ...newImages];
       return updatedImages;
+    }); 
+
+  };
+
+  const handleDelete = useCallback(() => {
+    setImages((prevImages) => {
+      if (prevImages.length === 0) return prevImages;
+
+      const updatedImages = prevImages.filter((_, index) => index !== currentIndex);
+
+      return updatedImages;
     });
 
-  };
+    setCurrentIndex((prevIndex) =>
+      prevIndex >= images.length - 1 ? Math.max(0, images.length - 2) : prevIndex
+    );
+  }, [currentIndex, images.length]);
 
-  const handleDelete = () => {
-    if (images.length === 0) return;
-    const updatedImages = images.filter((_, index) => index !== currentIndex);
-    setImages(updatedImages);
 
-    if (currentIndex >= updatedImages.length) {
-      setCurrentIndex(Math.max(0, updatedImages.length - 1));
-    }
-  };
 
   const setAsMainImage = (index: number) => {
     setImages((prevImages) =>

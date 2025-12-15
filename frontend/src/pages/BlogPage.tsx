@@ -22,7 +22,7 @@ const BlogPage: React.FC = () => {
     setLoading(true);
     fetchBlogPosts(i18n.language.toUpperCase())
       .then(data => {
-        const mapped = data.map((post: any) => ({ ...post, image: post.imageUrl }));
+        const mapped = data.map((post: any) => ({ ...post, imageUrls: post.imageUrls }));
         setPosts(mapped);
       })
       .finally(() => setLoading(false));

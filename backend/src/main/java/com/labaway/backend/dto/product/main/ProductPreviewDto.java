@@ -1,6 +1,7 @@
 package com.labaway.backend.dto.product.main;
 
 import com.labaway.backend.dto.category.CategoryDto;
+import com.labaway.backend.dto.image.ImageUrls;
 import lombok.Builder;
 import lombok.Data;
 
@@ -13,6 +14,6 @@ public class ProductPreviewDto {
     private String name;
     private String slug;
     private BigDecimal price;
-    private String thumbnailUrl;
+    private ImageUrls imageUrls;
     private List<CategoryDto> categories;
 }

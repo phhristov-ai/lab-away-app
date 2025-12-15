@@ -4,16 +4,42 @@ import { useTranslation } from 'react-i18next';
 import { Category, fetchCategories } from '../services/categoriesService';
 import { ProductPreviewType } from '../types/ProductPreviewType';
 import { fetchProducts } from '../services/productService';
+import { ProductImage } from '../types/ProductImage';
 
-const transformProducts = (backendProducts: any[]): ProductPreviewType[] => {
-  return backendProducts.map(product => ({
+
+const transformProducts = (backendProducts: any[]): ProductPreviewType[] =>
+  backendProducts.map(product => ({
     name: product.name,
     price: product.price,
-    thumbnailUrl: product.thumbnailUrl,
     slug: product.slug,
     categories: product.categories ?? [],
+    images: mapImages(product),
   }));
+
+
+const mapImages = (product: any): ProductImage[] => {
+  if (product.images?.length) {
+    return product.images.map((img: any) => ({
+      imageUrlSmall: img.imageUrlSmall || "",
+      imageUrlMedium: img.imageUrlMedium || "",
+      imageUrlLarge: img.imageUrlLarge || "",
+      main: img.main ?? false,
+    }));
+  }
+
+  if (product.imageUrls) {
+    const { small = "", medium = "", large = "" } = product.imageUrls;
+    return [{
+      imageUrlSmall: small,
+      imageUrlMedium: medium,
+      imageUrlLarge: large,
+      main: true,
+    }];
+  }
+
+  return [];
 };
+
 
 export const useShopPage = () => {
   const [products, setProducts] = useState<ProductPreviewType[]>([]);
@@ -37,7 +63,6 @@ export const useShopPage = () => {
           fetchProducts(),
           fetchCategories(),
         ]);
-
         setProducts(transformProducts(backendProducts));
         setCategories(backendCategories);
       } catch (error) {

@@ -50,8 +50,16 @@ class ProductTransformerTest {
 
     @Test
     void fromProjection_mapsCorrectly() {
-        ProductPreviewProjection projection = createMockProductPreviewProjection("Product 1", "slug-1", BigDecimal.valueOf(99.99), "[{\"name\":\"Category1\",\"slug\":\"category1\"}]");
-        when(jsonParsingUtils.parseCategoryList("[{\"name\":\"Category1\",\"slug\":\"category1\"}]"))
+        ProductPreviewProjection projection = mock(ProductPreviewProjection.class);
+        when(projection.getName()).thenReturn("Product 1");
+        when(projection.getSlug()).thenReturn("slug-1");
+        when(projection.getPrice()).thenReturn(BigDecimal.valueOf(99.99));
+        when(projection.getImageUrlSmall()).thenReturn("http://example.com/image-small.jpg");
+        when(projection.getImageUrlMedium()).thenReturn("http://example.com/image-medium.jpg");
+        when(projection.getImageUrlLarge()).thenReturn("http://example.com/image-large.jpg");
+        when(projection.getCategories()).thenReturn("[{\"name\":\"Category1\",\"slug\":\"category1\"}]");
+
+        when(jsonParsingUtils.parseCategoryList(projection.getCategories()))
                 .thenReturn(List.of(createCategoryDto("Category1", "category1")));
 
         ProductPreviewDto dto = productTransformer.fromProjection(projection);
@@ -59,22 +67,17 @@ class ProductTransformerTest {
         assertThat(dto.getName()).isEqualTo("Product 1");
         assertThat(dto.getSlug()).isEqualTo("slug-1");
         assertThat(dto.getPrice()).isEqualTo(BigDecimal.valueOf(99.99));
-        assertThat(dto.getThumbnailUrl()).isEqualTo("http://example.com/image.jpg");
+
+        assertThat(dto.getImageUrls()).isNotNull();
+        assertThat(dto.getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
+        assertThat(dto.getImageUrls().getMedium()).isEqualTo("http://example.com/image-medium.jpg");
+        assertThat(dto.getImageUrls().getLarge()).isEqualTo("http://example.com/image-large.jpg");
+
         assertThat(dto.getCategories()).hasSize(1);
         assertThat(dto.getCategories().get(0).getName()).isEqualTo("Category1");
         assertThat(dto.getCategories().get(0).getSlug()).isEqualTo("category1");
 
-        verify(jsonParsingUtils).parseCategoryList("[{\"name\":\"Category1\",\"slug\":\"category1\"}]");
-    }
-
-    private ProductPreviewProjection createMockProductPreviewProjection(String name, String slug, BigDecimal price, String categoryJson) {
-        ProductPreviewProjection mockProjection = mock(ProductPreviewProjection.class);
-        when(mockProjection.getName()).thenReturn(name);
-        when(mockProjection.getSlug()).thenReturn(slug);
-        when(mockProjection.getPrice()).thenReturn(price);
-        when(mockProjection.getThumbnailUrl()).thenReturn("http://example.com/image.jpg");
-        when(mockProjection.getCategories()).thenReturn(categoryJson);
-        return mockProjection;
+        verify(jsonParsingUtils).parseCategoryList(projection.getCategories());
     }
 
     private CategoryDto createCategoryDto(String name, String slug) {
@@ -114,7 +117,12 @@ class ProductTransformerTest {
         assertThat(dto.getDescription()).isEqualTo(translation.getDescription());
         assertThat(dto.getSlug()).isEqualTo(product.getSlug());
         assertThat(dto.getImages()).hasSize(1);
-        assertThat(dto.getImages().get(0).getImageUrl()).isEqualTo(imageDto.getImageUrl());
+
+        ProductImageDto dtoImage = dto.getImages().get(0);
+        assertThat(dtoImage.getImageUrlSmall()).isEqualTo(imageDto.getImageUrlSmall());
+        assertThat(dtoImage.getImageUrlMedium()).isEqualTo(imageDto.getImageUrlMedium());
+        assertThat(dtoImage.getImageUrlLarge()).isEqualTo(imageDto.getImageUrlLarge());
+        assertThat(dtoImage.isMain()).isTrue();
 
         List<String> expectedSlugs = product.getCategories().stream()
                 .map(Category::getSlug)
@@ -126,6 +134,7 @@ class ProductTransformerTest {
 
         assertThat(actualSlugs).containsExactlyInAnyOrderElementsOf(expectedSlugs);
     }
+
 
     private CategoryDto createSimpleCategoryDto(Category category) {
         return CategoryDto.builder()
@@ -214,14 +223,18 @@ class ProductTransformerTest {
     private ProductImage buildProductImage() {
         return ProductImage.builder()
                 .id(imageId)
-                .imageUrl("http://example.com/image.jpg")
+                .imageUrlSmall("http://example.com/image-small.jpg")
+                .imageUrlMedium("http://example.com/image-medium.jpg")
+                .imageUrlLarge("http://example.com/image-large.jpg")
                 .main(true)
                 .build();
     }
 
     private ProductImageDto buildProductImageDto() {
         return ProductImageDto.builder()
-                .imageUrl("http://example.com/image.jpg")
+                .imageUrlSmall("http://example.com/image-small.jpg")
+                .imageUrlMedium("http://example.com/image-medium.jpg")
+                .imageUrlLarge("http://example.com/image-large.jpg")
                 .main(true)
                 .build();
     }

@@ -47,6 +47,8 @@ const BlogPostPage: React.FC = () => {
     return <div>Access denied.</div>;
   }
 
+  const imageUrls = post?.imageUrls ?? location.state?.imageUrls;
+
   return (
     <div className="blog-post-container">
 
@@ -136,13 +138,19 @@ const BlogPostPage: React.FC = () => {
             />
           </button>
         ) : (
-          (post?.image ?? location.state?.image) && (
-            <img
-              src={post.image ?? location.state?.image}
-              alt={post.title}
-              className="blog-post-image"
-            />
+          imageUrls && (
+            <picture>
+              <source media="(max-width: 600px)" srcSet={imageUrls.small} />
+              <source media="(max-width: 1024px)" srcSet={imageUrls.medium} />
+              <img
+                src={imageUrls.large}
+                alt={post?.title ?? ""}
+                className="blog-post-image"
+                loading="lazy"
+              />
+            </picture>
           )
+
         )}
 
         {isAdmin ? (

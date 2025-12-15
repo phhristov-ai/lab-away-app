@@ -1,10 +1,11 @@
 import { Category } from "../services/categoriesService";
+import { ProductImage } from "./ProductImage";
 
 export type ProductPreviewType = {
   name: string;
   price: number;
-  thumbnailUrl: string;
   slug: string;
   categories: Category[];
+  images: ProductImage[];
   onClick?: () => void;
 };

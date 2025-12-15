@@ -25,7 +25,7 @@ const ArrowStack: React.FC<ArrowStackProps> = ({
   return (
     <div className="arrow-stack-container">
       {/* Icon above first arrow */}
-      <img src={iconSrc} alt="First Icon" className="arrow-icon" />
+      <img src={iconSrc} alt="First Icon" className="arrow-icon" loading="lazy"/>
 
       {/* Arrows container */}
       <div

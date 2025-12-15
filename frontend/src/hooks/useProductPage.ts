@@ -3,7 +3,7 @@ import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ProductFullType } from '../types/ProductFullType';
 import { ProductPreviewType } from '../types/ProductPreviewType';
-import { createProduct, deleteProduct, fetchProductBySlug, ProductPayloadDto, updateProduct } from '../services/productService';
+import { createProduct, deleteProduct, fetchProductBySlug, ProductImageDto, ProductPayloadDto, updateProduct } from '../services/productService';
 import { useAdmin } from '../context/AdminContext';
 import { getColumns, getFaqItems, getFeatureItems } from '../services/productPageContent';
 import { t } from 'i18next';
@@ -23,10 +23,12 @@ export const useProductPage = () => {
     const [product, setProduct] = useState<ProductFullType | ProductPreviewType | null>(
         location.state?.product ?? {}
     );
-    const getInitialImages = (product: ProductFullType | ProductPreviewType | null): ProductImage[] => {
-        if (!product) return [];
-        if (isFullProduct(product)) return product.images;
-        return [{ imageUrl: product.thumbnailUrl, main: true }];
+
+    const getInitialImages = (
+    product: ProductFullType | ProductPreviewType | null
+    ): ProductImage[] => {
+    if (!product) return [];
+    return product.images ?? [];
     };
 
     const initialImages = getInitialImages(product);
@@ -85,9 +87,6 @@ export const useProductPage = () => {
         }
     }, [product, allCategories]);
 
-    useEffect(() => {
-        setImages(getInitialImages(product));
-    }, [product, getInitialImages]);
 
 
     const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -126,10 +125,16 @@ export const useProductPage = () => {
 
             try {
                 const fullProduct = await fetchProductBySlug(slug);
-                setProduct((prev: any) => ({ ...prev, ...fullProduct }));
+                
+                setProduct(fullProduct);
                 setTitle(fullProduct.name);
                 setPrice(fullProduct.price);
-                setDescription(fullProduct.description)
+                setDescription(fullProduct.description);
+
+                if (fullProduct.images) {
+                    setImages(fullProduct.images);
+                }
+
             } catch (error) {
                 console.error('Error fetching product by slug:', error);
             }
@@ -138,61 +143,66 @@ export const useProductPage = () => {
         loadProduct();
     }, [slug, i18n.language]);
 
+
+
     const handleSave = async () => {
-        try {
-            const isNew = slug === 'new';
-            const language = i18n.language.toUpperCase();
+    try {
+        const isNew = slug === 'new';
+        const language = i18n.language.toUpperCase();
 
-            if (!isNew && !isFullProduct(product)) {
-                console.warn('Product is not fully loaded');
-                return;
-            }
-
-            const {
-                mainImageIndex,
-                filesToUpload,
-                existingImageUrls,
-            } = processImagesForPayload(images);
-
-            const payload: ProductPayloadDto = {
-                price,
-                stock: 10, //TODO to fix later
-                active: true,
-                mainImageIndex: mainImageIndex,
-                categories: selectedCategories.map(cat => cat.slug),
-                translation: {
-                    language,
-                    name: title,
-                    description: description,
-                },
-                imageUrls: existingImageUrls,
-            };
-
-            let result;
-            if (isNew) {
-                result = await createProduct(payload, filesToUpload);
-            } else {
-                result = await updateProduct(slug!, payload, filesToUpload);
-            }
-
-            const updatedSlug = result.slug;
-
-            setSuccessMessage(isNew ? 'Product created successfully!' : 'Product updated successfully!');
-            setShowSuccessModal(true);
-
-            setTimeout(() => {
-                navigate(`/product/${updatedSlug}`);
-            }, 1500);
-        } catch (err) {
-            console.error('Error saving product:', err);
+        if (!isNew && !isFullProduct(product)) {
+        console.warn('Product is not fully loaded');
+        return;
         }
+
+        const {
+            mainImageIndex,
+            filesToUpload,
+            existingImages,
+        } = processImagesForPayload(images);
+
+        const imagesPayload: ProductImageDto[] = existingImages.map(img => ({
+            imageUrlSmall: img.imageUrlSmall,
+            imageUrlMedium: img.imageUrlMedium,
+            imageUrlLarge: img.imageUrlLarge,
+            main: img.main,
+        }));
+
+        console.log(imagesPayload)
+
+        const payload: ProductPayloadDto = {
+        price,
+        stock: 10,
+        active: true,
+        mainImageIndex,
+        categories: selectedCategories.map(cat => cat.slug),
+        translation: {
+            language,
+            name: title,
+            description,
+        },
+        images: imagesPayload,
+        };
+
+        const result = isNew
+        ? await createProduct(payload, filesToUpload)
+        : await updateProduct(slug!, payload, filesToUpload);
+
+        setSuccessMessage(isNew ? 'Product created successfully!' : 'Product updated successfully!');
+        setShowSuccessModal(true);
+
+        setTimeout(() => {
+        navigate(`/product/${result.slug}`);
+        }, 1500);
+    } catch (err) {
+        console.error('Error saving product:', err);
+    }
     };
 
     type NormalizedImageData = {
-        normalizedImages: ProductImage[];
         mainImageIndex: number;
         filesToUpload: File[];
-        existingImageUrls: string[];
+        existingImages: ProductImage[];
     };
 
     function processImagesForPayload(images: ProductImage[]): NormalizedImageData {
@@ -202,19 +212,17 @@ export const useProductPage = () => {
 
         const filesToUpload = normalizedImages
             .filter(img => img.file)
-            .map(img => img.file as File);
+            .map(img => img.file!);
 
-        const existingImageUrls = normalizedImages
-            .filter(img => !img.file)
-            .map(img => img.imageUrl);
+        const existingImages = normalizedImages.filter(img => !img.file);
 
         return {
-            normalizedImages,
             mainImageIndex,
             filesToUpload,
-            existingImageUrls,
+            existingImages,
         };
     }
+
 
     function normalizeMainImage(images: ProductImage[]): ProductImage[] {
         if (images.length === 0) return [];

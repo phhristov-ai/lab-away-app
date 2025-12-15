@@ -6,6 +6,7 @@ import com.labaway.backend.properties.AwsProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
@@ -29,6 +30,16 @@ public class S3Service {
                 awsProperties.getS3BucketName(), fileName, inputStream, null));
 
         return amazonS3.getUrl(awsProperties.getS3BucketName(), fileName).toString();
+    }
+
+    public String uploadFileWithName(byte[] fileBytes, String fileName) {
+        try {
+            InputStream inputStream = new ByteArrayInputStream(fileBytes);
+            amazonS3.putObject(awsProperties.getS3BucketName(), fileName, inputStream, null);
+            return amazonS3.getUrl(awsProperties.getS3BucketName(), fileName).toString();
+        } catch (Exception e) {
+            throw new RuntimeException("Error uploading image to S3 with name: " + fileName, e);
+        }
     }
 
     public void deleteFile(String fileUrl) {

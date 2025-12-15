@@ -7,7 +7,7 @@ const TopHeader = () => {
 
   return (
     <div className="top-header">
-      <img src={flagEU} alt="EU flag" className="top-header-flag" />
+      <img src={flagEU} alt="EU flag" className="top-header-flag" loading="lazy"/>
       <p>{t('header.topHeader')}</p>
     </div>
   );

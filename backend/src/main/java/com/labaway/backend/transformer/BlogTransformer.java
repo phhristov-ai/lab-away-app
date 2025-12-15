@@ -2,6 +2,7 @@ package com.labaway.backend.transformer;
 
 import com.labaway.backend.dto.blog.*;
 import com.labaway.backend.dto.category.CategoryDto;
+import com.labaway.backend.dto.image.ImageUrls;
 import com.labaway.backend.entity.blog.Blog;
 import com.labaway.backend.entity.blog.BlogTranslation;
 import com.labaway.backend.enums.Language;
@@ -27,13 +28,25 @@ public class BlogTransformer {
         return BlogResponseDto.builder()
                 .slug(blog.getSlug())
                 .author(blog.getAuthor())
-                .imageUrl(blog.getImageUrl())
+                .imageUrls(mapImageUrls(blog))
                 .categories(categoryDtos)
                 .title(translation != null ? translation.getTitle() : null)
                 .content(translation != null ? translation.getContent() : null)
                 .readingTime(translation != null ? translation.getReadingTime() : 0)
                 .createdAt(blog.getCreatedAt())
                 .updatedAt(blog.getUpdatedAt())
+                .build();
+    }
+
+    private ImageUrls mapImageUrls(Blog blog) {
+        if (blog == null) {
+            return null;
+        }
+
+        return ImageUrls.builder()
+                .small(blog.getImageUrlSmall())
+                .medium(blog.getImageUrlMedium())
+                .large(blog.getImageUrlLarge())
                 .build();
     }
 
@@ -104,13 +117,21 @@ public class BlogTransformer {
         return BlogPreviewDto.builder()
                 .slug(projection.getSlug())
                 .author(projection.getAuthor())
-                .imageUrl(projection.getImageUrl())
+                .imageUrls(mapImageUrls(projection))
                 .title(projection.getTitle())
                 .excerpt(projection.getExcerpt())
                 .readingTime(projection.getReadingTime())
                 .createdAt(projection.getCreatedAt())
                 .updatedAt(projection.getUpdatedAt())
                 .categories(jsonParsingUtils.parseCategoryList(projection.getCategories()))
+                .build();
+    }
+
+    private ImageUrls mapImageUrls(BlogPreviewProjection projection) {
+        return ImageUrls.builder()
+                .small(projection.getImageUrlSmall())
+                .medium(projection.getImageUrlMedium())
+                .large(projection.getImageUrlLarge())
                 .build();
     }
 }

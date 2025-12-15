@@ -26,7 +26,11 @@ public class ProductImage {
     private Product product;
 
     @Column(nullable = false)
-    private String imageUrl;
+    private String imageUrlSmall;
+
+    private String imageUrlMedium;
+
+    private String imageUrlLarge;
 
     private boolean main;
 

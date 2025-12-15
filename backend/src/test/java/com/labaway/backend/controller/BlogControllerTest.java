@@ -1,6 +1,10 @@
 package com.labaway.backend.controller;
 
-import com.labaway.backend.dto.blog.*;
+import com.labaway.backend.dto.blog.BlogDto;
+import com.labaway.backend.dto.blog.BlogPreviewDto;
+import com.labaway.backend.dto.blog.BlogResponseDto;
+import com.labaway.backend.dto.blog.TranslationDto;
+import com.labaway.backend.dto.image.ImageUrls;
 import com.labaway.backend.enums.Language;
 import com.labaway.backend.service.BlogService;
 import com.labaway.backend.service.S3Service;
@@ -56,12 +60,20 @@ class BlogControllerTest {
         verify(blogService).getAllBlogsForPreview(Language.EN);
     }
 
-    private BlogPreviewDto createSampleBlogPreviewDto() {
+    public static ImageUrls createSampleImageUrls() {
+        return ImageUrls.builder()
+                .small("https://example.com/test-small.jpg")
+                .medium("https://example.com/test-medium.jpg")
+                .large("https://example.com/test-large.jpg")
+                .build();
+    }
+
+    public static BlogPreviewDto createSampleBlogPreviewDto() {
         return BlogPreviewDto.builder()
                 .slug("test-blog")
                 .title("Test Blog")
                 .author("John Doe")
-                .imageUrl("https://example.com/test.jpg")
+                .imageUrls(createSampleImageUrls())
                 .excerpt("Test excerpt")
                 .readingTime(2)
                 .createdAt(Instant.now())
@@ -69,6 +81,7 @@ class BlogControllerTest {
                 .categories(Collections.emptyList())
                 .build();
     }
+
 
     @Test
     void getById_returnsBlogDto() {

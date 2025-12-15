@@ -1,5 +1,6 @@
 package com.labaway.backend.transformer;
 
+import com.labaway.backend.dto.image.ImageUrls;
 import com.labaway.backend.dto.product.main.*;
 import com.labaway.backend.entity.category.Category;
 import com.labaway.backend.entity.product.Product;
@@ -109,9 +110,16 @@ public class ProductTransformer {
                 .name(projection.getName())
                 .slug(projection.getSlug())
                 .price(projection.getPrice())
-                .thumbnailUrl(projection.getThumbnailUrl())
+                .imageUrls(mapImageUrls(projection))
                 .categories(jsonParsingUtils.parseCategoryList(projection.getCategories()))
                 .build();
     }
 
+    private ImageUrls mapImageUrls(ProductPreviewProjection projection) {
+        return ImageUrls.builder()
+                .small(projection.getImageUrlSmall())
+                .medium(projection.getImageUrlMedium())
+                .large(projection.getImageUrlLarge())
+                .build();
+    }
 }
