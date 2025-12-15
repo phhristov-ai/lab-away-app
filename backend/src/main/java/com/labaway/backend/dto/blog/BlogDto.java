@@ -1,9 +1,8 @@
-package com.labaway.backend.dto.blog;
+package com.labaway.backend.dto.product.image.blog;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 

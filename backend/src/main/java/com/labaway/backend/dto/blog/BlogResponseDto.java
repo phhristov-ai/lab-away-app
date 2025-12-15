@@ -1,6 +1,7 @@
-package com.labaway.backend.dto.blog;
+package com.labaway.backend.dto.product.image.blog;
 
 import com.labaway.backend.dto.category.CategoryDto;
+import com.labaway.backend.dto.image.ImageUrls;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +17,7 @@ public class BlogResponseDto {
 
     private String slug;
     private String author;
-    private String imageUrl;
+    private ImageUrls imageUrls;
     private String title;
     private String content;
     private List<CategoryDto> categories;

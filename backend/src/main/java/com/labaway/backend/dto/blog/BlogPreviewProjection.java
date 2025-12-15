@@ -1,11 +1,15 @@
-package com.labaway.backend.dto.blog;
+package com.labaway.backend.dto.product.image.blog;
 
 import java.time.Instant;
 
 public interface BlogPreviewProjection {
     String getSlug();
     String getAuthor();
-    String getImageUrl();
+    String getImageUrl();        // legacy
+    String getImageUrlSmall();
+    String getImageUrlMedium();
+    String getImageUrlLarge();
+
     String getTitle();
     String getExcerpt();
     Integer getReadingTime();

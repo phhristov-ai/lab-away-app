@@ -1,4 +1,4 @@
-package com.labaway.backend.dto.blog;
+package com.labaway.backend.dto.product.image.blog;
 
 import lombok.Builder;
 import lombok.Data;
