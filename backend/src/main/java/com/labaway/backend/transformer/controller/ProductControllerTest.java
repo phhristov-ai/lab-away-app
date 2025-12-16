@@ -1,7 +1,8 @@
-package com.labaway.backend.controller;
+package com.labaway.backend.transformer.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.labaway.backend.controller.ProductController;
 import com.labaway.backend.dto.category.CategoryDto;
 import com.labaway.backend.dto.image.ImageUrls;
 import com.labaway.backend.dto.product.main.*;
@@ -65,16 +66,16 @@ class ProductControllerTest {
     void getAll_shouldReturnListOfProductPreviews() {
         ProductPreviewDto previewDto = createProductPreviewDto("Test Product", "test-product", BigDecimal.TEN);
 
-        when(productService.getAllProductPreviews(Language.EN)).thenReturn(List.of(previewDto));
+        Mockito.when(productService.getAllProductPreviews(Language.EN)).thenReturn(List.of(previewDto));
 
         var result = productController.getAll(Language.EN);
 
-        assertThat(result).hasSize(1);
-        assertThat(result.get(0).getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
-        assertThat(result.get(0).getImageUrls().getMedium()).isEqualTo("http://example.com/image-medium.jpg");
-        assertThat(result.get(0).getImageUrls().getLarge()).isEqualTo("http://example.com/image-large.jpg");
+        Assertions.assertThat(result).hasSize(1);
+        Assertions.assertThat(result.get(0).getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
+        Assertions.assertThat(result.get(0).getImageUrls().getMedium()).isEqualTo("http://example.com/image-medium.jpg");
+        Assertions.assertThat(result.get(0).getImageUrls().getLarge()).isEqualTo("http://example.com/image-large.jpg");
 
-        verify(productService, times(1)).getAllProductPreviews(Language.EN);
+        Mockito.verify(productService, Mockito.times(1)).getAllProductPreviews(Language.EN);
     }
 
     @Test
@@ -90,25 +91,25 @@ class ProductControllerTest {
 
         productDto.setImages(List.of(imageDto));
 
-        when(productService.getProductBySlug(slug, Language.EN)).thenReturn(productDto);
+        Mockito.when(productService.getProductBySlug(slug, Language.EN)).thenReturn(productDto);
 
         var response = productController.getBySlug(slug, Language.EN);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().getImages()).hasSize(1);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(response.getBody().getImages()).hasSize(1);
 
         ProductImageDto dtoImage = response.getBody().getImages().get(0);
-        assertThat(dtoImage.getImageUrlSmall()).isEqualTo("http://example.com/image-small.jpg");
-        assertThat(dtoImage.getImageUrlMedium()).isEqualTo("http://example.com/image-medium.jpg");
-        assertThat(dtoImage.getImageUrlLarge()).isEqualTo("http://example.com/image-large.jpg");
-        assertThat(dtoImage.isMain()).isTrue();
+        Assertions.assertThat(dtoImage.getImageUrlSmall()).isEqualTo("http://example.com/image-small.jpg");
+        Assertions.assertThat(dtoImage.getImageUrlMedium()).isEqualTo("http://example.com/image-medium.jpg");
+        Assertions.assertThat(dtoImage.getImageUrlLarge()).isEqualTo("http://example.com/image-large.jpg");
+        Assertions.assertThat(dtoImage.isMain()).isTrue();
 
-        verify(productService, times(1)).getProductBySlug(slug, Language.EN);
+        Mockito.verify(productService, Mockito.times(1)).getProductBySlug(slug, Language.EN);
     }
 
     @Test
     void create_shouldReturnCreatedProductWithImages() throws IOException {
-        when(productService.createProduct(any(ProductPayloadDto.class), any(MultipartFile[].class)))
+        Mockito.when(productService.createProduct(ArgumentMatchers.any(ProductPayloadDto.class), ArgumentMatchers.any(MultipartFile[].class)))
                 .thenReturn(productDto);
 
         MultipartFile[] mockFiles = new MultipartFile[] {
@@ -117,12 +118,12 @@ class ProductControllerTest {
 
         ResponseEntity<ProductDto> response = productController.createProductWithImages(productPayloadDtoJson, mockFiles);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(response.getBody()).isEqualTo(productDto);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        Assertions.assertThat(response.getBody()).isEqualTo(productDto);
 
-        verify(productService, times(1)).createProduct(any(ProductPayloadDto.class), aryEq(mockFiles));
-        verifyNoMoreInteractions(productService);
-        verify(productService).createProduct(any(ProductPayloadDto.class), aryEq(mockFiles));
+        Mockito.verify(productService, Mockito.times(1)).createProduct(ArgumentMatchers.any(ProductPayloadDto.class), AdditionalMatchers.aryEq(mockFiles));
+        Mockito.verifyNoMoreInteractions(productService);
+        Mockito.verify(productService).createProduct(ArgumentMatchers.any(ProductPayloadDto.class), AdditionalMatchers.aryEq(mockFiles));
     }
 
     @Test
@@ -132,14 +133,14 @@ class ProductControllerTest {
                 createMockMultipartFile("image2.jpg", "content2")
         };
 
-        when(productService.createProduct(any(ProductPayloadDto.class), any(MultipartFile[].class)))
+        Mockito.when(productService.createProduct(ArgumentMatchers.any(ProductPayloadDto.class), ArgumentMatchers.any(MultipartFile[].class)))
                 .thenReturn(productDto);
 
         ResponseEntity<ProductDto> response = productController.createProductWithImages(productPayloadDtoJson, mockFiles);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(response.getBody()).isEqualTo(productDto);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        Assertions.assertThat(response.getBody()).isEqualTo(productDto);
 
-        verify(productService).createProduct(any(ProductPayloadDto.class), aryEq(mockFiles));
+        Mockito.verify(productService).createProduct(ArgumentMatchers.any(ProductPayloadDto.class), AdditionalMatchers.aryEq(mockFiles));
     }
 
     @Test
@@ -148,13 +149,13 @@ class ProductControllerTest {
                 createMockMultipartFile("image.jpg", "content")
         };
 
-        when(productService.createProduct(any(), any()))
+        Mockito.when(productService.createProduct(ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenThrow(new IOException("S3 upload failed"));
 
         ResponseEntity<ProductDto> response = productController.createProductWithImages(productPayloadDtoJson, mockFiles);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
-        assertThat(response.getBody()).isNull();
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+        Assertions.assertThat(response.getBody()).isNull();
     }
 
     @Test
@@ -163,8 +164,8 @@ class ProductControllerTest {
 
         var response = productController.delete(slug);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-        verify(productService, times(1)).deleteProductBySlug(slug);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        Mockito.verify(productService, Mockito.times(1)).deleteProductBySlug(slug);
     }
 
     @Test
@@ -172,17 +173,17 @@ class ProductControllerTest {
         ProductPreviewDto previewDto1 = createProductPreviewDto("Random Product 1", "random-product-1", BigDecimal.valueOf(99.99));
         ProductPreviewDto previewDto2 = createProductPreviewDto("Random Product 2", "random-product-2", BigDecimal.valueOf(149.99));
 
-        when(productService.getRandomProductPreviews(Language.EN)).thenReturn(List.of(previewDto1, previewDto2));
+        Mockito.when(productService.getRandomProductPreviews(Language.EN)).thenReturn(List.of(previewDto1, previewDto2));
 
         var result = productController.getRandomProducts(Language.EN);
 
-        assertThat(result).hasSize(2);
-        assertThat(result.get(0).getSlug()).isEqualTo("random-product-1");
-        assertThat(result.get(0).getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
-        assertThat(result.get(1).getSlug()).isEqualTo("random-product-2");
-        assertThat(result.get(1).getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
+        Assertions.assertThat(result).hasSize(2);
+        Assertions.assertThat(result.get(0).getSlug()).isEqualTo("random-product-1");
+        Assertions.assertThat(result.get(0).getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
+        Assertions.assertThat(result.get(1).getSlug()).isEqualTo("random-product-2");
+        Assertions.assertThat(result.get(1).getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
 
-        verify(productService, times(1)).getRandomProductPreviews(Language.EN);
+        Mockito.verify(productService, Mockito.times(1)).getRandomProductPreviews(Language.EN);
     }
 
     private static ProductPreviewDto createProductPreviewDto(String name, String slug, BigDecimal price) {
@@ -209,14 +210,14 @@ class ProductControllerTest {
                 .name("Updated Product")
                 .build();
 
-        when(productService.updateProduct(anyString(), any(ProductPayloadDto.class), aryEq(mockFiles))).thenReturn(updatedProductDto);
+        Mockito.when(productService.updateProduct(ArgumentMatchers.anyString(), ArgumentMatchers.any(ProductPayloadDto.class), AdditionalMatchers.aryEq(mockFiles))).thenReturn(updatedProductDto);
 
         ResponseEntity<ProductDto> response = productController.updateProduct(slug, productPayloadDtoJson, mockFiles);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(updatedProductDto);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(response.getBody()).isEqualTo(updatedProductDto);
 
-        verify(productService).updateProduct(anyString(), any(ProductPayloadDto.class), aryEq(mockFiles));
+        Mockito.verify(productService).updateProduct(ArgumentMatchers.anyString(), ArgumentMatchers.any(ProductPayloadDto.class), AdditionalMatchers.aryEq(mockFiles));
     }
 
     @Test
@@ -225,14 +226,14 @@ class ProductControllerTest {
         MultipartFile[] mockFiles = new MultipartFile[] {
                 createMockMultipartFile("image.jpg", "image content")
         };
-        when(productService.updateProduct(anyString(), any(ProductPayloadDto.class), aryEq(mockFiles))).thenReturn(null);
+        Mockito.when(productService.updateProduct(ArgumentMatchers.anyString(), ArgumentMatchers.any(ProductPayloadDto.class), AdditionalMatchers.aryEq(mockFiles))).thenReturn(null);
 
         ResponseEntity<ProductDto> response = productController.updateProduct(slug, productPayloadDtoJson, mockFiles);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(response.getBody()).isNull();
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        Assertions.assertThat(response.getBody()).isNull();
 
-        verify(productService).updateProduct(anyString(), any(ProductPayloadDto.class), aryEq(mockFiles));
+        Mockito.verify(productService).updateProduct(ArgumentMatchers.anyString(), ArgumentMatchers.any(ProductPayloadDto.class), AdditionalMatchers.aryEq(mockFiles));
     }
 
     @Test
@@ -241,18 +242,18 @@ class ProductControllerTest {
         ProductPreviewDto previewDto1 = createProductPreviewDto("Health Product 1", "health-product-1", BigDecimal.valueOf(59.99));
         ProductPreviewDto previewDto2 = createProductPreviewDto("Health Product 2", "health-product-2", BigDecimal.valueOf(79.99));
 
-        when(productService.getRandomProductPreviewsByCategorySlug(categorySlug, Language.EN))
+        Mockito.when(productService.getRandomProductPreviewsByCategorySlug(categorySlug, Language.EN))
                 .thenReturn(List.of(previewDto1, previewDto2));
 
         List<ProductPreviewDto> result = productController.getRandomProductsByCategory(categorySlug, Language.EN);
 
-        assertThat(result).hasSize(2);
-        assertThat(result.get(0).getSlug()).isEqualTo("health-product-1");
-        assertThat(result.get(0).getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
-        assertThat(result.get(1).getSlug()).isEqualTo("health-product-2");
-        assertThat(result.get(1).getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
+        Assertions.assertThat(result).hasSize(2);
+        Assertions.assertThat(result.get(0).getSlug()).isEqualTo("health-product-1");
+        Assertions.assertThat(result.get(0).getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
+        Assertions.assertThat(result.get(1).getSlug()).isEqualTo("health-product-2");
+        Assertions.assertThat(result.get(1).getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
 
-        verify(productService, times(1)).getRandomProductPreviewsByCategorySlug(categorySlug, Language.EN);
+        Mockito.verify(productService, Mockito.times(1)).getRandomProductPreviewsByCategorySlug(categorySlug, Language.EN);
     }
 
     @Test
@@ -260,18 +261,18 @@ class ProductControllerTest {
         ProductPreviewDto previewDto1 = createProductPreviewDto("Random Product 1", "random-product-1", BigDecimal.valueOf(99.99));
         ProductPreviewDto previewDto2 = createProductPreviewDto("Random Product 2", "random-product-2", BigDecimal.valueOf(149.99));
 
-        when(productService.getRandomProductPreviewsByCategorySlug(null, Language.EN))
+        Mockito.when(productService.getRandomProductPreviewsByCategorySlug(null, Language.EN))
                 .thenReturn(List.of(previewDto1, previewDto2));
 
         List<ProductPreviewDto> result = productController.getRandomProductsByCategory(null, Language.EN);
 
-        assertThat(result).hasSize(2);
-        assertThat(result.get(0).getSlug()).isEqualTo("random-product-1");
-        assertThat(result.get(0).getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
-        assertThat(result.get(1).getSlug()).isEqualTo("random-product-2");
-        assertThat(result.get(1).getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
+        Assertions.assertThat(result).hasSize(2);
+        Assertions.assertThat(result.get(0).getSlug()).isEqualTo("random-product-1");
+        Assertions.assertThat(result.get(0).getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
+        Assertions.assertThat(result.get(1).getSlug()).isEqualTo("random-product-2");
+        Assertions.assertThat(result.get(1).getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
 
-        verify(productService, times(1)).getRandomProductPreviewsByCategorySlug(null, Language.EN);
+        Mockito.verify(productService, Mockito.times(1)).getRandomProductPreviewsByCategorySlug(null, Language.EN);
     }
 
     private MockMultipartFile createMockMultipartFile(String filename, String content) {

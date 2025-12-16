@@ -1,9 +1,10 @@
-package com.labaway.backend.controller;
+package com.labaway.backend.transformer.controller;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.HttpStatus.*;
 
+import com.labaway.backend.controller.AdminUserController;
 import org.springframework.http.HttpStatus;
 import com.labaway.backend.dto.admin.AdminUserCreateDto;
 import com.labaway.backend.dto.admin.AdminUserDto;
@@ -38,52 +39,52 @@ class AdminUserControllerTest {
     @Test
     void getAll_shouldReturnListOfUsers() {
         List<AdminUserDto> userList = List.of(sampleUserDto);
-        when(adminUserService.getAllAdminUsers()).thenReturn(userList);
+        Mockito.when(adminUserService.getAllAdminUsers()).thenReturn(userList);
 
         List<AdminUserDto> result = adminUserController.getAll();
 
-        assertEquals(userList, result);
-        verify(adminUserService).getAllAdminUsers();
+        Assertions.assertEquals(userList, result);
+        Mockito.verify(adminUserService).getAllAdminUsers();
     }
 
     @Test
     void getByUsername_shouldReturnUserDto() {
-        when(adminUserService.getAdminUserByUsername(username)).thenReturn(sampleUserDto);
+        Mockito.when(adminUserService.getAdminUserByUsername(username)).thenReturn(sampleUserDto);
 
         ResponseEntity<AdminUserDto> response = adminUserController.getByUsername(username);
 
         verifyUserDtoResponse(response, sampleUserDto, OK);
-        verify(adminUserService).getAdminUserByUsername(username);
+        Mockito.verify(adminUserService).getAdminUserByUsername(username);
     }
 
     @Test
     void create_shouldReturnCreatedUser() {
-        when(adminUserService.createAdminUser(sampleCreateDto)).thenReturn(sampleUserDto);
+        Mockito.when(adminUserService.createAdminUser(sampleCreateDto)).thenReturn(sampleUserDto);
 
         ResponseEntity<AdminUserDto> response = adminUserController.create(sampleCreateDto);
 
         verifyUserDtoResponse(response, sampleUserDto, CREATED);
-        verify(adminUserService).createAdminUser(sampleCreateDto);
+        Mockito.verify(adminUserService).createAdminUser(sampleCreateDto);
     }
 
     @Test
     void update_shouldReturnUpdatedUser() {
-        when(adminUserService.updateAdminUserByUsername(username, sampleCreateDto)).thenReturn(sampleUserDto);
+        Mockito.when(adminUserService.updateAdminUserByUsername(username, sampleCreateDto)).thenReturn(sampleUserDto);
 
         ResponseEntity<AdminUserDto> response = adminUserController.update(username, sampleCreateDto);
 
         verifyUserDtoResponse(response, sampleUserDto, OK);
-        verify(adminUserService).updateAdminUserByUsername(username, sampleCreateDto);
+        Mockito.verify(adminUserService).updateAdminUserByUsername(username, sampleCreateDto);
     }
 
     @Test
     void delete_shouldCallDeleteAndReturnNoContent() {
-        doNothing().when(adminUserService).deleteAdminUserByUsername(username);
+        Mockito.doNothing().when(adminUserService).deleteAdminUserByUsername(username);
 
         ResponseEntity<Void> response = adminUserController.delete(username);
 
-        assertEquals(NO_CONTENT, response.getStatusCode());
-        verify(adminUserService).deleteAdminUserByUsername(username);
+        Assertions.assertEquals(NO_CONTENT, response.getStatusCode());
+        Mockito.verify(adminUserService).deleteAdminUserByUsername(username);
     }
 
     // Helper Methods
@@ -106,7 +107,7 @@ class AdminUserControllerTest {
     }
 
     private void verifyUserDtoResponse(ResponseEntity<AdminUserDto> response, AdminUserDto expectedDto, HttpStatus expectedStatus) {
-        assertEquals(expectedStatus, response.getStatusCode());
-        assertEquals(expectedDto, response.getBody());
+        Assertions.assertEquals(expectedStatus, response.getStatusCode());
+        Assertions.assertEquals(expectedDto, response.getBody());
     }
 }
