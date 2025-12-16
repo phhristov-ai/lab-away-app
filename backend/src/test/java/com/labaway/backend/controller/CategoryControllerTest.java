@@ -1,6 +1,5 @@
-package com.labaway.backend.transformer.controller;
+package com.labaway.backend.controller;
 
-import com.labaway.backend.controller.CategoryController;
 import com.labaway.backend.dto.category.CategoryDto;
 import com.labaway.backend.dto.category.CreateCategoryDto;
 import com.labaway.backend.dto.category.CreateCategoryTranslationDto;
@@ -53,63 +52,63 @@ class CategoryControllerTest {
 
         ResponseEntity<Void> response = categoryController.addOrUpdateTranslation(slug, translationDto);
 
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        Mockito.verify(categoryService).addOrUpdateTranslation(slug, translationDto);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        verify(categoryService).addOrUpdateTranslation(slug, translationDto);
     }
 
 
     @Test
     void getAllCategories_returnsList() {
-        Mockito.when(categoryService.getAllCategories(Language.EN)).thenReturn(List.of(categoryDto));
+        when(categoryService.getAllCategories(Language.EN)).thenReturn(List.of(categoryDto));
 
         List<CategoryDto> result = categoryController.getAllCategories(Language.EN);
 
-        Assertions.assertThat(result).hasSize(1);
-        Assertions.assertThat(result.get(0).getName()).isEqualTo("Books");
-        Mockito.verify(categoryService).getAllCategories(Language.EN);
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).getName()).isEqualTo("Books");
+        verify(categoryService).getAllCategories(Language.EN);
     }
 
     @Test
     void getCategoryById_returnsCategoryDto() {
-        Mockito.when(categoryService.getCategoryBySlug(slug, Language.EN)).thenReturn(categoryDto);
+        when(categoryService.getCategoryBySlug(slug, Language.EN)).thenReturn(categoryDto);
 
         var response = categoryController.getCategoryBySlug(slug, Language.EN);
 
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Assertions.assertThat(response.getBody()).isEqualTo(categoryDto);
-        Mockito.verify(categoryService).getCategoryBySlug(slug, Language.EN);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(categoryDto);
+        verify(categoryService).getCategoryBySlug(slug, Language.EN);
     }
 
     @Test
     void createCategory_returnsCreatedCategoryDto() {
-        Mockito.when(categoryService.createCategory(createCategoryDto)).thenReturn(categoryDto);
+        when(categoryService.createCategory(createCategoryDto)).thenReturn(categoryDto);
 
         var response = categoryController.createCategory(createCategoryDto);
 
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        Assertions.assertThat(response.getBody()).isEqualTo(categoryDto);
-        Mockito.verify(categoryService).createCategory(createCategoryDto);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(response.getBody()).isEqualTo(categoryDto);
+        verify(categoryService).createCategory(createCategoryDto);
     }
 
     @Test
     void updateCategory_returnsUpdatedCategoryDto() {
-        Mockito.when(categoryService.updateCategory(slug, updateCategoryDto, Language.EN)).thenReturn(categoryDto);
+        when(categoryService.updateCategory(slug, updateCategoryDto, Language.EN)).thenReturn(categoryDto);
 
         var response = categoryController.updateCategory(slug, updateCategoryDto, Language.EN);
 
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Assertions.assertThat(response.getBody()).isEqualTo(categoryDto);
-        Mockito.verify(categoryService).updateCategory(slug, updateCategoryDto, Language.EN);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(categoryDto);
+        verify(categoryService).updateCategory(slug, updateCategoryDto, Language.EN);
     }
 
     @Test
     void deleteCategory_returnsNoContent() {
-        Mockito.doNothing().when(categoryService).deleteCategory(slug);
+        doNothing().when(categoryService).deleteCategory(slug);
 
         var response = categoryController.deleteCategory(slug);
 
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-        Mockito.verify(categoryService).deleteCategory(slug);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        verify(categoryService).deleteCategory(slug);
     }
 
     private static CategoryDto createCategoryDto(String name, String slug) {

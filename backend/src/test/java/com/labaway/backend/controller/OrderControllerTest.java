@@ -1,6 +1,5 @@
-package com.labaway.backend.transformer.controller;
+package com.labaway.backend.controller;
 
-import com.labaway.backend.controller.OrderController;
 import com.labaway.backend.dto.order.CreateOrderRequestDto;
 import com.labaway.backend.dto.order.CreateOrderResponseDto;
 import com.labaway.backend.dto.order.OrderDto;
@@ -40,24 +39,24 @@ class OrderControllerTest {
         CreateOrderRequestDto dto = new CreateOrderRequestDto();
         CreateOrderResponseDto responseDto = new CreateOrderResponseDto(generator.generate(), PaymentProvider.STRIPE,  "stripeSessionId", "paymentIntentId", BigDecimal.TEN);
 
-        Mockito.when(orderService.createOrder(dto)).thenReturn(responseDto);
+        when(orderService.createOrder(dto)).thenReturn(responseDto);
 
         ResponseEntity<CreateOrderResponseDto> response = orderController.createOrder(dto);
 
-        Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        Assertions.assertEquals(responseDto, response.getBody());
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(responseDto, response.getBody());
     }
 
     @Test
     void testConfirmOrder() {
         String orderNumber = generator.generate();
 
-        Mockito.doNothing().when(orderService).confirmOrder(orderNumber);
+        doNothing().when(orderService).confirmOrder(orderNumber);
 
         ResponseEntity<Void> response = orderController.confirmOrder(orderNumber);
 
-        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
-        Mockito.verify(orderService, Mockito.times(1)).confirmOrder(orderNumber);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        verify(orderService, times(1)).confirmOrder(orderNumber);
     }
 
     @Test
@@ -65,36 +64,36 @@ class OrderControllerTest {
         String orderNumber = generator.generate();
         OrderDto orderDto = new OrderDto();
 
-        Mockito.when(orderService.getOrderByOrderNumber(orderNumber)).thenReturn(orderDto);
+        when(orderService.getOrderByOrderNumber(orderNumber)).thenReturn(orderDto);
 
         ResponseEntity<OrderDto> response = orderController.getOrder(orderNumber);
 
-        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
-        Assertions.assertEquals(orderDto, response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(orderDto, response.getBody());
     }
 
     @Test
     void testGetAllOrders() {
         List<OrderDto> orderList = List.of(new OrderDto(), new OrderDto());
 
-        Mockito.when(orderService.getAllOrders()).thenReturn(orderList);
+        when(orderService.getAllOrders()).thenReturn(orderList);
 
         ResponseEntity<List<OrderDto>> response = orderController.getAllOrders();
 
-        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
-        Assertions.assertEquals(orderList, response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(orderList, response.getBody());
     }
 
     @Test
     void testDeleteOrder() {
         String orderNumber = generator.generate();
 
-        Mockito.doNothing().when(orderService).deleteOrder(orderNumber);
+        doNothing().when(orderService).deleteOrder(orderNumber);
 
         ResponseEntity<Void> response = orderController.deleteOrder(orderNumber);
 
-        Assertions.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-        Mockito.verify(orderService).deleteOrder(orderNumber);
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        verify(orderService).deleteOrder(orderNumber);
     }
 
     @Test
@@ -102,11 +101,11 @@ class OrderControllerTest {
         String orderNumber = generator.generate();
         OrderStatus status = OrderStatus.PAID;
 
-        Mockito.doNothing().when(orderService).updateOrderStatus(orderNumber, status);
+        doNothing().when(orderService).updateOrderStatus(orderNumber, status);
 
         ResponseEntity<Void> response = orderController.updateStatus(orderNumber, status);
 
-        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
-        Mockito.verify(orderService).updateOrderStatus(orderNumber, status);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        verify(orderService).updateOrderStatus(orderNumber, status);
     }
 }

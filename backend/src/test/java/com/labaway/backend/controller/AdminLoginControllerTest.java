@@ -1,6 +1,5 @@
-package com.labaway.backend.transformer.controller;
+package com.labaway.backend.controller;
 
-import com.labaway.backend.controller.AdminLoginController;
 import com.labaway.backend.dto.error.ErrorResponse;
 import com.labaway.backend.dto.security.JwtResponse;
 import com.labaway.backend.security.JwtUtil;
@@ -50,27 +49,27 @@ class AdminLoginControllerTest {
     @Test
     void login_shouldReturnOkResponse_whenCredentialsAreValid() {
         AdminLoginRequest request = buildLoginRequest(username, password);
-        Mockito.when(adminUserService.validateCredentials(username, password)).thenReturn(Optional.of(mockAdminDto));
-        Mockito.when(jwtUtil.generateToken(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn("mock-token");
+        when(adminUserService.validateCredentials(username, password)).thenReturn(Optional.of(mockAdminDto));
+        when(jwtUtil.generateToken(anyString(), anyString())).thenReturn("mock-token");
 
         ResponseEntity<?> response = adminLoginController.login(request);
 
         verifySuccessfulLoginResponse(response);
 
-        Mockito.verify(adminUserService).validateCredentials(username, password);
-        Mockito.verify(jwtUtil).generateToken(mockAdminDto.getUsername(), mockAdminDto.getRole());
+        verify(adminUserService).validateCredentials(username, password);
+        verify(jwtUtil).generateToken(mockAdminDto.getUsername(), mockAdminDto.getRole());
     }
 
     @Test
     void login_shouldReturnUnauthorized_whenCredentialsAreInvalid() {
         AdminLoginRequest request = buildLoginRequest(username, "wrongPassword");
-        Mockito.when(adminUserService.validateCredentials(username, "wrongPassword")).thenReturn(Optional.empty());
+        when(adminUserService.validateCredentials(username, "wrongPassword")).thenReturn(Optional.empty());
 
         ResponseEntity<?> response = adminLoginController.login(request);
 
         verifyUnauthorizedLoginResponse(response);
 
-        Mockito.verify(adminUserService).validateCredentials(username, "wrongPassword");
+        verify(adminUserService).validateCredentials(username, "wrongPassword");
     }
 
     private AdminLoginRequest buildLoginRequest(String username, String password) {
@@ -92,18 +91,18 @@ class AdminLoginControllerTest {
     }
 
     private void verifySuccessfulLoginResponse(ResponseEntity<?> response) {
-        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
 
         JwtResponse jwtResponse = (JwtResponse) response.getBody();
-        Assertions.assertNotNull(jwtResponse);
-        Assertions.assertEquals("mock-token", jwtResponse.token());
+        assertNotNull(jwtResponse);
+        assertEquals("mock-token", jwtResponse.token());
     }
 
     private void verifyUnauthorizedLoginResponse(ResponseEntity<?> response) {
-        Assertions.assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
 
-        Assertions.assertThat(response.getBody()).isInstanceOf(ErrorResponse.class);
+        assertThat(response.getBody()).isInstanceOf(ErrorResponse.class);
         ErrorResponse errorResponse = (ErrorResponse) response.getBody();
-        Assertions.assertEquals("Invalid credentials", errorResponse.getMessage());
+        assertEquals("Invalid credentials", errorResponse.getMessage());
     }
 }

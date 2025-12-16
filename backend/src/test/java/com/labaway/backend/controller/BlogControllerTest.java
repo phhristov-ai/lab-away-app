@@ -1,6 +1,5 @@
-package com.labaway.backend.transformer.controller;
+package com.labaway.backend.controller;
 
-import com.labaway.backend.controller.BlogController;
 import com.labaway.backend.dto.blog.BlogDto;
 import com.labaway.backend.dto.blog.BlogPreviewDto;
 import com.labaway.backend.dto.blog.BlogResponseDto;
@@ -52,13 +51,13 @@ class BlogControllerTest {
     void getAll_returnsListOfBlogs() {
         BlogPreviewDto dto = createSampleBlogPreviewDto();
 
-        Mockito.when(blogService.getAllBlogsForPreview(Language.EN)).thenReturn(List.of(dto));
+        when(blogService.getAllBlogsForPreview(Language.EN)).thenReturn(List.of(dto));
 
         List<BlogPreviewDto> result = blogController.getAllBlogsForPreiew(Language.EN);
 
-        Assertions.assertThat(result).hasSize(1);
-        Assertions.assertThat(result.get(0).getTitle()).isEqualTo("Test Blog");
-        Mockito.verify(blogService).getAllBlogsForPreview(Language.EN);
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).getTitle()).isEqualTo("Test Blog");
+        verify(blogService).getAllBlogsForPreview(Language.EN);
     }
 
     public static ImageUrls createSampleImageUrls() {
@@ -87,61 +86,61 @@ class BlogControllerTest {
     @Test
     void getById_returnsBlogDto() {
         String slug = "test-blog";
-        Mockito.when(blogService.getBlogBySlug(slug, Language.EN)).thenReturn(blogResponseDto);
+        when(blogService.getBlogBySlug(slug, Language.EN)).thenReturn(blogResponseDto);
         ResponseEntity<BlogResponseDto> response = blogController.getBySlug(slug, Language.EN);
 
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Assertions.assertThat(response.getBody()).isEqualTo(blogResponseDto);
-        Mockito.verify(blogService).getBlogBySlug(slug, Language.EN);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(blogResponseDto);
+        verify(blogService).getBlogBySlug(slug, Language.EN);
     }
 
     @Test
     void create_returnsCreatedBlogDto() throws IOException {
         MockMultipartFile file = createMockImageFile();
         String expectedUrl = "https://bucket.s3.amazonaws.com/blog-images/blog-slug/image.jpg";
-        Mockito.when(s3Service.uploadFile(file)).thenReturn(expectedUrl);
-        Mockito.when(blogService.createBlog(blogDto, file)).thenReturn(blogResponseDto);
+        when(s3Service.uploadFile(file)).thenReturn(expectedUrl);
+        when(blogService.createBlog(blogDto, file)).thenReturn(blogResponseDto);
 
         ResponseEntity<BlogResponseDto> response = blogController.createBlog(blogDto, file);
 
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        Assertions.assertThat(response.getBody()).isEqualTo(blogResponseDto);
-        Mockito.verify(blogService).createBlog(blogDto, file);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(response.getBody()).isEqualTo(blogResponseDto);
+        verify(blogService).createBlog(blogDto, file);
     }
 
     @Test
     void create_withNullFile_returnsCreatedBlogDto() throws IOException {
-        Mockito.when(blogService.createBlog(blogDto, null)).thenReturn(blogResponseDto);
+        when(blogService.createBlog(blogDto, null)).thenReturn(blogResponseDto);
 
         ResponseEntity<BlogResponseDto> response = blogController.createBlog(blogDto, null);
 
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        Assertions.assertThat(response.getBody()).isEqualTo(blogResponseDto);
-        Mockito.verify(blogService).createBlog(blogDto, null);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(response.getBody()).isEqualTo(blogResponseDto);
+        verify(blogService).createBlog(blogDto, null);
     }
 
     @Test
     void create_whenIOExceptionThrown_returnsInternalServerError() throws IOException {
         MockMultipartFile file = createMockImageFile();
-        Mockito.when(blogService.createBlog(blogDto, file))
+        when(blogService.createBlog(blogDto, file))
                 .thenThrow(new IOException("Upload failed"));
 
         ResponseEntity<BlogResponseDto> response = blogController.createBlog(blogDto, file);
 
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
-        Assertions.assertThat(response.getBody()).isNull();
-        Mockito.verify(blogService).createBlog(blogDto, file);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+        assertThat(response.getBody()).isNull();
+        verify(blogService).createBlog(blogDto, file);
     }
 
 
     @Test
     void delete_removesBlog() {
-        Mockito.doNothing().when(blogService).deleteBlog(slug);
+        doNothing().when(blogService).deleteBlog(slug);
 
         ResponseEntity<Void> response = blogController.delete(slug);
 
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-        Mockito.verify(blogService).deleteBlog(slug);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        verify(blogService).deleteBlog(slug);
     }
 
     @Test
@@ -150,12 +149,12 @@ class BlogControllerTest {
         BlogDto updateDto = createCreateBlogDto("Title", "Content");
         BlogResponseDto updatedBlogDto = createBlogResponseDto(slug, "New Title", "NEw Content");
         MultipartFile file = createMockImageFile();
-        Mockito.when(blogService.updateBlog(ArgumentMatchers.eq(slug), ArgumentMatchers.any(BlogDto.class), ArgumentMatchers.any(MultipartFile.class))).thenReturn(updatedBlogDto);
+        when(blogService.updateBlog(eq(slug), any(BlogDto.class), any(MultipartFile.class))).thenReturn(updatedBlogDto);
         ResponseEntity<BlogResponseDto> response = blogController.updateBlog(slug, updateDto, file);
 
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Assertions.assertThat(response.getBody()).isNotNull();
-        Mockito.verify(blogService).updateBlog(slug, updateDto, file);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+        verify(blogService).updateBlog(slug, updateDto, file);
     }
 
     @Test
@@ -163,15 +162,15 @@ class BlogControllerTest {
         BlogPreviewDto previewDto1 = createSampleBlogPreviewDto();
         BlogPreviewDto previewDto2 = createSampleBlogPreviewDto();
 
-        Mockito.when(blogService.getRandomBlogPreviews(Language.EN)).thenReturn(List.of(previewDto1, previewDto2));
+        when(blogService.getRandomBlogPreviews(Language.EN)).thenReturn(List.of(previewDto1, previewDto2));
 
         var result = blogController.getRandomBlogs(Language.EN);
 
-        Assertions.assertThat(result).hasSize(2);
-        Assertions.assertThat(result.get(0).getSlug()).isEqualTo("test-blog");
-        Assertions.assertThat(result.get(1).getSlug()).isEqualTo("test-blog");
+        assertThat(result).hasSize(2);
+        assertThat(result.get(0).getSlug()).isEqualTo("test-blog");
+        assertThat(result.get(1).getSlug()).isEqualTo("test-blog");
 
-        Mockito.verify(blogService, Mockito.times(1)).getRandomBlogPreviews(Language.EN);
+        verify(blogService, times(1)).getRandomBlogPreviews(Language.EN);
     }
     private MockMultipartFile createMockImageFile() {
         return new MockMultipartFile(
