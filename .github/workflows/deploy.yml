@@ -83,10 +83,12 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
-          pip install --user awsebcli==3.22.13
+          pip install --user awsebcli
           export PATH=$PATH:~/.local/bin
       
-          eb init Lab-Away --platform "Corretto 17 running on 64bit Amazon Linux 2023" --region $AWS_REGION --no-verify-ssl
+          # Use --quiet to avoid prompts
+          eb init -p "Corretto 17 running on 64bit Amazon Linux 2023" Lab-Away --region $AWS_REGION --no-verify-ssl --quiet
+      
+          # Deploy the staged JAR
           eb deploy Lab-Away-env --staged --quiet
 
-          eb deploy Lab-Away-env --staged
