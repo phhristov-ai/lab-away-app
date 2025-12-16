@@ -86,9 +86,15 @@ jobs:
           pip install --user awsebcli
           export PATH=$PATH:~/.local/bin
       
-          # Use --quiet to avoid prompts
-          eb init -p "Corretto 17 running on 64bit Amazon Linux 2023" Lab-Away --region $AWS_REGION --no-verify-ssl --quiet
+          # Initialize EB app quietly, no SSH prompt
+          eb init Lab-Away \
+            --platform "Corretto 17 running on 64bit Amazon Linux 2023" \
+            --region $AWS_REGION \
+            --no-verify-ssl \
+            --quiet \
+            || echo "EB init may have already been done"
       
-          # Deploy the staged JAR
-          eb deploy Lab-Away-env --staged --quiet
+          # Deploy staged JAR quietly
+          eb deploy Lab-Away-env --staged --quiet --debug
+
 
