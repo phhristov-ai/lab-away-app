@@ -1,4 +1,4 @@
-package com.labaway.backend.controller;
+package com.labaway.backend.controller.admin;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;

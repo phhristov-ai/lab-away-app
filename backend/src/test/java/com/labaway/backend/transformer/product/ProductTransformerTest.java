@@ -1,4 +1,4 @@
-package com.labaway.backend.transformer;
+package com.labaway.backend.transformer.product;
 
 import com.labaway.backend.dto.category.CategoryDto;
 import com.labaway.backend.dto.product.image.ProductImageDto;

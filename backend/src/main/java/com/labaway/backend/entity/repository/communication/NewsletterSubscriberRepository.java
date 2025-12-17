@@ -1,4 +1,4 @@
-package com.labaway.backend.entity.repository;
+package com.labaway.backend.entity.repository.communication;
 
 import com.labaway.backend.entity.communication.NewsletterSubscriber;
 import org.springframework.data.jpa.repository.JpaRepository;

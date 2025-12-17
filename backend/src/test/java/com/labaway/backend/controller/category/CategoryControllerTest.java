@@ -1,4 +1,4 @@
-package com.labaway.backend.controller;
+package com.labaway.backend.controller.category;
 
 import com.labaway.backend.controller.category.CategoryController;
 import com.labaway.backend.dto.category.CategoryDto;

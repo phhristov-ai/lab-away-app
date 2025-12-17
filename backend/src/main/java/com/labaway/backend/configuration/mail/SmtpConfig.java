@@ -1,4 +1,4 @@
-package com.labaway.backend.configuration;
+package com.labaway.backend.configuration.mail;
 
 import com.labaway.backend.configuration.aws.AwsSecretsManagerHelper;
 import org.springframework.stereotype.Component;

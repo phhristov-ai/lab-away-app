@@ -1,4 +1,4 @@
-package com.labaway.backend.transformer;
+package com.labaway.backend.transformer.order;
 
 import com.labaway.backend.dto.order.AddressDto;
 import com.labaway.backend.entity.order.Address;

@@ -1,4 +1,4 @@
-package com.labaway.backend.configuration;
+package com.labaway.backend.configuration.jwt;
 
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

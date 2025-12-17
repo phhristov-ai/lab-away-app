@@ -1,6 +1,6 @@
 package com.labaway.backend.strategy;
 
-import com.labaway.backend.configuration.StripeConfig;
+import com.labaway.backend.configuration.payment.StripeConfig;
 import com.labaway.backend.dto.payment.CreatePaymentRequestDto;
 import com.labaway.backend.dto.payment.CreatePaymentResponseDto;
 import com.stripe.model.PaymentIntent;

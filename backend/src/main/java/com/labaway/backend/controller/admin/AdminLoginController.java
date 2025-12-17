@@ -1,4 +1,4 @@
-package com.labaway.backend.controller;
+package com.labaway.backend.controller.admin;
 
 import com.labaway.backend.dto.error.ErrorResponse;
 import com.labaway.backend.dto.security.JwtResponse;

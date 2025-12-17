@@ -1,4 +1,4 @@
-package com.labaway.backend.controller;
+package com.labaway.backend.controller.blog;
 
 import com.labaway.backend.dto.blog.BlogDto;
 import com.labaway.backend.dto.blog.BlogPreviewDto;

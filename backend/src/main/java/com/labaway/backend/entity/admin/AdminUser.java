@@ -1,4 +1,4 @@
-package com.labaway.backend.entity;
+package com.labaway.backend.entity.admin;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

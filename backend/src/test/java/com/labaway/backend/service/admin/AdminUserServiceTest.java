@@ -1,4 +1,4 @@
-package com.labaway.backend.service;
+package com.labaway.backend.service.admin;
 
 import com.labaway.backend.dto.admin.AdminUserCreateDto;
 import com.labaway.backend.dto.admin.AdminUserDto;

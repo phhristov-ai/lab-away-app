@@ -1,4 +1,4 @@
-package com.labaway.backend.service;
+package com.labaway.backend.service.storage;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;

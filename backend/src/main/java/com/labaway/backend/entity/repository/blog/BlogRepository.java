@@ -1,4 +1,4 @@
-package com.labaway.backend.entity.repository;
+package com.labaway.backend.entity.repository.blog;
 
 import com.labaway.backend.dto.blog.BlogPreviewProjection;
 import com.labaway.backend.entity.blog.Blog;

@@ -1,4 +1,4 @@
-package com.labaway.backend.controller;
+package com.labaway.backend.controller.communication;
 
 import com.labaway.backend.controller.communication.NewsletterController;
 import com.labaway.backend.dto.subscription.SubscriptionRequest;

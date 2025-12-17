@@ -1,4 +1,4 @@
-package com.labaway.backend.configuration;
+package com.labaway.backend.configuration.async;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

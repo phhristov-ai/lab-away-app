@@ -1,4 +1,4 @@
-package com.labaway.backend.configuration;
+package com.labaway.backend.configuration.secrets;
 
 import java.util.Map;
 

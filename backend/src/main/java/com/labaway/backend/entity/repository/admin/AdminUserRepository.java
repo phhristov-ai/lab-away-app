@@ -1,4 +1,4 @@
-package com.labaway.backend.entity.repository;
+package com.labaway.backend.entity.repository.admin;
 
 import com.labaway.backend.entity.admin.AdminUser;
 import org.springframework.data.jpa.repository.JpaRepository;

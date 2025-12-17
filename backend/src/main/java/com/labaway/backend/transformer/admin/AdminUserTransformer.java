@@ -1,4 +1,4 @@
-package com.labaway.backend.transformer;
+package com.labaway.backend.transformer.admin;
 
 import com.labaway.backend.dto.admin.AdminUserCreateDto;
 import com.labaway.backend.dto.admin.AdminUserDto;

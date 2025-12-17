@@ -1,4 +1,4 @@
-package com.labaway.backend.service;
+package com.labaway.backend.service.blog;
 
 import com.labaway.backend.dto.blog.*;
 import com.labaway.backend.dto.image.ImageUrls;
@@ -6,11 +6,11 @@ import com.labaway.backend.entity.blog.Blog;
 import com.labaway.backend.entity.category.Category;
 import com.labaway.backend.enums.Language;
 import com.labaway.backend.exception.ResourceNotFoundException;
-import com.labaway.backend.entity.repository.BlogRepository;
-import com.labaway.backend.entity.repository.CategoryRepository;
+import com.labaway.backend.entity.repository.blog.BlogRepository;
+import com.labaway.backend.entity.repository.category.CategoryRepository;
 import com.labaway.backend.service.media.ImageService;
 import com.labaway.backend.service.storage.S3Service;
-import com.labaway.backend.transformer.BlogTransformer;
+import com.labaway.backend.transformer.blog.BlogTransformer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

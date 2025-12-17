@@ -1,4 +1,4 @@
-package com.labaway.backend.configuration;
+package com.labaway.backend.configuration.cors;
 
 
 import org.springframework.context.annotation.Bean;

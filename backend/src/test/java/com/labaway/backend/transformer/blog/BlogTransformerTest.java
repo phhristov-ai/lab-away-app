@@ -1,4 +1,4 @@
-package com.labaway.backend.transformer;
+package com.labaway.backend.transformer.blog;
 
 import com.labaway.backend.dto.blog.*;
 import com.labaway.backend.dto.category.CategoryDto;

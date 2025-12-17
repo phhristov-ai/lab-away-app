@@ -1,4 +1,4 @@
-package com.labaway.backend.service;
+package com.labaway.backend.service.order;
 
 import com.labaway.backend.dto.order.*;
 import com.labaway.backend.dto.payment.CreatePaymentResponseDto;
@@ -12,7 +12,6 @@ import com.labaway.backend.entity.repository.product.ProductRepository;
 import com.labaway.backend.enums.Language;
 import com.labaway.backend.enums.OrderStatus;
 import com.labaway.backend.service.communication.EmailService;
-import com.labaway.backend.service.order.OrderService;
 import com.labaway.backend.strategy.PaymentProvider;
 import com.labaway.backend.strategy.PaymentStrategy;
 import com.labaway.backend.strategy.PaymentStrategyFactory;

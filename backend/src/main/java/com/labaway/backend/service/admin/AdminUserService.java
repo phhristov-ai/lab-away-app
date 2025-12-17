@@ -1,10 +1,10 @@
-package com.labaway.backend.service;
+package com.labaway.backend.service.admin;
 
 import com.labaway.backend.dto.admin.AdminUserCreateDto;
 import com.labaway.backend.dto.admin.AdminUserDto;
-import com.labaway.backend.entity.AdminUser;
-import com.labaway.backend.entity.repository.AdminUserRepository;
-import com.labaway.backend.transformer.AdminUserTransformer;
+import com.labaway.backend.entity.admin.AdminUser;
+import com.labaway.backend.entity.repository.admin.AdminUserRepository;
+import com.labaway.backend.transformer.admin.AdminUserTransformer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

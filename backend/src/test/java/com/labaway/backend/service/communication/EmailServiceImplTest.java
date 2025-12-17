@@ -1,4 +1,4 @@
-package com.labaway.backend.service;
+package com.labaway.backend.service.communication;
 
 import com.labaway.backend.configuration.mail.SmtpConfig;
 import com.labaway.backend.entity.order.Address;

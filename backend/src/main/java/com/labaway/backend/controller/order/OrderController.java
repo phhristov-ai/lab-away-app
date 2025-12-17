@@ -1,4 +1,4 @@
-package com.labaway.backend.controller;
+package com.labaway.backend.controller.order;
 
 import com.labaway.backend.dto.order.CreateOrderRequestDto;
 import com.labaway.backend.dto.order.CreateOrderResponseDto;

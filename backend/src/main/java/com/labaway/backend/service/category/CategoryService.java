@@ -1,4 +1,4 @@
-package com.labaway.backend.service;
+package com.labaway.backend.service.category;
 
 import com.labaway.backend.dto.category.CategoryDto;
 import com.labaway.backend.dto.category.CreateCategoryDto;
@@ -6,11 +6,11 @@ import com.labaway.backend.dto.category.CreateCategoryTranslationDto;
 import com.labaway.backend.dto.category.UpdateCategoryDto;
 import com.labaway.backend.entity.category.Category;
 import com.labaway.backend.entity.category.CategoryTranslation;
-import com.labaway.backend.entity.repository.CategoryTranslationRepository;
+import com.labaway.backend.entity.repository.category.CategoryTranslationRepository;
 import com.labaway.backend.enums.Language;
 import com.labaway.backend.exception.CategoryNotFoundException;
-import com.labaway.backend.entity.repository.CategoryRepository;
-import com.labaway.backend.transformer.CategoryTransformer;
+import com.labaway.backend.entity.repository.category.CategoryRepository;
+import com.labaway.backend.transformer.category.CategoryTransformer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

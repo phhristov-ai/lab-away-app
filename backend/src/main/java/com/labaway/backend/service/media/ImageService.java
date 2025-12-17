@@ -1,4 +1,4 @@
-package com.labaway.backend.service;
+package com.labaway.backend.service.media;
 
 import com.labaway.backend.dto.image.ImageUrls;
 import com.labaway.backend.service.storage.S3Service;

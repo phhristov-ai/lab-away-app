@@ -1,7 +1,7 @@
-package com.labaway.backend.service;
+package com.labaway.backend.service.communication;
 
-import com.labaway.backend.entity.NewsletterSubscriber;
-import com.labaway.backend.entity.repository.NewsletterSubscriberRepository;
+import com.labaway.backend.entity.communication.NewsletterSubscriber;
+import com.labaway.backend.entity.repository.communication.NewsletterSubscriberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

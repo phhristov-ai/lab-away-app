@@ -1,4 +1,4 @@
-package com.labaway.backend.transformer;
+package com.labaway.backend.transformer.product;
 
 import com.labaway.backend.dto.image.ImageUrls;
 import com.labaway.backend.dto.product.main.*;
@@ -7,6 +7,7 @@ import com.labaway.backend.entity.product.Product;
 import com.labaway.backend.entity.product.ProductTranslation;
 import com.labaway.backend.entity.repository.product.ProductPreviewProjection;
 import com.labaway.backend.enums.Language;
+import com.labaway.backend.transformer.category.CategoryTransformer;
 import com.labaway.backend.util.JsonParsingUtils;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;

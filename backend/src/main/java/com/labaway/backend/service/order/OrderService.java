@@ -1,4 +1,4 @@
-package com.labaway.backend.service;
+package com.labaway.backend.service.order;
 
 import com.labaway.backend.dto.order.*;
 import com.labaway.backend.dto.payment.CreatePaymentRequestDto;
@@ -7,15 +7,15 @@ import com.labaway.backend.entity.order.Order;
 
 import com.labaway.backend.entity.order.OrderItem;
 import com.labaway.backend.entity.product.Product;
-import com.labaway.backend.entity.repository.OrderItemRepository;
-import com.labaway.backend.entity.repository.ProductRepository;
+import com.labaway.backend.entity.repository.order.OrderItemRepository;
+import com.labaway.backend.entity.repository.product.ProductRepository;
 import com.labaway.backend.enums.OrderStatus;
-import com.labaway.backend.entity.repository.OrderRepository;
+import com.labaway.backend.entity.repository.order.OrderRepository;
 import com.labaway.backend.service.communication.EmailService;
 import com.labaway.backend.strategy.PaymentProvider;
 import com.labaway.backend.strategy.PaymentStrategy;
 import com.labaway.backend.strategy.PaymentStrategyFactory;
-import com.labaway.backend.transformer.OrderTransformer;
+import com.labaway.backend.transformer.order.OrderTransformer;
 import com.labaway.backend.util.OrderNumberGenerator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;

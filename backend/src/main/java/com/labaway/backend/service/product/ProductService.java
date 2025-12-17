@@ -1,4 +1,4 @@
-package com.labaway.backend.service;
+package com.labaway.backend.service.product;
 
 import com.labaway.backend.dto.image.ImageUrls;
 import com.labaway.backend.dto.product.image.ProductImageDto;
@@ -9,12 +9,12 @@ import com.labaway.backend.entity.product.ProductImage;
 import com.labaway.backend.enums.Language;
 import com.labaway.backend.exception.CategoryNotFoundException;
 import com.labaway.backend.exception.ProductNotFoundException;
-import com.labaway.backend.entity.repository.CategoryRepository;
-import com.labaway.backend.entity.repository.ProductImageRepository;
-import com.labaway.backend.entity.repository.ProductRepository;
+import com.labaway.backend.entity.repository.category.CategoryRepository;
+import com.labaway.backend.entity.repository.product.ProductImageRepository;
+import com.labaway.backend.entity.repository.product.ProductRepository;
 import com.labaway.backend.service.media.ImageService;
 import com.labaway.backend.service.storage.S3Service;
-import com.labaway.backend.transformer.ProductTransformer;
+import com.labaway.backend.transformer.product.ProductTransformer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

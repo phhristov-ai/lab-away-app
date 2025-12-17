@@ -1,6 +1,7 @@
-package com.labaway.backend.configuration;
+package com.labaway.backend.configuration.aws;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.labaway.backend.configuration.secrets.SecretsManagerHelper;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.regions.Region;

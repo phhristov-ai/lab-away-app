@@ -1,4 +1,4 @@
-package com.labaway.backend.entity.repository;
+package com.labaway.backend.entity.repository.category;
 
 import com.labaway.backend.entity.category.CategoryTranslation;
 import com.labaway.backend.enums.Language;

@@ -36,7 +36,6 @@ class OrderConfirmationTemplateTest {
                 .contains("John Doe")
                 .contains("product-1");
 
-        System.out.println(htmlContent);
         Files.delete(outputFile);
     }
 

@@ -1,4 +1,4 @@
-package com.labaway.backend.transformer;
+package com.labaway.backend.transformer.category;
 
 import com.labaway.backend.dto.category.CategoryDto;
 import com.labaway.backend.dto.category.CreateCategoryDto;

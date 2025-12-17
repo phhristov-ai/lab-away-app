@@ -1,7 +1,7 @@
-package com.labaway.backend.service;
+package com.labaway.backend.service.admin;
 
-import com.labaway.backend.entity.AdminUser;
-import com.labaway.backend.entity.repository.AdminUserRepository;
+import com.labaway.backend.entity.admin.AdminUser;
+import com.labaway.backend.entity.repository.admin.AdminUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;

@@ -1,4 +1,4 @@
-package com.labaway.backend.entity.repository;
+package com.labaway.backend.entity.repository.order;
 
 import com.labaway.backend.entity.order.Order;
 import org.springframework.data.jpa.repository.JpaRepository;

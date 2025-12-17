@@ -1,4 +1,4 @@
-package com.labaway.backend.service;
+package com.labaway.backend.service.blog;
 
 import com.labaway.backend.dto.blog.*;
 import com.labaway.backend.dto.category.CategoryDto;

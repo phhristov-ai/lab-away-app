@@ -1,4 +1,4 @@
-package com.labaway.backend.entity.repository;
+package com.labaway.backend.entity.repository.category;
 
 public interface CategoryProjection {
     String getName();

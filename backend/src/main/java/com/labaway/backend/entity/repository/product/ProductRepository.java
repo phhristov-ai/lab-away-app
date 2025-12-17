@@ -1,4 +1,4 @@
-package com.labaway.backend.entity.repository;
+package com.labaway.backend.entity.repository.product;
 
 import com.labaway.backend.entity.product.Product;
 import org.springframework.data.jpa.repository.JpaRepository;

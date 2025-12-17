@@ -1,4 +1,4 @@
-package com.labaway.backend.controller;
+package com.labaway.backend.controller.product;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.labaway.backend.dto.product.main.*;
