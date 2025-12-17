@@ -9,6 +9,7 @@ import org.springframework.web.filter.CorsFilter;
 
 import java.util.List;
 
+@Configuration
 public class CorsConfig {
 
     @Bean
@@ -16,7 +17,6 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
 
-        // Allow localhost for prerender/build
         config.setAllowedOriginPatterns(List.of(
                 "http://localhost:*",
                 "https://www.lab-away.com",
