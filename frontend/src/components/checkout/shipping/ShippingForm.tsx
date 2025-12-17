@@ -1,6 +1,6 @@
 import { t } from 'i18next';
 import { forwardRef, useEffect, useImperativeHandle } from 'react';
-import { useShippingForm } from '../../../hooks/useShippingForm';
+import { useShippingForm } from '../../../hooks/checkout/useShippingForm';
 import CountryDropdown from './CountryDropdown';
 import FormField from './FormField';
 import './ShippingForm.css';

@@ -92,7 +92,7 @@
         "fullName": "Name",
         "email": "E-Mail-Adresse",
         "phone": "Telefon",
-        "country": "Land / Region",
+        "country": "Land",
         "address": "Straßenadresse",
         "city": "Stadt",
         "postcode": "Postleitzahl"
@@ -103,7 +103,7 @@
       "title": "Versanddetails",
       "fields": {
         "fullName": "Name",
-        "country": "Land / Region",
+        "country": "Land",
         "address": "Straßenadresse",
         "city": "Stadt",
         "postcode": "Postleitzahl"

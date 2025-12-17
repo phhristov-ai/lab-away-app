@@ -1,5 +1,5 @@
 import { sendGAEvent } from "../context/consent/consentUtils";
-import { Category } from "../services/categoriesService";
+import { Category } from "../services/category/categoriesService";
 
 export type GAItem = {
   item_id: string;

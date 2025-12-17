@@ -1,6 +1,6 @@
 import React, { createContext, useReducer, useContext, ReactNode, useMemo } from 'react';
 import { trackAddToCart, trackGAEvent, trackRemoveFromCart } from '../utils/analytics';
-import { Category } from '../services/categoriesService';
+import { Category } from '../services/category/categoriesService';
 import { CartItem } from '../types/CartItem';
 
 

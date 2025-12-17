@@ -5,8 +5,6 @@ import thirdIcon from '../../assets/icons/third-icon.svg';
 import forthIcon from '../../assets/icons/forth-icon.svg';
 
 
-import './ScrollAnimatedArrows.css';
-
 const MAX_ARROW_HEIGHT = 180;
 
 interface ArrowStackProps {

@@ -3,10 +3,9 @@ import AddToCartButton from './AddToCartButton';
 import './ProductInfo.css';
 import QuantitySelector from './QuantitySelector';
 import { useTranslation } from 'react-i18next';
-import '../../pages/BlogPostPage.css';
-import { useProductInfo } from '../../hooks/useProductInfo';
+import { useProductInfo } from '../../hooks/product/useProductInfo';
 import { useNavigate } from 'react-router-dom';
-import { Category } from '../../services/categoriesService';
+import { Category } from '../../services/category/categoriesService';
 
 type ProductInfoProps = {
   title: string;

@@ -2,7 +2,7 @@ import React from 'react';
 import './Gallery.css';
 import SlickDots from './SlickDots';
 import { ProductImage } from '../../types/ProductImage';
-import { useGallery } from '../../hooks/useGallery';
+import { useGallery } from '../../hooks/product/useGallery';
 
 interface GalleryProps {
   images: ProductImage[];

@@ -6,7 +6,7 @@ import './CartItemRow.css';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '../../../utils/format';
 import { Link } from 'react-router-dom';
-import { Category } from '../../../services/categoriesService';
+import { Category } from '../../../services/category/categoriesService';
 import { CartItem } from '../../../types/CartItem';
 
 type Props = {

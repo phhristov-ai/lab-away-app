@@ -33,3 +33,8 @@
   background-color: #4edafd;
   color: #fff;
 }
+
+.feature-image-link:hover .feature-image-button {
+  background-color: #4edafd;
+  color: #fff;
+}

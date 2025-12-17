@@ -1,5 +1,5 @@
 import { useCart } from '../../context/CartContext';
-import { Category } from '../../services/categoriesService';
+import { Category } from '../../services/category/categoriesService';
 import './AddToCartButton.css';
 
 interface AddToCartButtonProps {

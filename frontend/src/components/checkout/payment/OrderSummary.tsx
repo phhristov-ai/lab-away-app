@@ -6,7 +6,7 @@ import ShippingDetails from './ShippingDetails';
 import SummaryTotals from './SummaryTotals';
 import { useTranslation } from 'react-i18next';
 import CustomButton from '../shipping/CustomButton';
-import { Category } from '../../../services/categoriesService';
+import { Category } from '../../../services/category/categoriesService';
 import { CartItem } from '../../../types/CartItem';
 
 type ShippingInfo = {

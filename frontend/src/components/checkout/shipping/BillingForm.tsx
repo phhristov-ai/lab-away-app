@@ -5,7 +5,7 @@ import {
   forwardRef,
   useImperativeHandle
 } from 'react';
-import { useBillingForm } from '../../../hooks/useBillingForm';
+import { useBillingForm } from '../../../hooks/checkout/useBillingForm';
 import { t } from 'i18next';
 import PhoneField from './PhoneField';
 

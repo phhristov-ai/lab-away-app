@@ -1,5 +1,5 @@
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
-import { usePayPal } from '../../../hooks/usePayPal';
+import { usePayPal } from '../../../hooks/checkout/usePayPal';
 
 const PayPalForm: React.FC = () => {
   const { PAYPAL_CLIENT_ID, createOrder, onApprove } = usePayPal();

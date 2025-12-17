@@ -1,6 +1,6 @@
 import { CardCvcElement, CardExpiryElement, CardNumberElement } from '@stripe/react-stripe-js';
 import './StripeForm.css';
-import { useCreditCardForm } from '../../../hooks/useCreditCardForm';
+import { useCreditCardForm } from '../../../hooks/checkout/useCreditCardForm';
 import { SetStateAction, useState } from 'react';
 import visaIcon from '../../../assets/icons/payment/visa.svg';
 import mastercardIcon from '../../../assets/icons/payment/mastercard.svg';

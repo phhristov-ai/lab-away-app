@@ -1,7 +1,7 @@
 import React from 'react';
 import './BlogPostGrid.css';
-import BlogPost from './BlogPost';
-import { BlogPostType } from '../../services/blogPostService';
+import BlogPost from '../blogpost/BlogPost';
+import { BlogPostType } from '../../services/blog/blogPostService';
 import { Link } from 'react-router-dom';
 import { useAdmin } from '../../context/AdminContext';
 

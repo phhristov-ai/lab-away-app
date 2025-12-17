@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Category } from '../../services/categoriesService';
+import { Category } from '../../services/category/categoriesService';
 import './FilterBar.css';
 
 type FilterBarProps = {

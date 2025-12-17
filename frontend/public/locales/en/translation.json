@@ -118,7 +118,7 @@
       "fields": {
         "fullName": "Full name",
         "phone": "Phone",
-        "country": "Country / Region",
+        "country": "Country",
         "address": "Street address",
         "city": "Town / City",
         "postcode": "Postcode / ZIP"
@@ -128,7 +128,7 @@
       "title": "Shipping Details",
       "fields": {
         "fullName": "Full name",
-        "country": "Country / Region",
+        "country": "Country",
         "address": "Street address",
         "phone": "Phone",
         "city": "Town / City",
@@ -563,7 +563,7 @@
     },
     "shippingAddress": {
       "heading": "Shipping Address",
-      "country": "Country / Region",
+      "country": "Country",
       "address": "Street address",
       "city": "Town / City",
       "postcode": "Postcode / ZIP"

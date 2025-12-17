@@ -3,7 +3,7 @@ import QuantitySelector from '../../product/QuantitySelector';
 import { Link } from 'react-router-dom';
 import { useCart } from "../../../context/CartContext";
 import { CartItem } from '../../../types/CartItem';
-import { Category } from '../../../services/categoriesService';
+import { Category } from '../../../services/category/categoriesService';
 
 type Props = {
   item: CartItem;

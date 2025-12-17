@@ -3,21 +3,21 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Footer from './components/footer/Footer';
 import './App.css';
 import { CartProvider } from './context/CartContext';
-import ScrollToTop from './components/common/ScrollToTop';
+import ScrollToTop from './components/common/layout/ScrollToTop';
 import { CheckoutProvider } from './context/CheckoutContext';
 import TopHeader from './components/header/TopHeader';
 import Navbar from './components/header/Navbar';
 import { AdminProvider } from './context/AdminContext';
-import AdminLoginPage from './pages/AdminLoginPage';
-import CookieConsentFooter from './components/common/CookieConsentFooter';
-import GDPRPopup from './components/common/GDPRPopup';
+import AdminLoginPage from './pages/admin/AdminLoginPage';
+import CookieConsentFooter from './components/common/consent/CookieConsentFooter';
+import GDPRPopup from './components/common/consent/GDPRPopup';
 import { ConsentProvider } from './context/consent/ConsentProvider';
-import ScrollToTopButton from './components/common/ScrollToTopButton';
+import ScrollToTopButton from './components/common/layout/ScrollToTopButton';
 import { useState } from 'react';
 import LanguageLayout from './layouts/LanguageLayout';
-import LanguagePrefixer from './assets/LanguagePrefixer';
+import LanguagePrefixer from './hooks/utils/LanguagePrefixer';
 import { supportedLanguages } from './utils/langMatcher';
-import { languageSpecificRoutes } from './components/languageSpecificRoutes';
+import { languageSpecificRoutes } from './utils/languageSpecificRoutes';
 import i18n from './i18n/i18n';
 import { ConsentState } from './context/consent/types';
 

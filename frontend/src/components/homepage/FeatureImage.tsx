@@ -19,24 +19,23 @@ const FeatureImage: React.FC<FeatureImageProps> = ({
   buttonLink,
 }) => {
   return (
-    <div className="feature-image">
-      <img
-        src={mediumSrc}
-        alt={altText}
-        loading="lazy"
-        srcSet={`
-          ${mediumSrc} 768w,
-          ${smallSrc} 480w
-        `}
-        sizes="(max-width: 480x) 480px,
-                (max-width: 768px) 768px,
-                768px"
-      />
-
-      <Link to={buttonLink}>
+    <Link to={buttonLink} className="feature-image-link">
+      <div className="feature-image">
+        <img
+          src={mediumSrc}
+          alt={altText}
+          loading="lazy"
+          srcSet={`
+            ${mediumSrc} 768w,
+            ${smallSrc} 480w
+          `}
+          sizes="(max-width: 480px) 480px,
+                 (max-width: 768px) 768px,
+                 768px"
+        />
         <Button text={buttonText} className="feature-image-button" />
-      </Link>
-    </div>
+      </div>
+    </Link>
   );
 };
 

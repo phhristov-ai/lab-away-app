@@ -1,4 +1,4 @@
-import { Category } from "../services/categoriesService";
+import { Category } from "../services/category/categoriesService";
 import { ProductImage } from "./ProductImage";
 
 export type SharedContent = {

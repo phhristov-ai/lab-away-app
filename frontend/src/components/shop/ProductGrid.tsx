@@ -1,9 +1,9 @@
 import React from 'react';
 import './ProductGrid.css';
 import { ProductPreviewType } from '../../types/ProductPreviewType';
-import Product from '../homepage/Product';
 import { useAdmin } from '../../context/AdminContext';
 import { Link } from 'react-router-dom';
+import Product from '../common/product/Product';
 
 type ProductGridProps = {
   products: ProductPreviewType[];
@@ -13,7 +13,7 @@ type ProductGridProps = {
 
 const ProductGrid: React.FC<ProductGridProps> = ({ products, showCreateNew = false, onProductClick }) => {
   const { isAdmin } = useAdmin();
-
+    console.log(products);
 
   return (
     <div className="product-grid">

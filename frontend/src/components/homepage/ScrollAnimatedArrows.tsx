@@ -3,7 +3,7 @@ import './ScrollAnimatedArrows.css';
 import ArrowStack from './ArrowStack';
 import { useTranslation } from 'react-i18next';
 import AnimationDescription from './AnimationDescription';
-import useArrowAnimation from '../../hooks/useArrowAnimation';
+import useArrowAnimation from '../../hooks/utils/useArrowAnimation';
 
 
 const ScrollAnimatedArrows: React.FC = () => {
