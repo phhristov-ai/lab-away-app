@@ -1,6 +1,6 @@
 package com.labaway.backend.security;
 
-import com.labaway.backend.configuration.JwtSecretConfig;
+import com.labaway.backend.configuration.jwt.JwtSecretConfig;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

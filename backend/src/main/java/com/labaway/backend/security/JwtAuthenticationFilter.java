@@ -1,5 +1,5 @@
 package com.labaway.backend.security;
-import com.labaway.backend.service.CustomUserDetailsService;
+import com.labaway.backend.service.admin.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
