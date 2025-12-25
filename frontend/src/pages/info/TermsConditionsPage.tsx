@@ -1,5 +1,5 @@
 import { Trans, useTranslation } from "react-i18next";
-import '../styles/TextStyles.css'; 
+import '../styles/TextStyles.css';
 import { SUPPORT_EMAIL } from "../../config/constants";
 import { Helmet } from "react-helmet";
 
@@ -8,9 +8,9 @@ const TermsConditionsPage = () => {
 
   const renderParagraphs = (path: string) => {
     const paragraphs = getArray(t(path, { returnObjects: true }));
-    return paragraphs.map((_, idx) => (
-      <p key={idx}>
-        <Trans 
+    return paragraphs.map((paragraph, idx) => (
+      <p key={`${path}-${idx}`}> {/* Use a unique key */}
+        <Trans
           i18nKey={`${path}.${idx}`}
           components={{ email: <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a> }}
         />
@@ -20,17 +20,18 @@ const TermsConditionsPage = () => {
 
   const renderList = (path: string) => {
     const items = getArray(t(path, { returnObjects: true }));
-    return items.map((item, idx) => <li key={idx}>{item}</li>);
+    return items.map((item, idx) => <li key={`${path}-${idx}`}>{item}</li>);
   };
+
 
   const renderForm = (path: string) => {
     const lines = getArray(t(path, { returnObjects: true }));
     return lines.map((line, idx) =>
       line.trim() === "" ? (
-        <br key={idx} />
+        <br key={`${path}-br-${idx}`} />
       ) : (
-        <p key={idx}>
-          <Trans 
+        <p key={`${path}-${idx}`}>
+          <Trans
             i18nKey={`${path}.${idx}`}
             components={{ email: <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a> }}
           />
@@ -55,7 +56,7 @@ const TermsConditionsPage = () => {
         <meta property="og:title" content={t('terms.title')} />
         <meta property="og:description" content={t('terms.metaDescription') || "Read our terms and conditions for using our services."} />
       </Helmet>
-      
+
       <h1>{t('terms.title')}</h1>
 
       <section>

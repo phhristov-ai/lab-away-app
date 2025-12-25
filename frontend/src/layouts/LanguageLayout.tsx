@@ -8,19 +8,16 @@ interface LanguageLayoutProps {
   lang: string;
 }
 
-const supportedLanguages = ['en', 'de', 'bg'];
+const supportedLanguages = new Set(['en', 'de', 'bg']);
 
 const LanguageLayout = ({ lang }: LanguageLayoutProps) => {
-  // Optionally check supportedLanguages.includes(lang)
   useEffect(() => {
-    if (supportedLanguages.includes(lang)) {
+    if (supportedLanguages.has(lang)) {
       i18n.changeLanguage(lang);
-    } else {
-      // maybe fallback or redirect
     }
   }, [lang]);
 
-  if (!supportedLanguages.includes(lang)) {
+  if (!supportedLanguages.has(lang)) {
     return <Navigate to="/en" replace />;
   }
 

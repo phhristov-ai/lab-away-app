@@ -1,49 +1,48 @@
-const fs = require('fs');
-const path = require('path');
-const { axiosInstanceServer } = require('./src/services/api/axiosInstance.server');
+import fs from 'node:fs';
+import path from 'node:path';
+import { axiosInstanceServer } from './src/services/api/axiosInstance.server.js'; // make sure to add .js for ESM
 
 const LANGUAGES = ['en', 'de'];
 const BASE_URL = 'https://www.lab-away.com'; // your public URL
 
-(async () => {
-  try {
-    const staticRoutes = [
-      '/', '/shop', '/blog', '/delivery', '/privacy-policy',
-      '/terms-and-conditions', '/contact', '/imprint'
-    ];
+try {
+  const staticRoutes = [
+    '/', '/shop', '/blog', '/delivery', '/privacy-policy',
+    '/terms-and-conditions', '/contact', '/imprint'
+  ];
 
-    let allRoutes = [];
+  let allRoutes = [];
 
-    for (const lang of LANGUAGES) {
-      const upperLang = lang.toUpperCase();
+  for (const lang of LANGUAGES) {
+    const upperLang = lang.toUpperCase();
 
-      // Products
-      const productRes = await axiosInstanceServer.get('/products', {
-        params: { lang: upperLang },
-      });
-      const productSlugs = productRes.data.map(product => product.slug);
-      const productRoutes = productSlugs.map(slug => `/${lang}/product/${slug}`);
+    // Products
+    const productRes = await axiosInstanceServer.get('/products', {
+      params: { lang: upperLang },
+    });
+    const productSlugs = productRes.data.map(product => product.slug);
+    const productRoutes = productSlugs.map(slug => `/${lang}/product/${slug}`);
 
-      // Blogs
-      const blogRes = await axiosInstanceServer.get('/blogs', {
-        params: { lang: upperLang },
-      });
-      const blogSlugs = blogRes.data.map(blog => blog.slug);
-      const blogRoutes = blogSlugs.map(slug => `/${lang}/blog/${slug}`);
+    // Blogs
+    const blogRes = await axiosInstanceServer.get('/blogs', {
+      params: { lang: upperLang },
+    });
+    const blogSlugs = blogRes.data.map(blog => blog.slug);
+    const blogRoutes = blogSlugs.map(slug => `/${lang}/blog/${slug}`);
 
-      // Localized static pages
-      const localizedStaticRoutes = staticRoutes.map(route => `/${lang}${route}`);
+    // Localized static pages
+    const localizedStaticRoutes = staticRoutes.map(route => `/${lang}${route}`);
 
-      allRoutes.push(...localizedStaticRoutes, ...productRoutes, ...blogRoutes);
-    }
+    allRoutes.push(...localizedStaticRoutes, ...productRoutes, ...blogRoutes);
+  }
 
-    // Save routes JSON for prerendering
-    const routesPath = path.resolve(__dirname, 'prerender-routes.json');
-    fs.writeFileSync(routesPath, JSON.stringify(allRoutes, null, 2), 'utf8');
-    console.log(`✅ Generated ${allRoutes.length} routes for prerendering`);
+  // Save routes JSON for prerendering
+  const routesPath = path.resolve('prerender-routes.json');
+  await fs.promises.writeFile(routesPath, JSON.stringify(allRoutes, null, 2), 'utf8');
+  console.log(`✅ Generated ${allRoutes.length} routes for prerendering`);
 
-    // Generate sitemap.xml
-    const sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>
+  // Generate sitemap.xml
+  const sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${allRoutes.map(route => `
   <url>
@@ -53,21 +52,20 @@ ${allRoutes.map(route => `
   </url>`).join('')}
 </urlset>
 `;
-    const sitemapPath = path.resolve(__dirname, 'public', 'sitemap.xml');
-    fs.writeFileSync(sitemapPath, sitemapContent, 'utf8');
-    console.log('✅ sitemap.xml generated!');
+  const sitemapPath = path.resolve('public', 'sitemap.xml');
+  await fs.promises.writeFile(sitemapPath, sitemapContent, 'utf8');
+  console.log('✅ sitemap.xml generated!');
 
-    // Generate robots.txt
-    const robotsContent = `User-agent: *
+  // Generate robots.txt
+  const robotsContent = `User-agent: *
 Allow: /
 Sitemap: ${BASE_URL}/sitemap.xml
 `;
-    const robotsPath = path.resolve(__dirname, 'public', 'robots.txt');
-    fs.writeFileSync(robotsPath, robotsContent, 'utf8');
-    console.log('✅ robots.txt generated!');
-
-  } catch (err) {
-    console.error('❌ Error generating routes:', err);
-    process.exit(1);
-  }
-})();
+  const robotsPath = path.resolve('public', 'robots.txt');
+  await fs.promises.writeFile(robotsPath, robotsContent, 'utf8');
+  console.log('✅ robots.txt generated!');
+  
+} catch (err) {
+  console.error('❌ Error generating routes:', err);
+  process.exit(1);
+}

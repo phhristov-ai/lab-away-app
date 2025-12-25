@@ -34,22 +34,26 @@ const AdminProductEditor: React.FC<AdminProductEditorProps> = ({
       <h3>Admin Editor</h3>
 
       <label>
-        Product Name
+        <span>Product Name</span>
         <input value={name} onChange={(e) => setName(e.target.value)} />
       </label>
 
       <label>
-        Price
+        <span>Price</span>
         <input
           type="number"
           value={price}
-          onChange={(e) => setPrice(parseFloat(e.target.value))}
+          onChange={(e) => setPrice(Number.parseFloat(e.target.value))}
         />
       </label>
 
+
       <label>
-        Description
-        <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
+        <span>Description</span>
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
       </label>
 
       <div className="image-management">
@@ -78,7 +82,7 @@ const AdminProductEditor: React.FC<AdminProductEditorProps> = ({
                   setImages(newImages);
                 }}
               />
-              Main
+              <span>Main</span>
             </label>
             <button
               onClick={() => setImages(images.filter((_, i) => i !== idx))}

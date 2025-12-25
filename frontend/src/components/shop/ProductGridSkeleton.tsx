@@ -2,10 +2,12 @@ import React from 'react';
 import './ProductGridSkeleton.css';
 
 const ProductGridSkeleton: React.FC = () => {
+  const skeletonCount = 8;
+
   return (
     <div className="product-grid">
-      {Array.from({ length: 8 }).map((_, index) => (
-        <div key={index} className="product-item">
+      {Array.from({ length: skeletonCount }, (_, i) => (
+        <div key={`skeleton-${i}`} className="product-item">
           <div className="product-skeleton-card">
             <div className="skeleton-image" />
             <div className="skeleton-text short" />

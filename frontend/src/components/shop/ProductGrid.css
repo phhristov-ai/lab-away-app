@@ -13,7 +13,7 @@
 }
 
 .new-product-item {
-  border: 2px dashed #61dafb;
+  border: 2px dashed var(--primary-color);
   border-radius: 8px;
   background-color: #f0fbff;
   transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
@@ -49,7 +49,7 @@
   align-items: center;
   justify-content: center;
   font-size: 3.5rem;
-  color: #61dafb;
+  color: var(--primary-color);
   border-radius: 4px;
   margin-bottom: 12px;
   transition: background-color 0.2s;

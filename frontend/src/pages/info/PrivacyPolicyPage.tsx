@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import '../styles/TextStyles.css'; 
+import '../styles/TextStyles.css';
 import { Helmet } from "react-helmet";
 
 const PrivacyPolicyPage = () => {
@@ -13,16 +13,19 @@ const PrivacyPolicyPage = () => {
 
   const renderParagraphs = (path: string) => {
     const paragraphs = getArray(t(path, { returnObjects: true }));
-    return paragraphs.map((p, idx) => <p key={idx}>{p}</p>);
+    return paragraphs.map((p) => (
+      <p key={`${path}-${p}`}>{p}</p>
+    ));
   };
 
   const renderList = (path: string) => {
     const items = getArray(t(path, { returnObjects: true }));
     if (items.length === 0) return null;
+
     return (
       <ul>
-        {items.map((item, idx) => (
-          <li key={idx}>{item}</li>
+        {items.map((item) => (
+          <li key={`${path}-${item}`}>{item}</li>
         ))}
       </ul>
     );

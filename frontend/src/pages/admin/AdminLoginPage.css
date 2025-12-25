@@ -24,8 +24,8 @@
   margin-bottom: 1rem;
   padding: 0.75rem;
   font-size: 1rem;
-  color: #61dafb;
-  border: 1px solid #61dafb;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
   border-radius: 20px;
 
 }
@@ -34,14 +34,14 @@
   padding: 0.75rem;
   font-size: 1rem;
   background-color: #fff;
-  border: 1px solid #61dafb;
+  border: 1px solid var(--primary-color);
   border-radius: 20px;
-  color: #61dafb;
+  color: var(--primary-color);
   cursor: pointer;
 }
 
 .admin-login-container button:hover {
-  background-color: #61dafb;
+  background-color: var(--primary-color);
   color: #fff;
 }
 

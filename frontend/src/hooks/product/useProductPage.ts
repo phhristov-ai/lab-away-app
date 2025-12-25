@@ -227,7 +227,7 @@ export const useProductPage = () => {
         if (images.length === 0) return [];
         const mainIndex = images.findIndex(img => img.main);
 
-        const validMainIndex = mainIndex >= 0 ? mainIndex : 0;
+        const validMainIndex = Math.max(mainIndex, 0);
 
         return images.map((img, idx) => ({
             ...img,

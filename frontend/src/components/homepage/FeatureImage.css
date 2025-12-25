@@ -21,7 +21,7 @@
   width: 60%;
   padding: 12px;
   background-color: #fff;
-  color: #4edafd;
+  color: var(--primary-color);
   border: none;
   border-radius: 20px;
   font-size: 16px;
@@ -30,12 +30,12 @@
 }
 
 .feature-image-button:hover {
-  background-color: #4edafd;
+  background-color: var(--primary-color);
   color: #fff;
 }
 
 .feature-image-link:hover .feature-image-button {
-  background-color: #4edafd;
+  background-color: var(--primary-color);
   color: #fff;
 }
 

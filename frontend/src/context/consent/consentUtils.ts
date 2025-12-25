@@ -5,7 +5,9 @@ declare global {
     dataLayer: any[];
     gtag?: (...args: any[]) => void;
   }
+  var gtag: ((...args: any[]) => void) | undefined;
 }
+
 
 export function getStoredConsent(): ConsentState {
   const stored = localStorage.getItem("cookieConsent");
@@ -27,21 +29,25 @@ export function saveConsent(consent: ConsentState) {
 }
 
 export function ensureGoogleAnalytics() {
-  if (typeof window.gtag !== 'function') {
-    console.warn('[GA] gtag not found. Is the GA script in index.html?');
-  } else {
+  if (typeof globalThis.gtag === 'function') {
     console.log('[GA] Ready');
+  } else {
+    console.warn('[GA] gtag not found. Is the GA script in index.html?');
   }
 }
 
-export function sendGAEvent(event: string, params: Record<string, any> = {}) {
-  if (typeof window.gtag === 'function') {
-    window.gtag('event', event, params);
+export function sendGAEvent(
+  event: string,
+  params: Record<string, unknown> = {}
+) {
+  if (typeof globalThis.gtag === 'function') {
+    globalThis.gtag('event', event, params);
     console.log('[GA Event]', event, params);
   } else {
     console.warn('[GA] Tried to send event before GA loaded:', event);
   }
 }
+
 
 export function loadGoogleAds() {
   if (document.getElementById('ads-script')) return;

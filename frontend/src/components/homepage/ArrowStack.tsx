@@ -9,7 +9,7 @@ const MAX_ARROW_HEIGHT = 180;
 
 interface ArrowStackProps {
   blueArrowHeights: string[];
-  arrowWidth?: number; 
+  arrowWidth?: number;
   iconSrc?: string;
   gapIconsSrc?: string[];
 }
@@ -27,9 +27,9 @@ const ArrowStack: React.FC<ArrowStackProps> = ({
       <div className="arrows-container" style={{ width: `${arrowWidth}px` }}>
         {/* Grey arrows */}
         <div className="arrows-stack arrows-grey">
-          {Array.from({ length: 4 }).map((_, i) => (
+          {Array.from({ length: 4 }, (_, i) => (
             <div
-              key={`grey-arrow-${i}`}
+              key={`grey-arrow-${i + 1}`}
               className="arrow-vertical grey-arrow"
               style={{ height: `${MAX_ARROW_HEIGHT}px` }}
             />

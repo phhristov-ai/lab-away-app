@@ -42,7 +42,7 @@ input[type=number] {
 }
 
 .App-link {
-  color: #61dafb;
+  color: var(--primary-color);
 }
 
 .page-container {

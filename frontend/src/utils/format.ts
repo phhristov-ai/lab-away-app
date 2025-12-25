@@ -4,7 +4,7 @@ export const formatCurrency = (
   locale: string,
   currency: string = 'EUR'
 ): string => {
-  const number = typeof value === 'string' ? parseFloat(value) : value;
+  const number = typeof value === 'string' ? Number.parseFloat(value) : value;
 
   return new Intl.NumberFormat(locale, {
     style: 'currency',
