@@ -1,9 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { axiosInstanceServer } from './src/services/api/axiosInstance.server.js'; // make sure to add .js for ESM
+import { axiosInstanceServer } from './src/services/api/axiosInstance.server.js';
 
 const LANGUAGES = ['en', 'de'];
-const BASE_URL = 'https://www.lab-away.com'; // your public URL
+const BASE_URL = 'https://www.lab-away.com';
 
 try {
   const staticRoutes = [

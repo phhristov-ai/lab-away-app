@@ -27,6 +27,11 @@ public class EmailServiceImpl implements EmailService {
     private static final Logger log =
             LoggerFactory.getLogger(EmailServiceImpl.class);
 
+    private static final Map<String, String> subjects = Map.of(
+            "en", "Your order has been confirmed",
+            "de", "Ihre Bestellung wurde bestätigt"
+    );
+
     public EmailServiceImpl(SmtpConfig smtpConfig, JavaMailSender mailSender, TemplateEngine templateEngine) {
         this.fromEmail = smtpConfig.getFromEmail();
         this.mailSender = mailSender;
@@ -46,7 +51,10 @@ public class EmailServiceImpl implements EmailService {
 
             helper.setTo(orderEmailDto.customerEmail());
             helper.setFrom(fromEmail);
-            helper.setSubject("Your order has been confirmed");
+
+            String lang = orderEmailDto.language().toLowerCase();
+            String subject = subjects.getOrDefault(lang, subjects.get("en"));
+            helper.setSubject(subject);
 
             Context context = buildOrderConfirmationContext(orderEmailDto);
             String html = templateEngine.process("order-confirmation-" + orderEmailDto.language().toLowerCase(), context);
