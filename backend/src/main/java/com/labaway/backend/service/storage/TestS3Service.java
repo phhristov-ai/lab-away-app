@@ -30,7 +30,6 @@ public class TestS3Service extends S3Service {
     @Override
     public String uploadFile(MultipartFile file) throws IOException {
         String fileUrl = super.uploadFile(file);
-        System.out.println(fileUrl);
         String key = extractKeyFromUrl(fileUrl);
         uploadedKeys.add(key);
         return fileUrl;
@@ -46,15 +45,12 @@ public class TestS3Service extends S3Service {
              S3ObjectInputStream inputStream = s3Object.getObjectContent()) {
             byte[] content = inputStream.readAllBytes();
             cachedFiles.put(key, content);
-            System.out.println("Cached file content for key: " + key);
         } catch (IOException e) {
-            System.err.println("Failed to cache file before deletion: " + key);
             e.printStackTrace();
         }
 
         // Delete the file
         amazonS3.deleteObject(bucketName, key);
-        System.out.println("Deleted file from S3: " + key);
     }
 
     private String extractKeyFromUrl(String url) {
@@ -68,9 +64,7 @@ public class TestS3Service extends S3Service {
             for (String key : uploadedKeys) {
                 try {
                     amazonS3.deleteObject(awsProperties.getS3BucketName(), key);
-                    System.out.println("Deleted uploaded test file: " + key);
                 } catch (Exception e) {
-                    System.err.println("Failed to delete uploaded test file: " + key);
                     e.printStackTrace();
                 }
             }
@@ -83,14 +77,11 @@ public class TestS3Service extends S3Service {
                     metadata.setContentLength(content.length);
 
                     amazonS3.putObject(new PutObjectRequest(bucketName, key, bais, metadata));
-                    System.out.println("Re-uploaded cached file: " + key);
                 } catch (Exception e) {
-                    System.err.println("Failed to re-upload cached file: " + key);
                     e.printStackTrace();
                 }
             });
         } catch (Exception e) {
-            System.err.println("Unexpected exception in cleanUpTestFiles:");
             e.printStackTrace();
         }
     }

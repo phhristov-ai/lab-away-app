@@ -31,9 +31,8 @@ function App() {
   };
 
   const handleConsentUpdate = (consent: ConsentState) => {
-    console.log("User interacted:", consent);
-    setHasInteracted(true);    // mark consent given
-    setShowPopup(false);       // hide popup
+    setHasInteracted(true);
+    setShowPopup(false);
   };
 
   return (

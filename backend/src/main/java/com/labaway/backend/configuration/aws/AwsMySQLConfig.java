@@ -26,8 +26,6 @@ public class AwsMySQLConfig {
         String dbname = secrets.get("dbname");
 
         String port = String.valueOf(secrets.get("port"));
-        String engine = secrets.get("engine");
-
         String url = String.format("jdbc:mysql://%s:%s/%s", host, port, dbname);
 
         HikariDataSource dataSource = new HikariDataSource();

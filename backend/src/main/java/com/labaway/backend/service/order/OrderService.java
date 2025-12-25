@@ -21,6 +21,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.math.BigDecimal;
@@ -129,20 +130,26 @@ public class OrderService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    @Transactional
     public void confirmOrder(String orderNumber) {
         Order order = orderRepository.findByOrderNumber(orderNumber)
                 .orElseThrow(() -> new EntityNotFoundException("Order not found"));
 
-        PaymentStrategy strategy = paymentStrategyFactory.getStrategy(order.getPaymentProvider());
+        PaymentStrategy strategy =
+                paymentStrategyFactory.getStrategy(order.getPaymentProvider());
         String sessionId = getPaymentSessionId(order);
 
         if (!strategy.isPaymentCompleted(sessionId)) {
             throw new IllegalStateException("Payment has not been completed yet.");
         }
+
         order.setStatus(OrderStatus.PAID);
         orderRepository.save(order);
-        emailService.sendOrderConfirmationEmail(order);
+
+        OrderEmailDto emailDto = orderTransformer.mapToEmailDto(order);
+        emailService.sendOrderConfirmationEmail(emailDto);
     }
+
 
     private String getPaymentSessionId(Order order) {
         return switch (order.getPaymentProvider()) {

@@ -10,20 +10,24 @@
        style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #e0e0e0;">
     <tr>
         <td style="padding: 20px; text-align: center;">
-            <img src="https://lab-away.com/static/media/lab-away.logo.6fb712dbcc4db7fca767.png"
+            <img src="https://lab-away.com/static/media/lab-away.logo.71672527b5f6a3e2326e.webp"
                  alt="Lab-Away Logo"
                  style="max-width: 200px; display: block; margin: 0 auto;" />
         </td>
     </tr>
 
     <tr>
-        <td style="padding: 20px;">
-            <h2 style="color: #4edafd; margin-bottom: 10px;">New Order: #<span th:text="${orderId}"></span></h2>
-            <p style="margin: 0;">You have received an order from <strong th:text="${billingName}"></strong></p>
-            <p style="margin-top: 10px;">The order is as follows:<br>
-                Order #<span th:text="${orderId}"></span> (<span th:text="${orderDate}"></span>)
+        <td style="padding: 0 20px 20px 20px;">
+            <h2 style="color: #4edafd; margin-bottom: 10px;">Thank You for Your Order!</h2>
+            <p style="font-size: 16px; margin-bottom: 10px; color: #333;">
+                Your order has been successfully received, and we're processing it right now.
             </p>
+            <p style="margin-top: 10px;">Order #<span th:text="${orderId}"></span> placed on <span th:text="${orderDate}"></span></p>
+        </td>
+    </tr>
 
+    <tr>
+        <td style="padding: 20px;">
             <table border="0" cellpadding="8" cellspacing="0" width="100%"
                    style="border-collapse: collapse; margin-top: 15px;">
                 <thead>
@@ -44,9 +48,9 @@
 
             <p style="margin-top: 20px;">
                 Subtotal: <span th:text="${subtotal}"></span><br>
-                Shipping: <span th:text="${shipping}"></span><br>
+                Free Shipping<br>
                 Payment method: <span th:text="${paymentMethod}"></span><br>
-                <strong style="color: #4edafd;">Total: <span th:text="${total}"></span></strong>
+                <strong style="color: #4edafd; font-size: 18px;">Total: <span th:text="${total}"></span></strong>
             </p>
 
             <!-- Billing & Shipping Side-by-Side -->
@@ -81,10 +85,19 @@
                 </tr>
             </table>
 
-
-            <p style="margin-top: 30px; font-size: 12px; color: #888;">
-                Thank you for your order!
-            </p>
+            <tr>
+                <td style="
+                    padding-top: 32px;
+                    padding-bottom: 16px;
+                    font-size: 16px;
+                    line-height: 22px;
+                    font-weight: 600;
+                    color: #333;
+                    text-align: center;
+                  ">
+                    Thank you for your order!
+                </td>
+            </tr>
         </td>
     </tr>
 </table>

@@ -45,8 +45,10 @@ export const useProductInfo = ({
           placeholder="Enter price"
           value={price}
           onChange={(e) => {
-            const value = parseFloat(e.target.value);
-            if (!isNaN(value)) onPriceChange?.(value);
+            const value = Number.parseFloat(e.target.value);
+            if (!Number.isNaN(value)) {
+              onPriceChange?.(value);
+            }
           }}
           className="post-input"
         />

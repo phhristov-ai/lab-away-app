@@ -1,5 +1,5 @@
 const fs = require('fs-extra');
-const path = require('path');
+const path = require('node:path');
 const puppeteer = require('puppeteer');
 const AWS = require('aws-sdk');
 const axios = require('axios');

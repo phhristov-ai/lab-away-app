@@ -1,6 +1,7 @@
 package com.labaway.backend.transformer.order;
 
 import com.labaway.backend.dto.order.AddressDto;
+import com.labaway.backend.dto.order.AddressEmailDto;
 import com.labaway.backend.entity.order.Address;
 import org.springframework.stereotype.Component;
 

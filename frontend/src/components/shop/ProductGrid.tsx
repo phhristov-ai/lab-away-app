@@ -13,7 +13,6 @@ type ProductGridProps = {
 
 const ProductGrid: React.FC<ProductGridProps> = ({ products, showCreateNew = false, onProductClick }) => {
   const { isAdmin } = useAdmin();
-    console.log(products);
 
   return (
     <div className="product-grid">

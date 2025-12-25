@@ -15,6 +15,7 @@ const CookieToggle: React.FC<CookieToggleProps> = ({ label, value, onChange }) =
           type="checkbox"
           checked={value}
           onChange={() => onChange(!value)}
+          aria-label={label}
         />
         <span className="slider-circle" />
       </label>

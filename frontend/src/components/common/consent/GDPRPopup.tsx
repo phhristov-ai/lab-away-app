@@ -10,8 +10,8 @@ interface GDPRPopupProps {
 }
 
 interface GDPRPopupProps {
-  onClose: () => void;
-  onConsentUpdate: (consent: ConsentState) => void;
+    onClose: () => void;
+    onConsentUpdate: (consent: ConsentState) => void;
 }
 
 const GDPRPopup: React.FC<GDPRPopupProps> = ({ onClose, onConsentUpdate }) => {
@@ -24,7 +24,7 @@ const GDPRPopup: React.FC<GDPRPopupProps> = ({ onClose, onConsentUpdate }) => {
     const handleInteraction = () => {
         const updatedConsent: ConsentState = { hasInteracted: true };
         onConsentUpdate(updatedConsent);
-        onClose(); 
+        onClose();
     };
 
     return (
@@ -60,19 +60,20 @@ const GDPRPopup: React.FC<GDPRPopupProps> = ({ onClose, onConsentUpdate }) => {
                 <div className="gdpr-main">
                     <div className="gdpr-content">
                         {(activeTab === 'overview' || showNecessaryMobile) && (
-                        <div>
-                            <h2 className="gdpr-section-title">Privacy Overview</h2>
-                            <p>
-                                Strictly Necessary Cookie should be enabled at all times so that we can save your preferences for cookie settings.
-                            </p>
-                        </div>
+                            <div>
+                                <h2 className="gdpr-section-title">Privacy Overview</h2>
+                                <p>
+                                    Strictly Necessary Cookie should be enabled at all times so that we can save your preferences for cookie settings.
+                                </p>
+                            </div>
                         )}
-                        <div
+                        <button
+                            type="button"
                             className={`gdpr-mobile-title ${showNecessaryMobile ? 'open' : ''}`}
                             onClick={() => setShowNecessaryMobile((prev) => !prev)}
                         >
                             Strictly Necessary Cookies
-                        </div>
+                        </button>
 
                         {(activeTab === 'necessary' || showNecessaryMobile) && (
                             <div

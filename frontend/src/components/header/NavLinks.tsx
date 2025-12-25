@@ -1,49 +1,87 @@
-import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 // @ts-ignore
-import { HashLink } from 'react-router-hash-link';
 import './NavLinks.css';
-import { useEffect } from 'react';
-import i18n from '../../i18n/i18n';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHouse, faShop, faNewspaper, faXmark, faTruck, faEnvelope, faFlaskVial } from '@fortawesome/free-solid-svg-icons'
+import { NavItem } from './NavItem';
+import { useMobileSidebar } from '../../hooks/utils/useMobileSidebar';
 
-const NavLinks = ({ isMobileSidebarOpen = false, onClose }: { isMobileSidebarOpen?: boolean; onClose?: () => void }) => {
-  const { t } = useTranslation();
+interface NavLinksProps {
+  isMobileSidebarOpen?: boolean;
+  onClose?: () => void;
+  showIcons?: boolean;
+}
 
-  useEffect(() => {
-    if (isMobileSidebarOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isMobileSidebarOpen]);
+const NavLinks: React.FC<NavLinksProps> = ({ isMobileSidebarOpen = false, onClose, showIcons = false }) => {
+  const { t, i18n } = useTranslation();
+  const sidebarTop = useMobileSidebar(isMobileSidebarOpen);
 
   return (
-    <ul className={`navbar-links ${isMobileSidebarOpen ? 'mobile-sidebar' : ''}`}>
+    <ul
+      className={`navbar-links ${isMobileSidebarOpen ? 'mobile-sidebar' : ''}`}
+      style={isMobileSidebarOpen ? { top: `${sidebarTop}px` } : {}}
+    >
       {isMobileSidebarOpen && (
-        <li className="close-button-mobile">
-          <button onClick={onClose}>×</button>
-        </li>
-      )}
-      <li><Link to="/">{t('header.navigation.home')}</Link></li>
-      <li><Link to="/shop">{t('header.navigation.shop')}</Link></li>
-      <li>
-        <HashLink
-          smooth
-          to={`/${i18n.language}#how-it-works-anchor`}
-          scroll={(el: { scrollIntoView: (arg0: { behavior: string; block: string; }) => void; }) => {
-            setTimeout(() => {
-              el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 100);
-          }}
+        <NavItem
+          icon={<FontAwesomeIcon icon={faXmark} className="nav-icon" />}
           onClick={onClose}
-        >
-          {t('header.navigation.howItWorks')}
-        </HashLink>      </li>
-      <li><Link to="/blog">{t('header.navigation.blog')}</Link></li>
+        />
+
+      )}
+      <NavItem
+        to="/"
+        label={t('header.navigation.home')}
+        icon={showIcons && <FontAwesomeIcon icon={faHouse} className="nav-icon" />}
+        onClick={onClose}
+      />
+
+      <NavItem
+        to="/shop"
+        label={t('header.navigation.shop')}
+        icon={showIcons && <FontAwesomeIcon icon={faShop} className="nav-icon" />}
+        onClick={onClose}
+      />
+
+      <NavItem
+        to={`/${i18n.language}#how-it-works-anchor`}
+        label={t('header.navigation.howItWorks')}
+        icon={showIcons && <FontAwesomeIcon icon={faFlaskVial} className="nav-icon" />}
+        onClick={onClose}
+        isHashLink
+        scroll={(el) => {
+          if (el) {
+            setTimeout(() => {
+              el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            }, 100)
+          }
+        }}
+      />
+
+      <NavItem
+        to="/blog"
+        label={t('header.navigation.blog')}
+        icon={showIcons && <FontAwesomeIcon icon={faNewspaper} className="nav-icon" />}
+        onClick={onClose}
+      />
+
+      {isMobileSidebarOpen && (
+        <NavItem
+          to="/delivery"
+          label={t('header.navigation.shipping')}
+          icon={showIcons && <FontAwesomeIcon icon={faTruck} className="nav-icon" />}
+          onClick={onClose}
+        />
+      )}
+
+      {isMobileSidebarOpen && (
+        <NavItem
+          to="/contact"
+          label={t('header.navigation.contact')}
+          icon={showIcons && <FontAwesomeIcon icon={faEnvelope} className="nav-icon" />}
+          onClick={onClose}
+        />
+      )}
+
     </ul>
   );
 };

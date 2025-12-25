@@ -19,3 +19,9 @@
 .filter-button:hover {
   background-color: #ccc;
 }
+
+.filter-button.active {
+  background-color: var(--primary-color);
+  color: white; 
+  border-color: var(--primary-color);
+}

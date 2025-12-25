@@ -14,6 +14,8 @@ interface CheckoutGraphProps {
 }
 
 const CheckoutGraph: React.FC<CheckoutGraphProps> = ({ steps }) => {
+  const lastStepId = steps.at(-1)?.id;
+
   return (
     <div className="checkout-graph-container">
       <div className="graph-row">
@@ -23,17 +25,17 @@ const CheckoutGraph: React.FC<CheckoutGraphProps> = ({ steps }) => {
             label={step.label}
             imgSrc={step.imgSrc}
             isSelected={step.isSelected}
-            isLast={step.id === steps[steps.length - 1].id}
+            isLast={step.id === lastStepId}
           />
         ))}
       </div>
 
       <div className="text-row">
-          {steps.map((step) => (
-            <span className="checkout-text-element" key={`label-${step.id}`}>
-              <span className="checkout-text">{step.label}</span>
-            </span>
-          ))}
+        {steps.map((step) => (
+          <span className="checkout-text-element" key={`label-${step.id}`}>
+            <span className="checkout-text">{step.label}</span>
+          </span>
+        ))}
       </div>
     </div>
   );

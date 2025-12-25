@@ -168,7 +168,6 @@ export const useProductPage = () => {
             main: img.main,
         }));
 
-        console.log(imagesPayload)
 
         const payload: ProductPayloadDto = {
         price,

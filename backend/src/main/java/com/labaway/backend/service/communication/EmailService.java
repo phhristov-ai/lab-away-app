@@ -1,7 +1,7 @@
 package com.labaway.backend.service.communication;
 
-import com.labaway.backend.entity.order.Order;
+import com.labaway.backend.dto.order.OrderEmailDto;
 
 public interface EmailService {
-    void sendOrderConfirmationEmail(Order order);
+    void sendOrderConfirmationEmail(OrderEmailDto orderEmailDto);
 }

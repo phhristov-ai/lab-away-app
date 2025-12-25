@@ -5,7 +5,9 @@
       "home": "Home",
       "shop": "Shop",
       "howItWorks": "How it works",
-      "blog": "Blog"
+      "blog": "Blog",
+      "shipping": "Shipping",
+      "contact": "Contact"
     },
     "cart": {
       "altText": "Shopping cart"
@@ -120,8 +122,8 @@
         "phone": "Phone",
         "country": "Country",
         "address": "Street address",
-        "city": "Town / City",
-        "postcode": "Postcode / ZIP"
+        "city": "City",
+        "postcode": "Postal code"
       }
     },
     "shipping": {
@@ -131,8 +133,8 @@
         "country": "Country",
         "address": "Street address",
         "phone": "Phone",
-        "city": "Town / City",
-        "postcode": "Postcode / ZIP"
+        "city": "City",
+        "postcode": "Postal code"
       },
       "useDifferentBilling": "Use a different billing address?"
     },
@@ -565,8 +567,8 @@
       "heading": "Shipping Address",
       "country": "Country",
       "address": "Street address",
-      "city": "Town / City",
-      "postcode": "Postcode / ZIP"
+      "city": "City",
+      "postcode": "Postal code"
     },
     "invalid": "Invalid success page – missing order details."
   },

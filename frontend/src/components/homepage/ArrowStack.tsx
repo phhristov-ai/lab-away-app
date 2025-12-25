@@ -22,19 +22,14 @@ const ArrowStack: React.FC<ArrowStackProps> = ({
 }) => {
   return (
     <div className="arrow-stack-container">
-      {/* Icon above first arrow */}
-      <img src={iconSrc} alt="First Icon" className="arrow-icon" loading="lazy"/>
+      <img src={iconSrc} alt="First Icon" className="arrow-icon" loading="lazy" />
 
-      {/* Arrows container */}
-      <div
-        className="arrows-container"
-        style={{ width: `${arrowWidth}px` }}
-      >
+      <div className="arrows-container" style={{ width: `${arrowWidth}px` }}>
         {/* Grey arrows */}
         <div className="arrows-stack arrows-grey">
-          {[...Array(4)].map((_, i) => (
+          {Array.from({ length: 4 }).map((_, i) => (
             <div
-              key={`grey-${i}`}
+              key={`grey-arrow-${i}`}
               className="arrow-vertical grey-arrow"
               style={{ height: `${MAX_ARROW_HEIGHT}px` }}
             />
@@ -45,7 +40,7 @@ const ArrowStack: React.FC<ArrowStackProps> = ({
         <div className="arrows-stack arrows-blue">
           {blueArrowHeights.map((height, i) => (
             <div
-              key={`blue-${i}`}
+              key={`blue-arrow-${height}-${i}`}
               className="arrow-vertical blue-arrow"
               style={{ height }}
             />
@@ -55,7 +50,7 @@ const ArrowStack: React.FC<ArrowStackProps> = ({
         {/* Icons between arrows */}
         {gapIconsSrc.map((src, i) => (
           <img
-            key={`gap-icon-${i}`}
+            key={`gap-icon-${src}`}
             src={src}
             alt={`Gap icon ${i + 1}`}
             className={`gap-icon gap-icon-${i + 1}`}

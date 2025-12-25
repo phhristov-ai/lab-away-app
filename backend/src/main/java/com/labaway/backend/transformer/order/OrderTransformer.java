@@ -1,11 +1,10 @@
 package com.labaway.backend.transformer.order;
 
-import com.labaway.backend.dto.order.AddressDto;
-import com.labaway.backend.dto.order.OrderDto;
-import com.labaway.backend.dto.order.OrderItemDto;
+import com.labaway.backend.dto.order.*;
 import com.labaway.backend.entity.order.Address;
 import com.labaway.backend.entity.order.Order;
 import com.labaway.backend.entity.order.OrderItem;
+import com.labaway.backend.enums.Language;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -52,4 +51,46 @@ public class OrderTransformer {
     public AddressDto toDto(Address entity) {
         return addressTransformer.toDto(entity);
     }
+
+    public OrderEmailDto mapToEmailDto(Order order) {
+        Language language = Language.valueOf(order.getLanguage().toUpperCase());
+
+        return new OrderEmailDto(
+                order.getOrderNumber(),
+                order.getCreatedAt(),
+                order.getCustomerEmail(),
+                order.getLanguage(),
+                mapAddressToEmailDto(order.getBillingAddress()),
+                mapAddressToEmailDto(order.getShippingAddress()),
+                order.getPaymentProvider().name(),
+                order.getTotalPrice(),
+                order.getOrderItems().stream()
+                        .map(item -> mapOrderItemToEmailDto(item, language))
+                        .toList()
+        );
+    }
+
+    private AddressEmailDto mapAddressToEmailDto(Address address) {
+        return new AddressEmailDto(
+                address.getFirstName(),
+                address.getLastName(),
+                address.getStreetAddress(),
+                address.getCity(),
+                address.getPostCode(),
+                address.getCountry(),
+                address.getPhone()
+        );
+    }
+
+    private OrderItemEmailDto mapOrderItemToEmailDto(
+            OrderItem item,
+            Language language
+    ) {
+        return new OrderItemEmailDto(
+                item.getProduct().getTranslatedName(language),
+                item.getQuantity(),
+                item.getPrice()
+        );
+    }
+
 }

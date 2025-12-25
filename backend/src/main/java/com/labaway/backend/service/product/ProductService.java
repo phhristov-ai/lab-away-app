@@ -16,6 +16,8 @@ import com.labaway.backend.service.media.ImageService;
 import com.labaway.backend.service.storage.S3Service;
 import com.labaway.backend.transformer.product.ProductTransformer;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,8 +34,10 @@ public class ProductService {
     private final ProductTransformer productTransformer;
     private final ProductImageRepository productImageRepository;
     private final S3Service s3Service;
-
     private final ImageService imageService;
+
+    private static final Logger log =
+            LoggerFactory.getLogger(ProductService.class);
 
     public ProductDto createProduct(ProductPayloadDto productPayloadDto, MultipartFile[] files) throws IOException {
         List<ProductImage> productImages = processImageFiles(files, productPayloadDto.getMainImageIndex());
@@ -98,7 +102,7 @@ public class ProductService {
                 .filter(image -> !retainedUrls.contains(image.getImageUrlSmall())
                         && !retainedUrls.contains(image.getImageUrlMedium())
                         && !retainedUrls.contains(image.getImageUrlLarge()))
-                .collect(Collectors.toList());
+                .toList();
 
         for (ProductImage image : toRemove) {
             try {
@@ -112,7 +116,7 @@ public class ProductService {
                     s3Service.deleteFile(image.getImageUrlLarge());
                 }
             } catch (Exception e) {
-                System.err.println("Failed to delete S3 file: " + image + " - " + e.getMessage());
+                log.error("Failed to delete S3 file: " + image + " - " + e.getMessage());
             }
         }
 
@@ -176,7 +180,7 @@ public class ProductService {
                     s3Service.deleteFile(oldImage.getImageUrlLarge());
                 }
             } catch (Exception e) {
-                System.err.println("Failed to delete S3 file: " + oldImage + " - " + e.getMessage());
+                log.error("Failed to delete S3 file: " + oldImage + " - " + e.getMessage());
             }
         }
 
@@ -184,7 +188,7 @@ public class ProductService {
     }
 
 
-    private List<ProductImage> processImageFiles(MultipartFile[] files, Integer mainIndex) throws IOException {
+    private List<ProductImage> processImageFiles(MultipartFile[] files, Integer mainIndex) {
         List<ProductImage> productImages = new ArrayList<>();
         if (files == null || files.length == 0) {
             return productImages;

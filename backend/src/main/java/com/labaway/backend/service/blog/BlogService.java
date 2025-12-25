@@ -76,9 +76,8 @@ public class BlogService {
     }
 
 
-    private void uploadImageIfPresent(Blog blog, MultipartFile file) throws IOException {
+    private void uploadImageIfPresent(Blog blog, MultipartFile file) {
         if (file != null && !file.isEmpty()) {
-            // Use ImageService to resize and upload the image
             ImageUrls imageUrls = imageService.processAndUploadImage(file);
 
             blog.setImageUrlSmall(imageUrls.getSmall());
@@ -88,9 +87,8 @@ public class BlogService {
     }
 
 
-    private void replaceImageIfPresent(Blog blog, MultipartFile file) throws IOException {
+    private void replaceImageIfPresent(Blog blog, MultipartFile file) {
         if (file != null && !file.isEmpty()) {
-            // Delete old images if they exist
             if (blog.getImageUrlSmall() != null && !blog.getImageUrlSmall().isEmpty()) {
                 s3Service.deleteFile(blog.getImageUrlSmall());
             }
@@ -103,10 +101,8 @@ public class BlogService {
                 s3Service.deleteFile(blog.getImageUrlLarge());
             }
 
-            // Process and upload new image versions (small, medium, large)
             ImageUrls newImageUrls = imageService.processAndUploadImage(file);
 
-            // Set the new image URLs for all versions
             blog.setImageUrlSmall(newImageUrls.getSmall());
             blog.setImageUrlMedium(newImageUrls.getMedium());
             blog.setImageUrlLarge(newImageUrls.getLarge());

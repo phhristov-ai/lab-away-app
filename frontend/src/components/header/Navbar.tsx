@@ -3,54 +3,44 @@ import NavLinks from './NavLinks';
 import LanguageDropdown from './LanguageDropdown';
 import './Navbar.css';
 import CartIconWrapper from './CartIconWrapper';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useAdmin } from '../../context/AdminContext';
 import logoutIcon from '../../assets/icons/logout-icon.svg';
 import Hamburger from './Hamburger';
+import { useIsMobile } from '../../hooks/utils/useIsMobile';
 
 const Navbar = () => {
-  const { isAdmin, logout } = useAdmin();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const { isAdmin, logout } = useAdmin()
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const isMobile = useIsMobile();
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    handleResize();
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  const closeSidebar = () => setSidebarOpen(false)
+  const toggleSidebar = () => setSidebarOpen((prev) => !prev)
 
   return (
     <>
       <nav className="navbar">
         <div className="navbar-inner">
           <div className="navbar-left">
-            {isMobile ? (
-              <>
-                <Hamburger onClick={() => setSidebarOpen(prev => !prev)} isOpen={sidebarOpen} />
-                <Logo />
-              </>
-            ) : (
-              <>
-                <Logo />
-                <NavLinks />
-              </>
+            {isMobile && (
+              <Hamburger onClick={toggleSidebar} isOpen={sidebarOpen} />
             )}
 
+            <Logo />
+
+            {!isMobile && <NavLinks />}
           </div>
 
           <div className="navbar-right">
             <LanguageDropdown />
             <CartIconWrapper />
+
             {isAdmin && (
-              <button onClick={logout} className="icon-button" title="Logout">
+              <button
+                onClick={logout}
+                className="icon-button"
+                title="Logout"
+              >
                 <img src={logoutIcon} alt="Logout" loading="lazy" />
               </button>
             )}
@@ -59,10 +49,14 @@ const Navbar = () => {
       </nav>
 
       {isMobile && sidebarOpen && (
-        <NavLinks isMobileSidebarOpen={true} onClose={() => setSidebarOpen(false)} />
+        <NavLinks
+          isMobileSidebarOpen
+          onClose={closeSidebar}
+          showIcons
+        />
       )}
     </>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar

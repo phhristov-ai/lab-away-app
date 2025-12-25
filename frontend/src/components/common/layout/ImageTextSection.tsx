@@ -44,7 +44,7 @@ const ImageTextSection: React.FC<ImageTextSectionProps> = ({
         <h2>{title}</h2>
         <p>{text}</p>
         <Link to={buttonLink}>
-          <Button className={`${!displayButton ? 'hideButton' : ''}`} text={buttonText} />
+          <Button className={`${displayButton ? '' : 'hideButton'}`} text={buttonText} />
         </Link>
       </div>
     </section>

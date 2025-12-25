@@ -33,13 +33,10 @@ public class S3Service {
     }
 
     public String uploadFileWithName(byte[] fileBytes, String fileName) {
-        try {
-            InputStream inputStream = new ByteArrayInputStream(fileBytes);
-            amazonS3.putObject(awsProperties.getS3BucketName(), fileName, inputStream, null);
-            return amazonS3.getUrl(awsProperties.getS3BucketName(), fileName).toString();
-        } catch (Exception e) {
-            throw new RuntimeException("Error uploading image to S3 with name: " + fileName, e);
-        }
+        InputStream inputStream = new ByteArrayInputStream(fileBytes);
+        amazonS3.putObject(awsProperties.getS3BucketName(), fileName, inputStream, null);
+        return amazonS3.getUrl(awsProperties.getS3BucketName(), fileName).toString();
+
     }
 
     public void deleteFile(String fileUrl) {

@@ -15,7 +15,6 @@ import com.labaway.backend.entity.repository.category.CategoryRepository;
 import com.labaway.backend.entity.repository.product.ProductImageRepository;
 import com.labaway.backend.entity.repository.product.ProductRepository;
 import com.labaway.backend.service.media.ImageService;
-import com.labaway.backend.service.product.ProductService;
 import com.labaway.backend.service.storage.S3Service;
 import com.labaway.backend.transformer.product.ProductTransformer;
 import org.junit.jupiter.api.BeforeEach;

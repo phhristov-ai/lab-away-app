@@ -1,0 +1,38 @@
+.contact-page {
+  padding: 20px;
+}
+
+.contact-page h1 {
+  margin-bottom: 30px;
+  font-size: 2rem;
+  text-align: center;
+}
+
+.contact-blocks {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.contact-block {
+  flex: 1;
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 8px;
+  min-width: 250px;
+  box-sizing: border-box;
+}
+
+.contact-block:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .contact-blocks {
+    flex-direction: column;
+  }
+
+  .contact-block {
+    width: 100%;
+  }
+}

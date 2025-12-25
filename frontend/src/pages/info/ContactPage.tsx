@@ -1,11 +1,12 @@
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
+import './ContactPage.css';
 
 const ContactPage = () => {
   const { t } = useTranslation(); 
   
   return (
-    <div>
+    <div className="contact-page">
 
       <Helmet>
         <title>{t('contact.title')} | Lab-Away</title>
@@ -15,8 +16,9 @@ const ContactPage = () => {
       </Helmet>
 
       <h1>{t('contact.title')}</h1>
-      <div style={{ display: 'flex', gap: '20px' }}>
-        <div style={{ flex: 1, border: '1px solid #ccc', padding: '20px', borderRadius: '8px' }}>
+
+      <div className="contact-blocks">
+        <div className="contact-block">
           <h2>{t('contact.hospital.label')}</h2>
           <p>{t('contact.hospital.name')}</p>
           <p>{t('contact.hospital.address.street')}</p>
@@ -25,13 +27,13 @@ const ContactPage = () => {
           <p>{t('contact.hospital.phone')}</p>
         </div>
 
-        <div style={{ flex: 1, border: '1px solid #ccc', padding: '20px', borderRadius: '8px' }}>
+        <div className="contact-block">
           <h2>{t('contact.mail.label')}</h2>
           <p>{t('contact.mail.description')}</p>
           <p><a href={`mailto:${t('contact.mail.email')}`}>{t('contact.mail.email')}</a></p>
         </div>
 
-        <div style={{ flex: 1, border: '1px solid #ccc', padding: '20px', borderRadius: '8px' }}>
+        <div className="contact-block">
           <h2>{t('contact.corporateBuilding.label')}</h2>
           <p>{t('contact.corporateBuilding.description')}</p>
         </div>

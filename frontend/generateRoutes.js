@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { axiosInstanceServer } = require('./src/services/axiosInstance.server');
+const { axiosInstanceServer } = require('./src/services/api/axiosInstance.server');
 
 const LANGUAGES = ['en', 'de'];
 const BASE_URL = 'https://www.lab-away.com'; // your public URL

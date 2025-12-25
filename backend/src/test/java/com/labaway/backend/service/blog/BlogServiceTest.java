@@ -11,7 +11,6 @@ import com.labaway.backend.entity.repository.blog.BlogTranslationRepository;
 import com.labaway.backend.entity.repository.category.CategoryRepository;
 import com.labaway.backend.enums.Language;
 import com.labaway.backend.exception.ResourceNotFoundException;
-import com.labaway.backend.service.blog.BlogService;
 import com.labaway.backend.service.media.ImageService;
 import com.labaway.backend.service.storage.S3Service;
 import com.labaway.backend.transformer.blog.BlogTransformer;

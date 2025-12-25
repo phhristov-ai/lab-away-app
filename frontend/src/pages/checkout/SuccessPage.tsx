@@ -70,7 +70,7 @@ const SuccessPage: React.FC = () => {
             </ul>
 
             <Link to="/shop">
-              <Button text="Explore more" />
+              <Button text="Continue shopping" />
             </Link>
             <p className="follow-text">
               Follow us

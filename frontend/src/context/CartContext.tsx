@@ -57,7 +57,6 @@ function handleAddItem(state: CartState, payload: CartItem): CartState {
 
 function handleRemoveItem(state: CartState, slug: string): CartState {
   const removedItem = state.items.find(item => item.slug === slug);
-  console.log(removedItem);
   if (removedItem) {
     trackRemoveFromCart({
       item_id: removedItem.slug,
