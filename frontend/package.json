@@ -39,6 +39,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
     "generate-routes": "node generateRoutes.mjs",
     "start-prerender-server": "node prerender-server.mjs",
     "prerender": "node prerender.mjs",
