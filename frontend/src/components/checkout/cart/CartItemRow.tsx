@@ -23,53 +23,64 @@ type Props = {
 
 const CartItemRow: React.FC<Props> = ({ item }) => {
   const { dispatch } = useCart();
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const handleQuantityChange = (quantity: number) => {
-    dispatch({ type: 'UPDATE_QUANTITY', payload: { slug: item.slug, quantity : quantity, categories : item.categories } });
+    dispatch({ type: 'UPDATE_QUANTITY', payload: { slug: item.slug, quantity: quantity, categories: item.categories } });
   };
 
   const handleRemoveItem = () => {
-    dispatch({ type: 'REMOVE_ITEM', payload: { slug: item.slug, categories : item.categories } });
+    dispatch({ type: 'REMOVE_ITEM', payload: { slug: item.slug, categories: item.categories } });
   };
 
   return (
     <tr>
       <td data-label="Product">
-        <div className="product-cell">
-          <button className="remove-button" onClick={handleRemoveItem}>×</button>
-          <Link to={`/product/${item.slug}`}>
-            <img
-              src={item.image}
-              alt={item.product}
-              className="product-image"
-            />
-          </Link>
-          <div className="product-info">
-            <Link to={`/product/${item.slug}`} className="product-title-link">
-              <span className="product-title" >
-                {item.title}
-              </span>
+        <span className="cell-label">{t("checkout.cart.columns.product")}</span>
+        <div className="cell-value">
+          <div className="product-cell">
+            <button className="remove-button" onClick={handleRemoveItem}>×</button>
+            <Link to={`/product/${item.slug}`}>
+              <img src={item.image} alt={item.product} className="product-image" />
             </Link>
+            <div className="product-info">
+              <Link to={`/product/${item.slug}`} className="product-title-link">
+                <span className="product-title">{item.title}</span>
+              </Link>
+            </div>
           </div>
         </div>
       </td>
 
-      <td data-label="Price">{formatCurrency(item.price, i18n.language)}</td>
+      <td data-label="Price">
+        <span className="cell-label">{t("checkout.cart.columns.price")}</span>
+        <div className="cell-value">
+          {formatCurrency(item.price, i18n.language)}
+        </div>
+      </td>
 
       <td data-label="Quantity">
-        <QuantitySelector
-          value={item.quantity}
-          onChange={handleQuantityChange}
-        />
+        <span className="cell-label">{t("checkout.cart.columns.quantity")}</span>
+        <div className="cell-value">
+          <QuantitySelector
+            value={item.quantity}
+            onChange={handleQuantityChange}
+          />
+        </div>
       </td>
 
       <td data-label="Subtotal">
-        <div className="subtotal-wrapper">
-          {formatCurrency(item.subtotal, i18n.language)}
-          <span className="vat-text"><sub>{item.inclVat}</sub></span>
+        <span className="cell-label">{t("checkout.cart.columns.subtotal")}</span>
+        <div className="cell-value">
+          <div className="subtotal-wrapper">
+            {formatCurrency(item.subtotal, i18n.language)}
+            <span className="vat-text">
+              <sub>{item.inclVat}</sub>
+            </span>
+          </div>
         </div>
       </td>
+
     </tr>
   );
 

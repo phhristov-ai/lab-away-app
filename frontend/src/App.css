@@ -70,7 +70,7 @@ html {
 
 @media (max-width: 768px) {
   .page-container {
-    padding: 0 var(--spacing-sm);
+    padding: var(--spacing-sm);
     margin: 0 auto;
   }
 }

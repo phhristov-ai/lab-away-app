@@ -33,7 +33,7 @@ const CartTotals: React.FC<CartTotalsProps> = ({
   return (
     <div className="cart-totals">
       <h2>{labels.cartTotalsTitle}</h2>
-      <table className="totals-table">
+      <table className="totals-table mobile-card-table">
         <thead>
           <tr>
             <th></th>

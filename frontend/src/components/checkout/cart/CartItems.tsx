@@ -23,7 +23,7 @@ const CartItems: React.FC<CartItemsProps> = ({ items }) => {
   return (
     <div className="cart-items">
       <h2>{t('checkout.cart.title')}</h2>
-      <table>
+      <table className="cart-items-table mobile-card-table">
         <thead>
           <tr>
             <th colSpan={4}></th>

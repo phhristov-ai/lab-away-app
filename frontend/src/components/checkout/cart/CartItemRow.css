@@ -41,21 +41,18 @@ tbody {
   border: 1px solid var(--primary-color)
 }
 
-@media (max-width: 768px) {
-  table,
-  thead,
-  tbody,
-  th,
-  td,
-  tr {
-    display: block;
-  }
+.cell-label {
+  display: none;
+}
 
-  thead {
+@media (max-width: 768px) {
+
+  /* Hide headers only for mobile-card tables */
+  .mobile-card-table thead {
     display: none;
   }
 
-  tbody {
+  .mobile-card-table tbody {
     border: 1px solid var(--primary-color);
     border-radius: 6px;
     padding: 10px;
@@ -65,66 +62,74 @@ tbody {
     background-color: var(--background-color);
   }
 
-  td {
+  .mobile-card-table td {
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
-    padding: 10px 0;
+    padding: 10px;
     border: none;
   }
 
-  td::before {
-    content: attr(data-label);
+  .mobile-card-table .cell-label {
+    display: inline-block;
     font-weight: bold;
     color: #555;
     flex-basis: 40%;
     flex-shrink: 0;
     padding-right: 10px;
-
   }
 
-  .product-cell {
+  .mobile-card-table .product-cell {
     display: flex;
     flex-direction: column;
     gap: 5px;
   }
 
-  .product-info {
+  .mobile-card-table .product-info {
     margin-top: 0;
   }
 
-  tr:last-child {
+  .mobile-card-table tr:last-child {
     margin-bottom: 0;
   }
 
-  .totals-table {
+  .mobile-card-table.totals-table {
     width: 100%;
     border-collapse: collapse;
     background-color: var(--background-color);
   }
 
-  .totals-table thead {
-    display: none;
-  }
-
-  .totals-table tbody tr {
+  .mobile-card-table.totals-table tbody tr {
     display: flex;
     justify-content: space-between;
-    padding: 8px 0;
+    padding: 8px;
   }
 
-  .totals-table tbody td {
+  .mobile-card-table.totals-table tbody td {
     display: inline-block;
     width: auto;
     padding: 0;
     margin: 0;
   }
 
-  .totals-table tbody td:first-child {
+  .mobile-card-table.totals-table tbody td:first-child {
     font-weight: bold;
   }
 
-  .totals-table tbody td:last-child {
+  .mobile-card-table.totals-table tbody td:last-child {
     text-align: right;
+  }
+
+  .mobile-card-table .cell-value {
+    margin-left: auto;
+    text-align: right;
+  }
+
+  .cart-items-table.mobile-card-table tbody tr {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .cart-items-table.mobile-card-table tbody tr:last-child {
+    border-bottom: none;
   }
 }

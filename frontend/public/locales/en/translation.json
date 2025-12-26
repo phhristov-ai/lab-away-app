@@ -128,6 +128,7 @@
     },
     "shipping": {
       "title": "Shipping Details",
+      "description": "Please provide your shipping and billing information to complete your purchase.",
       "fields": {
         "fullName": "Full name",
         "country": "Country",
@@ -143,8 +144,8 @@
       "title": "Your Tests",
       "inclVat": "(incl. VAT)",
       "columns": {
-        "product": "PRODUCT",
-        "title": "TITLE",
+        "product": "Product",
+        "title": "Title",
         "price": "Price",
         "quantity": "Quantity",
         "subtotal": "Subtotal",

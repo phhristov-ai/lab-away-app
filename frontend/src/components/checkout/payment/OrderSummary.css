@@ -17,6 +17,10 @@
   border-collapse: collapse;
 }
 
+.order-summary-table tbody {
+  border: none;
+}
+
 .order-summary-table td {
   padding: 5px;
   font-size: 16px;
@@ -51,10 +55,4 @@
 
 .remove-button-container {
   text-align: center;
-}
-
-@media (max-width: 768px) {
-  .order-summary-item td {
-    border: none;
-  }
 }

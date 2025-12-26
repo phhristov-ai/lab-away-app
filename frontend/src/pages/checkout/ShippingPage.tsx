@@ -27,8 +27,8 @@ const ShippingPage = () => {
   const { shippingData, billingData } = useCheckout();
   const { enrichedItems, subtotalValue, shippingCost, total } = useCheckoutSummary();
 
-  const pageTitle = t('shipping.title') || "Shipping Information";
-  const pageDescription = t('shipping.description') || "Please provide your shipping and billing information to complete your purchase.";
+  const pageTitle = t('checkout.shipping.title') || "Shipping Information";
+  const pageDescription = t('checkout.shipping.description') || "Please provide your shipping and billing information to complete your purchase.";
 
   return (
     <>
