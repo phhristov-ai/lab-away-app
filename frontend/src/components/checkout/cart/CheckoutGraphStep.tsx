@@ -1,4 +1,3 @@
-// CheckoutStep.tsx
 import React from 'react';
 import './CheckoutGraph.css';
 

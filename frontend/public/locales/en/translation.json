@@ -139,7 +139,7 @@
       "useDifferentBilling": "Use a different billing address?"
     },
     "cart": {
-      "freeShipping" : "FREE",
+      "freeShipping": "FREE",
       "title": "Your Tests",
       "inclVat": "(incl. VAT)",
       "columns": {
@@ -168,7 +168,7 @@
         "cardNumber": "Card Number",
         "expiryDate": "Expiry Date",
         "cvc": "CVC",
-        "placeOrder": "Place Order"
+        "placeOrder": "Complete Secure Payments"
       },
       "paypal": {
         "methodLabel": "PayPal"
@@ -184,7 +184,7 @@
     "actions": {
       "next": "Next",
       "back": "Back",
-      "placeOrder": "Place Order",
+      "placeOrder": "Complete Secure Payment",
       "continue": "Continue"
     }
   },
@@ -193,33 +193,27 @@
     "sections": {
       "areaTitle": "Delivery area",
       "areaText": "We currently ship exclusively within Europe. Orders from outside Europe cannot be processed.",
-
       "shippingTitle": "Shipping costs",
       "shippingText": "We offer free delivery for all orders within Europe. No shipping or handling fees apply.",
-
       "timesTitle": "Delivery times",
       "timesText": "Our home test kits usually arrive within 1–2 business days after order confirmation. Please note that there is no delivery on Sundays or public holidays.",
-
       "combinedTitle": "Orders with different delivery times",
       "combinedText": "If you have ordered items with different delivery times, we will send the goods in one shipment unless a different arrangement has been made. In this case, the delivery time is determined by the item with the longest delivery time in your order.",
-
       "contactTitle": "Questions?",
       "contactText": "If you have any questions, feel free to contact us."
     }
   },
   "privacy": {
     "title": "Privacy Policy",
-
     "section1": {
       "title": "General Notice and Responsible Entity",
       "paragraphs": [
-        "The controller responsible for the processing of personal data on this website is Gryphone Health Solutions EOOD.",
+        "The controller responsible for the processing of personal data on this website is Gryphone Health Solutions LLC.",
         "Address: 34, Evlogi Georgiev Str., 9000 Varna, Bulgaria",
         "Email: sales@lab-away.com",
         "The controller decides alone or jointly with others on the purposes and means of processing personal data (e.g., name, contact details)."
       ]
     },
-
     "section2": {
       "title": "Consent and Withdrawal",
       "paragraphs": [
@@ -228,7 +222,6 @@
         "The legality of processing before withdrawal remains unaffected."
       ]
     },
-
     "section3": {
       "title": "Rights of Data Subjects",
       "paragraphs": [
@@ -240,8 +233,7 @@
         "Right to access, correction, blocking, or deletion of your data"
       ]
     },
-
-     "section4": {
+    "section4": {
       "title": "Data Transmission and Server Logs",
       "paragraphs": [
         "Server logs automatically record information sent by your browser, including:"
@@ -259,7 +251,6 @@
         "No merging with other data sources occurs."
       ]
     },
-
     "section5": {
       "title": "Order Processing & Payments",
       "paragraphs": [
@@ -325,7 +316,6 @@
         "You can unsubscribe at any time using the link in every email."
       ]
     },
-
     "section11": {
       "title": "Web Fonts",
       "paragraphs": [
@@ -335,7 +325,6 @@
         "Legal basis: Art. 6(1)(f) GDPR."
       ]
     },
-
     "section12": {
       "title": "Data Retention",
       "paragraphs": [
@@ -344,7 +333,6 @@
         "Upon withdrawal of consent, non-essential data will be deleted."
       ]
     },
-
     "section13": {
       "title": "Changes to the Privacy Policy",
       "paragraphs": [
@@ -365,10 +353,9 @@
     "section2": {
       "title": "§2 Retention of Title",
       "paragraphs": [
-        "Gryphone Health Solutions EOOD retains ownership of all goods until full payment of the purchase price has been received."
+        "Gryphone Health Solutions LLC retains ownership of all goods until full payment of the purchase price has been received."
       ]
     },
-
     "section3": {
       "title": "§3 Prices, Shipping Costs, and Payment",
       "paragraphs": [
@@ -398,11 +385,10 @@
         "Risk of accidental loss or deterioration passes to the buyer upon handover of the goods."
       ]
     },
-
     "section5": {
       "title": "§5 Conclusion of Contract",
       "paragraphs": [
-        "Orders via lab-away.com are concluded with Gryphone Health Solutions EOOD.",
+        "Orders via lab-away.com are concluded with Gryphone Health Solutions LLC.",
         "Product listings are not legally binding offers, but invitations to place an order.",
         "The contract is formed once the consumer successfully completes the order process and receives an order confirmation by email.",
         "The order is completed in the following steps:"
@@ -412,7 +398,6 @@
         "Click the “Order” button",
         "Check shopping cart",
         "Click “Checkout”",
-        "Log in (optional; anonymous shopping possible)",
         "Enter required information",
         "Complete secure payment"
       ],
@@ -420,7 +405,6 @@
         "Consumers may correct errors or cancel the order before final submission by using the browser back button or closing the browser."
       ]
     },
-
     "section6": {
       "title": "§6 Right of Withdrawal (14 days for consumers)",
       "paragraphs": [
@@ -436,11 +420,10 @@
         "If the goods are opened or used beyond necessary inspection, the consumer may be liable for diminished value."
       ]
     },
-
     "section7": {
       "title": "§7 Sample Withdrawal Form",
       "form": [
-        "To: Gryphone Health Solutions EOOD",
+        "To: Gryphone Health Solutions LLC",
         "Email: <email></email>",
         "",
         "I/We (*) hereby revoke the contract for the purchase of the following goods (*) / provision of services (*): ___________________________",
@@ -457,8 +440,8 @@
   "contact": {
     "title": "Contact",
     "hospital": {
-      "label": "Hospital",
-      "name": "Gryphone Health Solutions EOOD",
+      "label": "Company",
+      "name": "Gryphone Health Solutions LLC",
       "address": {
         "street": "30-34, Evlogi Georgiev str.",
         "city": "Varna",
@@ -495,7 +478,11 @@
     "title": "Newsletter Subscription"
   },
   "blog": {
-    "title": "Blog"
+    "title": "Blog",
+    "seo": {
+      "description": "Read insightful articles about health, drug tests, fertility tests, and more at Lab-Away's blog. Stay informed and stay healthy.",
+      "structuredDescription": "Explore Lab-Away's blog for health tips, insights on drug tests, fertility tests, and more. Stay informed with expert advice."
+    }
   },
   "shop": {
     "title": "CERTIFIED HOME TESTS",
@@ -549,7 +536,8 @@
     "banner": {
       "title": "Revolutionizing At-Home Testing: Instant Results Without Sending Samples – Setting Us Apart from EverlyWell",
       "subtitle": "Unlock New Paths to Optimal Health"
-    }
+    },
+    "subtitle" : "That's how easy it is to get tested at home"
   },
   "successPage": {
     "title": "Thank You",
@@ -578,5 +566,27 @@
       "invalidEmail": "Email is invalid",
       "invalidPhone": "Phone is invalid"
     }
-  }
+  },
+  "cookie": {
+    "message": "We are using cookies to give you the best experience on our website.",
+    "info": "You can find out more about which cookies we use or change preferences in",
+    "settings": "settings",
+    "accept": "Accept",
+    "enabled": "Enabled",
+    "disabled": "Disabled"
+  },
+  "gdpr": {
+    "privacyOverview": "Privacy Overview",
+    "necessaryCookies": "Strictly Necessary Cookies",
+    "overviewText": "Strictly Necessary Cookie should be enabled at all times so that we can save your preferences for cookie settings.",
+    "necessaryText": "If you disable this cookie, we will not be able to save your preferences. This means that every time you visit this website you will need to enable or disable cookies again.",
+    "analyticsCookies": "Analytics Cookies",
+    "marketingCookies": "Marketing Cookies",
+    "enableAll": "Enable All",
+    "saveSettings": "Save Settings",
+    "close": "Close GDPR Popup"
+  },
+  "misc": {
+    "scrollToTop": "Scroll to top"
+    }
 }

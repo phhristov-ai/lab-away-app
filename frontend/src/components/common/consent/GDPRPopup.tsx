@@ -4,6 +4,7 @@ import gdprLogo from '../../../assets/icons/gdpr-logo.our_.blue_.updated.webp';
 import LabAwayButton from '../button/LabAwayButton';
 import CookieToggle from './CookieToggle';
 import { ConsentState } from '../../../context/consent/types';
+import { useTranslation } from 'react-i18next';
 
 interface GDPRPopupProps {
     onClose: () => void;
@@ -20,7 +21,8 @@ const GDPRPopup: React.FC<GDPRPopupProps> = ({ onClose, onConsentUpdate }) => {
 
     const [analyticsEnabled, setAnalyticsEnabled] = useState(false);
     const [marketingEnabled, setMarketingEnabled] = useState(false);
-
+    const { t } = useTranslation();
+    
     const handleInteraction = () => {
         const updatedConsent: ConsentState = { hasInteracted: true };
         onConsentUpdate(updatedConsent);
@@ -33,7 +35,7 @@ const GDPRPopup: React.FC<GDPRPopupProps> = ({ onClose, onConsentUpdate }) => {
                 <div className="gdpr-logo-mobile">
                     <img src={gdprLogo} alt="GDPR Logo" className="gdpr-logo" />
                 </div>
-                <button className="gdpr-close-button" onClick={onClose} aria-label="Close GDPR Popup">
+                <button className="gdpr-close-button" onClick={onClose} aria-label={t("gdpr.close")}>
                     &times;
                 </button>
 
@@ -46,14 +48,14 @@ const GDPRPopup: React.FC<GDPRPopupProps> = ({ onClose, onConsentUpdate }) => {
                         className={`gdpr-tab ${activeTab === 'overview' ? 'active' : ''}`}
                         onClick={() => setActiveTab('overview')}
                     >
-                        Privacy Overview
+                        {t("gdpr.privacyOverview")}
                     </button>
                     <button
                         type="button"
                         className={`gdpr-tab ${activeTab === 'necessary' ? 'active' : ''}`}
                         onClick={() => setActiveTab('necessary')}
                     >
-                        Strictly Necessary Cookies
+                        {t("gdpr.necessaryCookies")}
                     </button>
                 </div>
 
@@ -61,9 +63,9 @@ const GDPRPopup: React.FC<GDPRPopupProps> = ({ onClose, onConsentUpdate }) => {
                     <div className="gdpr-content">
                         {(activeTab === 'overview' || showNecessaryMobile) && (
                             <div>
-                                <h2 className="gdpr-section-title">Privacy Overview</h2>
+                                <h2 className="gdpr-section-title">{t("gdpr.privacyOverview")}</h2>
                                 <p>
-                                    Strictly Necessary Cookie should be enabled at all times so that we can save your preferences for cookie settings.
+                                    {t("gdpr.overviewText")}
                                 </p>
                             </div>
                         )}
@@ -72,7 +74,7 @@ const GDPRPopup: React.FC<GDPRPopupProps> = ({ onClose, onConsentUpdate }) => {
                             className={`gdpr-mobile-title ${showNecessaryMobile ? 'open' : ''}`}
                             onClick={() => setShowNecessaryMobile((prev) => !prev)}
                         >
-                            Strictly Necessary Cookies
+                            {t("gdpr.necessaryCookies")}
                         </button>
 
                         {(activeTab === 'necessary' || showNecessaryMobile) && (
@@ -80,17 +82,17 @@ const GDPRPopup: React.FC<GDPRPopupProps> = ({ onClose, onConsentUpdate }) => {
                                 className={`gdpr-section-collapsible ${showNecessaryMobile ? 'active' : ''
                                     }`}
                             >
-                                <h2 className='gdpr-header-desktop'>Strictly Necessary Cookies</h2>
+                                <h2 className='gdpr-header-desktop'>{t("gdpr.necessaryCookies")}</h2>
                                 <p>
-                                    If you disable this cookie, we will not be able to save your preferences. This means that every time you visit this website you will need to enable or disable cookies again.
+                                    {t("gdpr.necessaryText")}
                                 </p>
                                 <CookieToggle
-                                    label="Analytics Cookies"
+                                    label={t("gdpr.analyticsCookies")}
                                     value={analyticsEnabled}
                                     onChange={() => setAnalyticsEnabled(prev => !prev)}
                                 />
                                 <CookieToggle
-                                    label="Marketing Cookies"
+                                    label={t("gdpr.marketingCookies")}
                                     value={marketingEnabled}
                                     onChange={() => setMarketingEnabled(prev => !prev)}
                                 />
@@ -102,10 +104,10 @@ const GDPRPopup: React.FC<GDPRPopupProps> = ({ onClose, onConsentUpdate }) => {
                         <hr className="gdpr-separator" />
                         <div className="gdpr-buttons">
                             <LabAwayButton className="enable-button" onClick={handleInteraction}>
-                                Enable All
+                                {t("gdpr.enableAll")}
                             </LabAwayButton>
                             <LabAwayButton className="save-button" onClick={handleInteraction}>
-                                Save Settings
+                                {t("gdpr.saveSettings")}
                             </LabAwayButton>
                         </div>
                     </div>

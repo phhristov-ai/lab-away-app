@@ -52,34 +52,38 @@ const BlogPostPage: React.FC = () => {
   return (
     <div className="blog-post-container">
 
-    {/* Helmet */}
-    {slug !== "new" && post && (
       <Helmet>
-        <title>{post.title} - Lab-Away Blog</title>
+        <title>
+          {(post?.title ?? "Blog Post")} - Lab-Away Blog
+        </title>
+
         <meta
           name="description"
           content={
-            post.excerpt ||
+            post?.excerpt ??
             "Read the latest blog post on Lab-Away, your trusted health testing platform."
           }
         />
-        <meta property="og:title" content={post.title} />
+
+        <meta property="og:title" content={post?.title ?? "Lab-Away Blog"} />
+
         <meta
           property="og:description"
           content={
-            post.excerpt || "Read the latest blog post on Lab-Away."
+            post?.excerpt ?? "Read the latest blog post on Lab-Away."
           }
         />
+
         <meta
           property="og:url"
           content={`https://www.lab-away.com/blog/${slug}`}
         />
+
         <meta
           property="og:image"
-          content={post.imageUrl || "default-image.jpg"}
+          content={post?.imageUrl ?? "default-image.jpg"}
         />
       </Helmet>
-    )}
 
       <div className="post-main">
         {isAdmin ? (

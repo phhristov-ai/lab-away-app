@@ -1,5 +1,6 @@
 import React from 'react';
 import './ThreeColumnLayout.css';
+import { useTranslation } from 'react-i18next';
 
 interface ColumnContent {
   icon: string;
@@ -12,15 +13,15 @@ interface ThreeColumnLayoutProps {
 }
 
 const ThreeColumnLayout: React.FC<ThreeColumnLayoutProps> = ({ columns }) => {
-
+  const { t } = useTranslation();
   return (
     <>
-      <h2 className="three-column-title">That's how easy it is to get tested at home</h2>
+      <h2 className="three-column-title">{t("productPage.subtitle")}</h2>
       <div className="three-column-container">
         {columns.map((column) => (
           <div key={column.header} className="column">
             <div className="icon">
-              <img src={column.icon} alt={column.header} className="icon-image" loading="lazy"/>
+              <img src={column.icon} alt={column.header} className="icon-image" loading="lazy" />
             </div>
             <div className="header">{column.header}</div>
             <div className="description">{column.description}</div>

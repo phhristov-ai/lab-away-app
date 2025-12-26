@@ -174,7 +174,6 @@ export function trackViewBlogPost(
 
 
 export function trackScrollBlogPost(postId: string, title: string, scrollDepth: number) {
-  console.log("Scroll");
   trackGAEvent('scroll_blog_post', {
     page_title: title,
     post_id: postId,

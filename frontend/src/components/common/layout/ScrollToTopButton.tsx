@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import './ScrollToTopButton.css';
+import { useTranslation } from 'react-i18next';
 
 const ScrollToTopButton = () => {
     const [isVisible, setIsVisible] = useState(false);
+    const { t } = useTranslation();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -22,7 +24,7 @@ const ScrollToTopButton = () => {
             <button
                 className="scroll-to-top-button"
                 onClick={handleClick}
-                aria-label="Scroll to top"
+                aria-label={t("misc.scrollToTop")}
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"

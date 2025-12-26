@@ -19,7 +19,12 @@ const ScrollAnimatedArrows: React.FC = () => {
   const MAX_ARROW_HEIGHT = 180;
   const ANIMATION_DURATION = 400;
 
-  const arrowHeights = useArrowAnimation(sectionRefs, MAX_ARROW_HEIGHT, ANIMATION_DURATION);
+  const arrowHeights = useArrowAnimation(
+    sectionRefs,
+    MAX_ARROW_HEIGHT,
+    ANIMATION_DURATION
+  );
+
   const blueArrowHeights = arrowHeights.map((height) => `${height}px`);
 
   return (
