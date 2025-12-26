@@ -50,7 +50,7 @@ public class ImageService {
     private void processImageForSize(byte[] fileBytes, ByteArrayOutputStream outputStream, int width, int height) throws IOException {
         BufferedImage originalImage = readImage(fileBytes);
 
-        BufferedImage resizedImage = resizeImage(originalImage, width, height);
+        BufferedImage resizedImage = resizeImagePreservingAspectRatio(originalImage, width, height);
 
         convertToWebP(resizedImage, outputStream);
     }
@@ -77,13 +77,22 @@ public class ImageService {
         }
     }
 
-    private BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {
-        Image resizedImage = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        BufferedImage resizedBufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = resizedBufferedImage.createGraphics();
-        g.drawImage(resizedImage, 0, 0, null);
+    private BufferedImage resizeImagePreservingAspectRatio(BufferedImage originalImage, int targetWidth, int targetHeight) {
+        int originalWidth = originalImage.getWidth();
+        int originalHeight = originalImage.getHeight();
+
+        double scale = Math.min((double) targetWidth / originalWidth, (double) targetHeight / originalHeight);
+
+        int newWidth = (int) (originalWidth * scale);
+        int newHeight = (int) (originalHeight * scale);
+
+        BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = resizedImage.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g.drawImage(originalImage, 0, 0, newWidth, newHeight, null);
         g.dispose();
-        return resizedBufferedImage;
+
+        return resizedImage;
     }
 
     private void convertToWebP(BufferedImage image, ByteArrayOutputStream outputStream) throws IOException {

@@ -168,7 +168,7 @@
         "cardNumber": "Card Number",
         "expiryDate": "Expiry Date",
         "cvc": "CVC",
-        "placeOrder": "Complete Secure Payments"
+        "placeOrder": "Complete Secure Payment"
       },
       "paypal": {
         "methodLabel": "PayPal"

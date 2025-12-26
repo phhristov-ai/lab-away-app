@@ -17,6 +17,7 @@
     display: flex;
     gap: 1rem;
     margin-bottom: 1.5rem;
+    flex-direction: column;
   }
 
   .payment-method {

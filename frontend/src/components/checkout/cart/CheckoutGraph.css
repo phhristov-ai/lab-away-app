@@ -85,13 +85,6 @@
 
 @media (max-width: 768px) {
   .checkout-graph-container {
-    width: 100%;
-    transform: none;
-  }
-
-  .checkout-text-element:nth-child(1),
-  .checkout-text-element:nth-child(2),
-  .checkout-text-element:nth-child(3) {
-    transform: none;
+    display: none;
   }
 }
