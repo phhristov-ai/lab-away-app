@@ -37,8 +37,11 @@
   font-weight: normal;
 }
 
-@media (max-width: 768px) {
+tbody {
+  border: 1px solid var(--primary-color)
+}
 
+@media (max-width: 768px) {
   table,
   thead,
   tbody,
