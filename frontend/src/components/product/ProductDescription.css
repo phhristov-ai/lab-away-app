@@ -2,3 +2,29 @@
     font-size: 16px;
     color: #333;
 }
+
+
+.product-desc-text {
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+
+.product-desc-list {
+  line-height: 1.8;
+  margin-bottom: 16px;
+  padding-left: 20px; /* default list indentation */
+}
+
+  .feature-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+
+   .feature-item {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    padding-top: 15px;
+  }

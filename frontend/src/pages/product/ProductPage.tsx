@@ -102,7 +102,6 @@ const ProductPage: React.FC = () => {
               onCloseSuccess={() => setShowSuccessModal(false)}
             />
           )}
-          <VerticalFeatureList items={featureItems} />
           <ProductDescription
             description={isFullProduct(product) ? description : ''}
             isAdmin={isAdmin}

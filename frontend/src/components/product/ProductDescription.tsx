@@ -18,7 +18,7 @@ const ProductDescription: React.FC<ProductDescriptionProps> = ({
         className="product-description-input"
         value={description}
         onChange={(e) => onDescriptionChange?.(e.target.value)}
-        rows={6}
+        rows={20}
         placeholder="Enter product description with optional HTML"
       />
     );
