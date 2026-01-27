@@ -2,7 +2,6 @@ package com.labaway.backend.controller.product;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.labaway.backend.controller.product.ProductController;
 import com.labaway.backend.dto.category.CategoryDto;
 import com.labaway.backend.dto.image.ImageUrls;
 import com.labaway.backend.dto.product.main.*;
@@ -64,7 +63,7 @@ class ProductControllerTest {
 
     @Test
     void getAll_shouldReturnListOfProductPreviews() {
-        ProductPreviewDto previewDto = createProductPreviewDto("Test Product", "test-product", BigDecimal.TEN);
+        ProductPreviewDto previewDto = createProductPreviewDto("Test Product", "test-product", BigDecimal.TEN, true);
 
         when(productService.getAllProductPreviews(Language.EN)).thenReturn(List.of(previewDto));
 
@@ -74,6 +73,7 @@ class ProductControllerTest {
         assertThat(result.get(0).getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
         assertThat(result.get(0).getImageUrls().getMedium()).isEqualTo("http://example.com/image-medium.jpg");
         assertThat(result.get(0).getImageUrls().getLarge()).isEqualTo("http://example.com/image-large.jpg");
+        assertThat(result.get(0).isActive()).isTrue();
 
         verify(productService, times(1)).getAllProductPreviews(Language.EN);
     }
@@ -97,6 +97,7 @@ class ProductControllerTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().getImages()).hasSize(1);
+        assertThat(response.getBody().isActive()).isTrue();
 
         ProductImageDto dtoImage = response.getBody().getImages().get(0);
         assertThat(dtoImage.getImageUrlSmall()).isEqualTo("http://example.com/image-small.jpg");
@@ -170,8 +171,8 @@ class ProductControllerTest {
 
     @Test
     void getRandomProducts_shouldReturnListOfProductPreviews() {
-        ProductPreviewDto previewDto1 = createProductPreviewDto("Random Product 1", "random-product-1", BigDecimal.valueOf(99.99));
-        ProductPreviewDto previewDto2 = createProductPreviewDto("Random Product 2", "random-product-2", BigDecimal.valueOf(149.99));
+        ProductPreviewDto previewDto1 = createProductPreviewDto("Random Product 1", "random-product-1", BigDecimal.valueOf(99.99), true);
+        ProductPreviewDto previewDto2 = createProductPreviewDto("Random Product 2", "random-product-2", BigDecimal.valueOf(149.99), false);
 
         when(productService.getRandomProductPreviews(Language.EN)).thenReturn(List.of(previewDto1, previewDto2));
 
@@ -180,17 +181,20 @@ class ProductControllerTest {
         assertThat(result).hasSize(2);
         assertThat(result.get(0).getSlug()).isEqualTo("random-product-1");
         assertThat(result.get(0).getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
+        assertThat(result.get(0).isActive()).isTrue();
         assertThat(result.get(1).getSlug()).isEqualTo("random-product-2");
         assertThat(result.get(1).getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
+        assertThat(result.get(1).isActive()).isFalse();
 
         verify(productService, times(1)).getRandomProductPreviews(Language.EN);
     }
 
-    private static ProductPreviewDto createProductPreviewDto(String name, String slug, BigDecimal price) {
+    private static ProductPreviewDto createProductPreviewDto(String name, String slug, BigDecimal price, boolean active) {
         return ProductPreviewDto.builder()
                 .name(name)
                 .slug(slug)
                 .price(price)
+                .active(active)
                 .imageUrls(ImageUrls.builder()
                         .small("http://example.com/image-small.jpg")
                         .medium("http://example.com/image-medium.jpg")
@@ -208,6 +212,7 @@ class ProductControllerTest {
         ProductDto updatedProductDto = ProductDto.builder()
                 .slug(slug)
                 .name("Updated Product")
+                .active(true)
                 .build();
 
         when(productService.updateProduct(anyString(), any(ProductPayloadDto.class), aryEq(mockFiles))).thenReturn(updatedProductDto);
@@ -239,8 +244,8 @@ class ProductControllerTest {
     @Test
     void getRandomProductsByCategory_withSlug_shouldReturnListOfProductPreviews() {
         String categorySlug = "health";
-        ProductPreviewDto previewDto1 = createProductPreviewDto("Health Product 1", "health-product-1", BigDecimal.valueOf(59.99));
-        ProductPreviewDto previewDto2 = createProductPreviewDto("Health Product 2", "health-product-2", BigDecimal.valueOf(79.99));
+        ProductPreviewDto previewDto1 = createProductPreviewDto("Health Product 1", "health-product-1", BigDecimal.valueOf(59.99), false);
+        ProductPreviewDto previewDto2 = createProductPreviewDto("Health Product 2", "health-product-2", BigDecimal.valueOf(79.99), true);
 
         when(productService.getRandomProductPreviewsByCategorySlug(categorySlug, Language.EN))
                 .thenReturn(List.of(previewDto1, previewDto2));
@@ -250,16 +255,18 @@ class ProductControllerTest {
         assertThat(result).hasSize(2);
         assertThat(result.get(0).getSlug()).isEqualTo("health-product-1");
         assertThat(result.get(0).getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
+        assertThat(result.get(0).isActive()).isFalse();
         assertThat(result.get(1).getSlug()).isEqualTo("health-product-2");
         assertThat(result.get(1).getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
+        assertThat(result.get(1).isActive()).isTrue();
 
         verify(productService, times(1)).getRandomProductPreviewsByCategorySlug(categorySlug, Language.EN);
     }
 
     @Test
     void getRandomProductsByCategory_withoutSlug_shouldReturnListOfRandomProductPreviews() {
-        ProductPreviewDto previewDto1 = createProductPreviewDto("Random Product 1", "random-product-1", BigDecimal.valueOf(99.99));
-        ProductPreviewDto previewDto2 = createProductPreviewDto("Random Product 2", "random-product-2", BigDecimal.valueOf(149.99));
+        ProductPreviewDto previewDto1 = createProductPreviewDto("Random Product 1", "random-product-1", BigDecimal.valueOf(99.99), true);
+        ProductPreviewDto previewDto2 = createProductPreviewDto("Random Product 2", "random-product-2", BigDecimal.valueOf(149.99), false);
 
         when(productService.getRandomProductPreviewsByCategorySlug(null, Language.EN))
                 .thenReturn(List.of(previewDto1, previewDto2));
@@ -269,8 +276,10 @@ class ProductControllerTest {
         assertThat(result).hasSize(2);
         assertThat(result.get(0).getSlug()).isEqualTo("random-product-1");
         assertThat(result.get(0).getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
+        assertThat(result.get(0).isActive()).isTrue();
         assertThat(result.get(1).getSlug()).isEqualTo("random-product-2");
         assertThat(result.get(1).getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
+        assertThat(result.get(1).isActive()).isFalse();
 
         verify(productService, times(1)).getRandomProductPreviewsByCategorySlug(null, Language.EN);
     }
@@ -311,6 +320,7 @@ class ProductControllerTest {
                 .categories(categoryDtos)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
+                .active(true)
                 .images(images)
                 .build();
     }

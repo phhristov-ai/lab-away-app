@@ -46,4 +46,7 @@ public class ProductDto {
     @NotNull
     private List<ProductImageDto> images;
 
+    @NotNull
+    private boolean active;
+
 }

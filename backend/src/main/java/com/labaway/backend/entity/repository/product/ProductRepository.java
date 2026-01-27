@@ -16,7 +16,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     @Query(value = "SELECT * FROM product_preview_view WHERE language = :language", nativeQuery = true)
     List<ProductPreviewProjection> findAllProductPreviewsByLanguage(@Param("language") String language);
 
-    @Query(value = "SELECT * FROM product_preview_view WHERE language = :language ORDER BY RAND() LIMIT 3", nativeQuery = true)
+    @Query(value = "SELECT * FROM product_preview_view WHERE language = :language AND active = true ORDER BY RAND() LIMIT 3", nativeQuery = true)
     List<ProductPreviewProjection> findRandomProductPreviewsByLanguage(@Param("language") String language);
 
     @Query(value = """

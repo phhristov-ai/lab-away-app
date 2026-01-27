@@ -102,6 +102,7 @@ class ProductServiceTest {
         assertThat(result.getSlug()).isEqualTo("test-product");
         assertThat(result.getImages()).hasSize(1);
         assertThat(result.getImages().get(0).getImageUrlSmall()).isEqualTo("http://example.com/image-small.jpg");
+        assertThat(result.isActive()).isTrue();
 
         verify(categoryRepository).findBySlugInAndLanguage(createDto.getCategories(), Language.EN);
         verify(productRepository).save(product);
@@ -116,6 +117,7 @@ class ProductServiceTest {
                 .price(BigDecimal.valueOf(100))
                 .stock(10)
                 .images(images)
+                .active(true)
                 .categories(new ArrayList<>())
                 .build();
     }
@@ -145,6 +147,7 @@ class ProductServiceTest {
                 createMockMultipartFile("image.jpg", "image content")
         };
         mockFindProductAndCategories(slug, createDto.getCategories(), product, categories);
+
         mockSaveAndTransform(product, expectedDto);
         when(productTransformer.fromCreateDto(any(), any())).thenReturn(product);
         ProductDto result = productService.updateProduct(slug, createDto, mockFiles);
@@ -214,7 +217,9 @@ class ProductServiceTest {
 
         assertThat(result).hasSize(2);
         assertThat(result.get(0).getSlug()).isEqualTo("slug-1");
+        assertThat(result.get(0).isActive()).isTrue();
         assertThat(result.get(1).getSlug()).isEqualTo("slug-2");
+        assertThat(result.get(1).isActive()).isTrue();
 
         verify(productRepository).findAllProductPreviewsByLanguage("EN");
     }
@@ -234,7 +239,9 @@ class ProductServiceTest {
 
         assertThat(result).hasSize(2);
         assertThat(result.get(0).getSlug()).isEqualTo("slug-1");
+        assertThat(result.get(0).isActive()).isTrue();
         assertThat(result.get(1).getSlug()).isEqualTo("slug-2");
+        assertThat(result.get(1).isActive()).isTrue();
 
         verify(productRepository).findRandomProductPreviewsByLanguage(LANGUAGE_EN_CODE);
     }
@@ -256,7 +263,9 @@ class ProductServiceTest {
 
         assertThat(result).hasSize(2);
         assertThat(result.get(0).getSlug()).isEqualTo("slug-1");
+        assertThat(result.get(0).isActive()).isTrue();
         assertThat(result.get(1).getSlug()).isEqualTo("slug-2");
+        assertThat(result.get(1).isActive()).isTrue();
 
         verify(categoryRepository).existsBySlug(slug);
         verify(productRepository).findRandomByLanguageAndCategory(LANGUAGE_EN_CODE, slug);
@@ -277,7 +286,9 @@ class ProductServiceTest {
 
         assertThat(result).hasSize(2);
         assertThat(result.get(0).getSlug()).isEqualTo("random-1");
+        assertThat(result.get(0).isActive()).isTrue();
         assertThat(result.get(1).getSlug()).isEqualTo("random-2");
+        assertThat(result.get(1).isActive()).isTrue();
 
         verify(productRepository).findRandomProductPreviewsByLanguage(LANGUAGE_EN_CODE);
         verifyNoInteractions(categoryRepository);
@@ -302,6 +313,7 @@ class ProductServiceTest {
                 .name(proj.getName())
                 .slug(proj.getSlug())
                 .price(proj.getPrice())
+                .active(proj.getActive())
                 .imageUrls(mapImageUrls(proj.getImageUrlSmall(), proj.getImageUrlMedium(), proj.getImageUrlLarge()))
                 .categories(createCategoryDtos())
                 .build();
@@ -351,6 +363,7 @@ class ProductServiceTest {
         when(mockProjection.getName()).thenReturn(name);
         when(mockProjection.getSlug()).thenReturn(slug);
         when(mockProjection.getPrice()).thenReturn(BigDecimal.valueOf(99.99));
+        when(mockProjection.getActive()).thenReturn(true);
 
         when(mockProjection.getImageUrlSmall()).thenReturn("http://example.com/image-small.jpg");
         when(mockProjection.getImageUrlMedium()).thenReturn("http://example.com/image-medium.jpg");

@@ -12,9 +12,10 @@ type ProductDetailsProps = {
   image: string;
   slug: string;
   categories: Category[];
+  enabled: boolean;
 };
 
-const ProductDetails: React.FC<ProductDetailsProps> = ({ name, price, image, slug, categories }) => {
+const ProductDetails: React.FC<ProductDetailsProps> = ({ name, price, image, slug, categories, enabled }) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
 
@@ -35,6 +36,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ name, price, image, slu
         price={price}
         quantity={1}
         categories={categories}
+        enabled={enabled}
       />
     </div>
   );

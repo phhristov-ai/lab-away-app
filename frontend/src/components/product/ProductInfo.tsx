@@ -15,6 +15,7 @@ type ProductInfoProps = {
   categories: Category[];
   onTitleChange?: (newTitle: string) => void;
   onPriceChange?: (newPrice: number) => void;
+  enabled: boolean;
 };
 
 const ProductInfo: React.FC<ProductInfoProps> = ({
@@ -25,6 +26,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
   categories,
   onTitleChange,
   onPriceChange,
+  enabled
 }) => {
   const { renderTitle, renderPrice } = useProductInfo({
     title,
@@ -56,6 +58,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
           slug={slug}
           variant="secondary"
           categories={categories}
+          enabled={enabled}
         />
       </div>
     </div>

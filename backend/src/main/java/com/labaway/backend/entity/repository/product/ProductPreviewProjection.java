@@ -7,11 +7,10 @@ public interface ProductPreviewProjection {
     String getName();
     String getSlug();
     BigDecimal getPrice();
-
+    Boolean getActive();
     String getImageUrlSmall();
     String getImageUrlMedium();
     String getImageUrlLarge();
-
     String getCategories();
 }
 

@@ -16,4 +16,5 @@ public class ProductPreviewDto {
     private BigDecimal price;
     private ImageUrls imageUrls;
     private List<CategoryDto> categories;
+    private boolean active;
 }

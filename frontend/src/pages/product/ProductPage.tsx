@@ -5,7 +5,6 @@ import ProductInfo from '../../components/product/ProductInfo';
 import './ProductPage.css';
 import ThreeColumnLayout from '../../components/product/ThreeColumnLayout';
 import Accordion from '../../components/product/Accordion';
-import VerticalFeatureList from '../../components/product/VerticalFeatureList';
 import ImageTextSection from '../../components/common/layout/ImageTextSection';
 import ScientistImageSmall from '../../assets/images/product/Scientist_480.webp';
 import ScientistImageLarge from '../../assets/images/product/Scientist_768.webp';
@@ -16,6 +15,7 @@ import { t } from 'i18next';
 import CategorySelect from '../../components/admin/CategorySelect';
 import ProductDescription from '../../components/product/ProductDescription';
 import { Helmet } from 'react-helmet';
+import ProductAvailabilitySelect from '../../components/product/ProductAvailabilitySelect';
 
 const ProductPage: React.FC = () => {
   const {
@@ -39,12 +39,13 @@ const ProductPage: React.FC = () => {
     successMessage,
     faqItems,
     columns,
-    featureItems,
     allCategories,
     selectedCategories,
     handleCategoryChange,
     images,
-    setImages
+    setImages,
+    enabled,
+    setEnabled
   } = useProductPage();
 
 
@@ -59,7 +60,7 @@ const ProductPage: React.FC = () => {
         <meta name="description" content={description} />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
-          <meta property="og:image" content={images[0]?.imageUrlSmall || '/default-image.jpg'} />
+        <meta property="og:image" content={images[0]?.imageUrlSmall || '/default-image.jpg'} />
         <meta property="og:url" content={`https://mystore.com/product/${slug}`} />
       </Helmet>
 
@@ -73,6 +74,12 @@ const ProductPage: React.FC = () => {
         </div>
 
         <div className="product-info">
+          {isAdmin && (
+            <ProductAvailabilitySelect
+              enabled={enabled}
+              onChange={setEnabled}
+            />
+          )}
           {isAdmin && (
             <CategorySelect
               allCategories={allCategories}
@@ -88,6 +95,7 @@ const ProductPage: React.FC = () => {
             slug={product.slug}
             onTitleChange={setTitle}
             onPriceChange={setPrice}
+            enabled={enabled}
           />)}
           {isAdmin && (
             <AdminActionButtons

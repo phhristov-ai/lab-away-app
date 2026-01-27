@@ -25,6 +25,7 @@ public class ProductPayloadDto {
     @Min(value = 0, message = "Stock quantity cannot be negative")
     private Integer stock;
 
+    @NotNull
     private boolean active;
 
     @NotNull(message = "At least one category slug is required")

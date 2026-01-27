@@ -4,8 +4,8 @@ import ProductDetails from './ProductDetails';
 import { Link } from 'react-router-dom';
 import { ProductPreviewType } from '../../../types/ProductPreviewType';
 
-const Product: React.FC<ProductPreviewType> = ({ name, price, images, slug, categories, onClick }) => {
-  const product = { name, price, images, slug, categories };
+const Product: React.FC<ProductPreviewType> = ({ name, price, images, slug, categories, onClick, enabled }) => {
+  const product = { name, price, images, slug, categories, enabled };
 
 
   return (
@@ -30,6 +30,7 @@ const Product: React.FC<ProductPreviewType> = ({ name, price, images, slug, cate
         image={images?.[0]?.imageUrlSmall} 
         slug={slug}
         categories={categories}
+        enabled={enabled}
       />
     </div>
   );

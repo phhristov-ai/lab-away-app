@@ -32,6 +32,7 @@ public class ProductTransformer {
                 .price(product.getPrice())
                 .stock(product.getStock())
                 .description(translation.getDescription())
+                .active(product.isActive())
                 .categories(product.getCategories().stream()
                         .map(category -> categoryTransformer.toDto(category, language))
                         .toList())
@@ -112,6 +113,7 @@ public class ProductTransformer {
                 .slug(projection.getSlug())
                 .price(projection.getPrice())
                 .imageUrls(mapImageUrls(projection))
+                .active(projection.getActive())
                 .categories(jsonParsingUtils.parseCategoryList(projection.getCategories()))
                 .build();
     }

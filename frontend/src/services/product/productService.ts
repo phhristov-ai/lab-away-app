@@ -22,6 +22,7 @@ export type ProductPayloadDto = {
   categories: string[];
   translation: ProductTranslationDto;
   images: ProductImageDto[];
+  enabled: boolean;
 };
 
 export const fetchProducts = async () => {

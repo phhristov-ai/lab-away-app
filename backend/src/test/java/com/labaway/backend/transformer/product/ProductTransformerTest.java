@@ -11,8 +11,6 @@ import com.labaway.backend.entity.product.ProductTranslation;
 import com.labaway.backend.entity.repository.product.ProductPreviewProjection;
 import com.labaway.backend.enums.Language;
 import com.labaway.backend.transformer.category.CategoryTransformer;
-import com.labaway.backend.transformer.product.ProductImageTransformer;
-import com.labaway.backend.transformer.product.ProductTransformer;
 import com.labaway.backend.util.JsonParsingUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,6 +55,7 @@ class ProductTransformerTest {
         when(projection.getName()).thenReturn("Product 1");
         when(projection.getSlug()).thenReturn("slug-1");
         when(projection.getPrice()).thenReturn(BigDecimal.valueOf(99.99));
+        when(projection.getActive()).thenReturn(true);
         when(projection.getImageUrlSmall()).thenReturn("http://example.com/image-small.jpg");
         when(projection.getImageUrlMedium()).thenReturn("http://example.com/image-medium.jpg");
         when(projection.getImageUrlLarge()).thenReturn("http://example.com/image-large.jpg");
@@ -70,6 +69,7 @@ class ProductTransformerTest {
         assertThat(dto.getName()).isEqualTo("Product 1");
         assertThat(dto.getSlug()).isEqualTo("slug-1");
         assertThat(dto.getPrice()).isEqualTo(BigDecimal.valueOf(99.99));
+        assertThat(dto.isActive()).isTrue();
 
         assertThat(dto.getImageUrls()).isNotNull();
         assertThat(dto.getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
@@ -120,6 +120,7 @@ class ProductTransformerTest {
         assertThat(dto.getDescription()).isEqualTo(translation.getDescription());
         assertThat(dto.getSlug()).isEqualTo(product.getSlug());
         assertThat(dto.getImages()).hasSize(1);
+        assertThat(dto.isActive()).isTrue();
 
         ProductImageDto dtoImage = dto.getImages().get(0);
         assertThat(dtoImage.getImageUrlSmall()).isEqualTo(imageDto.getImageUrlSmall());
@@ -153,7 +154,6 @@ class ProductTransformerTest {
         Set<Category> categories = buildCategorySet();
 
         Product product = productTransformer.fromCreateDto(productPayloadDto, new ArrayList<>(categories));
-        System.out.println("Product created: " + product);
 
         assertBasicProductFieldsMatch(productPayloadDto, product);
         assertProductCategoriesMatch(categories, product);

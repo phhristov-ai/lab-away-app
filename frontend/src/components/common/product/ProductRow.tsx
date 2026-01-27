@@ -19,6 +19,7 @@ const ProductRow: React.FC<ProductRowProps> = ({ products }) => {
           images={product.images}
           slug={product.slug}
           categories={product.categories}
+          enabled={product.enabled}
         />
       ))}
     </div>

@@ -25,10 +25,10 @@ export const useProductPage = () => {
     );
 
     const getInitialImages = (
-    product: ProductFullType | ProductPreviewType | null
+        product: ProductFullType | ProductPreviewType | null
     ): ProductImage[] => {
-    if (!product) return [];
-    return product.images ?? [];
+        if (!product) return [];
+        return product.images ?? [];
     };
 
     const initialImages = getInitialImages(product);
@@ -44,6 +44,7 @@ export const useProductPage = () => {
     const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+    const [enabled, setEnabled] = useState(true);
     const [price, setPrice] = useState(0);
     const [showConfirmDelete, setShowConfirmDelete] = useState(false);
     const handleDeleteClick = () => {
@@ -125,11 +126,12 @@ export const useProductPage = () => {
 
             try {
                 const fullProduct = await fetchProductBySlug(slug);
-                
+
                 setProduct(fullProduct);
                 setTitle(fullProduct.name);
                 setPrice(fullProduct.price);
                 setDescription(fullProduct.description);
+                setEnabled(fullProduct.enabled);
 
                 if (fullProduct.images) {
                     setImages(fullProduct.images);
@@ -146,56 +148,57 @@ export const useProductPage = () => {
 
 
     const handleSave = async () => {
-    try {
-        const isNew = slug === 'new';
-        const language = i18n.language.toUpperCase();
+        try {
+            const isNew = slug === 'new';
+            const language = i18n.language.toUpperCase();
 
-        if (!isNew && !isFullProduct(product)) {
-        console.warn('Product is not fully loaded');
-        return;
+            if (!isNew && !isFullProduct(product)) {
+                console.warn('Product is not fully loaded');
+                return;
+            }
+
+            const {
+                mainImageIndex,
+                filesToUpload,
+                existingImages,
+            } = processImagesForPayload(images);
+
+            const imagesPayload: ProductImageDto[] = existingImages.map(img => ({
+                imageUrlSmall: img.imageUrlSmall,
+                imageUrlMedium: img.imageUrlMedium,
+                imageUrlLarge: img.imageUrlLarge,
+                main: img.main,
+            }));
+
+
+            const payload: ProductPayloadDto = {
+                price,
+                stock: 10,
+                active: true,
+                mainImageIndex,
+                categories: selectedCategories.map(cat => cat.slug),
+                translation: {
+                    language,
+                    name: title,
+                    description,
+                },
+                images: imagesPayload,
+                enabled: enabled
+            };
+
+            const result = isNew
+                ? await createProduct(payload, filesToUpload)
+                : await updateProduct(slug!, payload, filesToUpload);
+
+            setSuccessMessage(isNew ? 'Product created successfully!' : 'Product updated successfully!');
+            setShowSuccessModal(true);
+
+            setTimeout(() => {
+                navigate(`/product/${result.slug}`);
+            }, 1500);
+        } catch (err) {
+            console.error('Error saving product:', err);
         }
-
-        const {
-            mainImageIndex,
-            filesToUpload,
-            existingImages,
-        } = processImagesForPayload(images);
-
-        const imagesPayload: ProductImageDto[] = existingImages.map(img => ({
-            imageUrlSmall: img.imageUrlSmall,
-            imageUrlMedium: img.imageUrlMedium,
-            imageUrlLarge: img.imageUrlLarge,
-            main: img.main,
-        }));
-
-
-        const payload: ProductPayloadDto = {
-        price,
-        stock: 10,
-        active: true,
-        mainImageIndex,
-        categories: selectedCategories.map(cat => cat.slug),
-        translation: {
-            language,
-            name: title,
-            description,
-        },
-        images: imagesPayload,
-        };
-
-        const result = isNew
-        ? await createProduct(payload, filesToUpload)
-        : await updateProduct(slug!, payload, filesToUpload);
-
-        setSuccessMessage(isNew ? 'Product created successfully!' : 'Product updated successfully!');
-        setShowSuccessModal(true);
-
-        setTimeout(() => {
-        navigate(`/product/${result.slug}`);
-        }, 1500);
-    } catch (err) {
-        console.error('Error saving product:', err);
-    }
     };
 
     type NormalizedImageData = {
@@ -263,6 +266,8 @@ export const useProductPage = () => {
         selectedCategories,
         handleCategoryChange,
         images,
-        setImages
+        setImages,
+        enabled,
+        setEnabled
     };
 };
