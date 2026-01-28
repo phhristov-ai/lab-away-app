@@ -4,43 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Category, fetchCategories } from '../../services/category/categoriesService';
 import { ProductPreviewType } from '../../types/ProductPreviewType';
 import { fetchProducts } from '../../services/product/productService';
-import { ProductImage } from '../../types/ProductImage';
-
-
-const transformProducts = (backendProducts: any[]): ProductPreviewType[] =>
-  backendProducts.map(product => ({
-    name: product.name,
-    price: product.price,
-    slug: product.slug,
-    categories: product.categories ?? [],
-    images: mapImages(product),
-    active: product.active
-  }));
-
-
-const mapImages = (product: any): ProductImage[] => {
-  if (product.images?.length) {
-    return product.images.map((img: any) => ({
-      imageUrlSmall: img.imageUrlSmall || "",
-      imageUrlMedium: img.imageUrlMedium || "",
-      imageUrlLarge: img.imageUrlLarge || "",
-      main: img.main ?? false,
-    }));
-  }
-
-  if (product.imageUrls) {
-    const { small = "", medium = "", large = "" } = product.imageUrls;
-    return [{
-      imageUrlSmall: small,
-      imageUrlMedium: medium,
-      imageUrlLarge: large,
-      main: true,
-    }];
-  }
-
-  return [];
-};
-
+import { transformProducts } from '../../utils/productPreview.mapper';
 
 export const useShopPage = () => {
   const [products, setProducts] = useState<ProductPreviewType[]>([]);
@@ -92,3 +56,5 @@ export const useShopPage = () => {
     loading,
   };
 };
+
+

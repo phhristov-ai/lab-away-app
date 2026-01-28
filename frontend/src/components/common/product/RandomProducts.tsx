@@ -5,6 +5,7 @@ import { ProductPreviewType } from "../../../types/ProductPreviewType";
 import { useTranslation } from 'react-i18next';
 import './RandomProducts.css';
 import ProductGridSkeleton from "../../shop/ProductGridSkeleton";
+import { transformProducts } from "../../../utils/productPreview.mapper";
 
 type RandomProductsProps = {
   direction?: 'row' | 'column';
@@ -45,9 +46,11 @@ const RandomProducts: React.FC<RandomProductsProps> = ({ direction = 'row', cate
     return <p>No products available.</p>;
   }
 
+  console.log(products);
+
   return (
     <div className={`random-products-section ${direction}`}>
-      <ProductGrid products={products} onProductClick={handleProductClick} />
+      <ProductGrid products={transformProducts(products)} onProductClick={handleProductClick} />
     </div>
   );
 };
