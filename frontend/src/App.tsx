@@ -20,7 +20,6 @@ import { supportedLanguages } from './utils/langMatcher';
 import { languageSpecificRoutes } from './utils/languageSpecificRoutes';
 import i18n from './i18n/i18n';
 import { ConsentState } from './context/consent/types';
-import StaticRedirect from './hooks/utils/StaticRedirect';
 
 function App() {
 
@@ -58,10 +57,8 @@ function App() {
 
                   <Route path="/admin" element={<AdminLoginPage />} />
 
-                  {/* Serve PDFs (or other static files) directly from S3 */}
-                  <Route path="/en/information/*" element={<StaticRedirect />} />
-                  <Route path="/de/information/*" element={<StaticRedirect />} />
-                  <Route path="/bg/information/*" element={<StaticRedirect />} />
+                  {/* Ignore PDFs completely — let the browser fetch them */}
+                  <Route path="/en/information/*" element={null} />
                   <Route path="*" element={<LanguagePrefixer />} />
                 </Routes>
               </div>
