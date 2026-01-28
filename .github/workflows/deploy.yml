@@ -49,30 +49,17 @@ jobs:
           npm run prerender-ci
 
       # Upload frontend build to S3
-      - name: Upload frontend to S3 (normal files)
+      - name: Upload frontend to S3
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
-          aws s3 rm s3://${{ secrets.S3_FRONTEND_BUCKET }}/static/ --recursive
-          aws s3 rm s3://${{ secrets.S3_FRONTEND_BUCKET }}/index.html
+          aws s3 rm s3://${{ secrets.S3_FRONTEND_BUCKET }} --recursive
           aws s3 sync frontend/build s3://${{ secrets.S3_FRONTEND_BUCKET }} \
             --delete \
             --exact-timestamps \
-            --cache-control "no-cache" \
-            --exclude "en/information/*.pdf"
-      
-      - name: Upload PDFs with correct content type
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-        run: |
-          aws s3 sync frontend/build/en/information s3://${{ secrets.S3_FRONTEND_BUCKET }}/en/information \
-            --exact-timestamps \
-            --cache-control "no-cache" \
-            --content-type "application/pdf"
+            --cache-control "no-cache"
             
        # Make mvnw executable
       - name: Make mvnw executable
