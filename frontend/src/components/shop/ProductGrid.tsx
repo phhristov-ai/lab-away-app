@@ -37,7 +37,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, showCreateNew = fal
             slug={product.slug}
             categories={product.categories}
             onClick={() => onProductClick?.(product)}
-            enabled={product.enabled}
+            active={product.active}
           />
         </div>
       ))}

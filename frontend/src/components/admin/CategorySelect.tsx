@@ -18,18 +18,29 @@ const CategorySelect: React.FC<CategorySelectProps> = ({
   onChange,
 }) => {
   return (
-    <select
-      className="category-select"
-      multiple
-      value={selectedSlugs}
-      onChange={onChange}
-    >
-      {allCategories.map(category => (
-        <option key={category.slug} value={category.slug}>
-          {category.name}
-        </option>
-      ))}
-    </select>
+    <div className="category-select-wrapper">
+      <label className="category-label" htmlFor="category-select">
+        Categories
+      </label>
+
+      <select
+        id="category-select"
+        className="category-select"
+        multiple
+        value={selectedSlugs}
+        onChange={onChange}
+      >
+        {allCategories.map(category => (
+          <option key={category.slug} value={category.slug}>
+            {category.name}
+          </option>
+        ))}
+      </select>
+
+      <span className="category-hint">
+        Hold Ctrl (Cmd on Mac) to select multiple
+      </span>
+    </div>
   );
 };
 

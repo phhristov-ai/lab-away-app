@@ -14,7 +14,7 @@ const transformProducts = (backendProducts: any[]): ProductPreviewType[] =>
     slug: product.slug,
     categories: product.categories ?? [],
     images: mapImages(product),
-    enabled: product.enabled
+    active: product.active
   }));
 
 

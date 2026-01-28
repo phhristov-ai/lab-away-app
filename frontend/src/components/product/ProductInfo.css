@@ -35,3 +35,42 @@
 .product-actions .add-to-cart-button {
   margin-top: 0;
 }
+
+
+.admin-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 300px; /* prevents inputs from being too wide */
+  margin-bottom: 16px;
+}
+
+.admin-field label {
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--secondary-color);
+}
+
+.admin-input {
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #fff;
+  color: #000;
+}
+
+/* optional: focus state */
+.admin-input:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(78, 218, 253, 0.3);
+}
+
+.out-of-stock-label {
+  color: #777;
+  letter-spacing: 0.02em;
+  margin: 10px 0px;
+}

@@ -8,5 +8,5 @@ export type ProductPreviewType = {
   categories: Category[];
   images: ProductImage[];
   onClick?: () => void;
-  enabled: boolean;
+  active: boolean;
 };

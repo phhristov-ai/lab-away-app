@@ -44,7 +44,7 @@ export const useProductPage = () => {
     const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [enabled, setEnabled] = useState(true);
+    const [active, setActive] = useState<boolean | undefined>(undefined);
     const [price, setPrice] = useState(0);
     const [showConfirmDelete, setShowConfirmDelete] = useState(false);
     const handleDeleteClick = () => {
@@ -131,7 +131,7 @@ export const useProductPage = () => {
                 setTitle(fullProduct.name);
                 setPrice(fullProduct.price);
                 setDescription(fullProduct.description);
-                setEnabled(fullProduct.enabled);
+                setActive(fullProduct.active);
 
                 if (fullProduct.images) {
                     setImages(fullProduct.images);
@@ -174,7 +174,7 @@ export const useProductPage = () => {
             const payload: ProductPayloadDto = {
                 price,
                 stock: 10,
-                active: true,
+                active: active,
                 mainImageIndex,
                 categories: selectedCategories.map(cat => cat.slug),
                 translation: {
@@ -182,8 +182,7 @@ export const useProductPage = () => {
                     name: title,
                     description,
                 },
-                images: imagesPayload,
-                enabled: enabled
+                images: imagesPayload
             };
 
             const result = isNew
@@ -267,7 +266,7 @@ export const useProductPage = () => {
         handleCategoryChange,
         images,
         setImages,
-        enabled,
-        setEnabled
+        active,
+        setActive
     };
 };

@@ -8,9 +8,10 @@ interface GalleryProps {
   images: ProductImage[];
   setImages: React.Dispatch<React.SetStateAction<ProductImage[]>>;
   isAdmin: boolean;
+  active: boolean | undefined;
 }
 
-const Gallery: React.FC<GalleryProps> = ({ images, setImages, isAdmin }) => {
+const Gallery: React.FC<GalleryProps> = ({ images, setImages, isAdmin, active }) => {
   const {
     currentIndex,
     isDragging,
@@ -25,6 +26,8 @@ const Gallery: React.FC<GalleryProps> = ({ images, setImages, isAdmin }) => {
     handleDragLeave,
     handleDrop,
   } = useGallery(images, setImages);
+
+  const isDisabled = !active;
 
   return (
     <div className="gallery">
@@ -56,7 +59,7 @@ const Gallery: React.FC<GalleryProps> = ({ images, setImages, isAdmin }) => {
           >
             {images[currentIndex]?.imageUrlSmall ? (
               <img
-                src={images?.[currentIndex]?.imageUrlSmall} // fallback
+                src={images?.[currentIndex]?.imageUrlSmall}
                 srcSet={`
                   ${images?.[currentIndex]?.imageUrlSmall} 480w,
                   ${images?.[currentIndex]?.imageUrlMedium} 768w,
@@ -102,7 +105,7 @@ const Gallery: React.FC<GalleryProps> = ({ images, setImages, isAdmin }) => {
             `}
             sizes="(max-width: 480px) 480px, (max-width: 768px) 768px, 1200px"
             alt={`Slide ${currentIndex + 1}`}
-            className="main-thumbnail-image"
+            className={`main-thumbnail-image ${isDisabled ? 'inactive' : ''}`}
           />
 
         )}

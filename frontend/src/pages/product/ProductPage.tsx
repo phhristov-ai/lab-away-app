@@ -44,8 +44,8 @@ const ProductPage: React.FC = () => {
     handleCategoryChange,
     images,
     setImages,
-    enabled,
-    setEnabled
+    active,
+    setActive
   } = useProductPage();
 
 
@@ -70,14 +70,25 @@ const ProductPage: React.FC = () => {
             images={images}
             setImages={setImages}
             isAdmin={isAdmin}
+            active={active}
           />
         </div>
 
         <div className="product-info">
+          <ProductInfo
+            title={title}
+            price={price}
+            image={product.images?.[0]?.imageUrlSmall}
+            categories={product.categories}
+            slug={product.slug}
+            onTitleChange={setTitle}
+            onPriceChange={setPrice}
+            active={active}
+          />
           {isAdmin && (
             <ProductAvailabilitySelect
-              enabled={enabled}
-              onChange={setEnabled}
+              active={active}
+              onChange={setActive}
             />
           )}
           {isAdmin && (
@@ -87,16 +98,11 @@ const ProductPage: React.FC = () => {
               onChange={handleCategoryChange}
             />
           )}
-          {!isAdmin && (<ProductInfo
-            title={title}
-            price={price}
-            image={product.images?.[0]?.imageUrlSmall}
-            categories={product.categories}
-            slug={product.slug}
-            onTitleChange={setTitle}
-            onPriceChange={setPrice}
-            enabled={enabled}
-          />)}
+          <ProductDescription
+            description={isFullProduct(product) ? description : ''}
+            isAdmin={isAdmin}
+            onDescriptionChange={setDescription}
+          />
           {isAdmin && (
             <AdminActionButtons
               isNew={slug === "new"}
@@ -110,11 +116,6 @@ const ProductPage: React.FC = () => {
               onCloseSuccess={() => setShowSuccessModal(false)}
             />
           )}
-          <ProductDescription
-            description={isFullProduct(product) ? description : ''}
-            isAdmin={isAdmin}
-            onDescriptionChange={setDescription}
-          />
         </div>
       </div>
 

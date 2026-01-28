@@ -1,7 +1,38 @@
+.category-select-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: fit-content;
+}
+
+.category-label {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--secondary-color);
+}
+
 .category-select {
-  width: 200px;
-  min-height: 100px;
+  min-width: 220px;
+  min-height: 120px;
   padding: 8px;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 14px;
+  border: 1px solid var(--secondary-color);
+  background-color: var(--background-color);
+  color: #222;
+  outline: none;
+}
+
+.category-select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(78, 218, 253, 0.35);
+}
+
+.category-select option {
+  padding: 6px;
+}
+
+.category-hint {
+  font-size: 12px;
+  color: #666;
 }

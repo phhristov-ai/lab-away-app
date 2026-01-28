@@ -12,7 +12,7 @@ interface AddToCartButtonProps {
   quantity: number;
   variant?: 'primary' | 'secondary';
   categories: Category[];
-  enabled: boolean;
+  active: boolean | undefined
 }
 
 const AddToCartButton: React.FC<AddToCartButtonProps> = ({
@@ -25,13 +25,13 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
   quantity,
   variant = 'primary',
   categories,
-  enabled
+  active
 }) => {
   const { dispatch } = useCart();
 
   const handleAdd = () => {
 
-    if (!enabled) {
+    if (!active) {
       return;
     }
     
@@ -51,13 +51,13 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
     });
     onClick();
   };
-
+  const isDisabled = !active;
   return (
     <button
-      className={`add-to-cart-button ${variant} ${!enabled ? 'disabled' : ''}`}
+      className={`add-to-cart-button ${variant} ${isDisabled ? 'disabled' : ''}`}
       onClick={handleAdd}
-      disabled={!enabled}
-      aria-disabled={!enabled}
+      disabled={!active}
+      aria-disabled={!active}
     >
       {label}
     </button>

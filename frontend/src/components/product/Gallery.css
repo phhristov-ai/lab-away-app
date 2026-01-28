@@ -150,3 +150,9 @@
   color: gold;
   text-shadow: 0 0 2px black;
 }
+
+/* Product page – inactive image */
+.main-thumbnail-image.inactive {
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}

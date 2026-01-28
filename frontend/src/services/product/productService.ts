@@ -17,12 +17,11 @@ export type ProductImageDto = {
 export type ProductPayloadDto = {
   price: number;
   stock: number;
-  active: boolean;
+  active: boolean | undefined
   mainImageIndex: number;
   categories: string[];
   translation: ProductTranslationDto;
   images: ProductImageDto[];
-  enabled: boolean;
 };
 
 export const fetchProducts = async () => {

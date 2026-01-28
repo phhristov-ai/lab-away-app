@@ -1,30 +1,73 @@
+.product-description {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Title */
+.product-description-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--secondary-color);
+  margin: 0;
+}
+
+/* Admin textarea */
+.product-description-input {
+  width: 100%;
+  min-height: 300px;
+  padding: 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid var(--secondary-color);
+  background: var(--background-color);
+  resize: vertical;
+  outline: none;
+}
+
+.product-description-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(78, 218, 253, 0.35);
+}
+
+.product-description-hint {
+  font-size: 12px;
+  color: #666;
+}
+
+/* Viewer content */
 .product-long-desc {
-    font-size: 16px;
-    color: #333;
+  font-size: 16px;
+  color: #333;
+  line-height: 1.8;
 }
 
-
+/* Text blocks */
 .product-desc-text {
-  line-height: 1.8;
   margin-bottom: 16px;
 }
 
+/* Lists */
 .product-desc-list {
-  line-height: 1.8;
   margin-bottom: 16px;
-  padding-left: 20px; /* default list indentation */
+  padding-left: 20px;
 }
 
-  .feature-icon {
-    width: 20px;
-    height: 20px;
-    margin-right: 10px;
-    vertical-align: middle;
-  }
+.product-desc-list li {
+  margin-bottom: 8px;
+}
 
-   .feature-item {
-    display: flex;
-    align-items: center;
-    font-size: 16px;
-    padding-top: 15px;
-  }
+/* Feature list items */
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  padding-top: 12px;
+}
+
+.feature-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}

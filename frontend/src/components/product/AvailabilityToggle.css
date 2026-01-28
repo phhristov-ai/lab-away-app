@@ -1,0 +1,43 @@
+.availability-toggle {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.availability-toggle .label {
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--secondary-color);
+}
+
+.toggle-group {
+    display: inline-flex;
+    width: fit-content;
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid var(--secondary-color);
+    background: var(--background-color);
+}
+
+.toggle-btn {
+    padding: 6px 12px;
+    /* tighter */
+    min-width: 90px;
+    /* equal width buttons */
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--secondary-color);
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.toggle-btn:not(.active):hover {
+    background: rgba(0, 123, 255, 0.08);
+}
+
+.toggle-btn.active {
+    background: var(--secondary-color);
+    color: white;
+}

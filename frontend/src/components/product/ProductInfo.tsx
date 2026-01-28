@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useProductInfo } from '../../hooks/product/useProductInfo';
 import { useNavigate } from 'react-router-dom';
 import { Category } from '../../services/category/categoriesService';
+import { useAdmin } from '../../context/AdminContext';
 
 type ProductInfoProps = {
   title: string;
@@ -15,7 +16,7 @@ type ProductInfoProps = {
   categories: Category[];
   onTitleChange?: (newTitle: string) => void;
   onPriceChange?: (newPrice: number) => void;
-  enabled: boolean;
+  active: boolean | undefined;
 };
 
 const ProductInfo: React.FC<ProductInfoProps> = ({
@@ -26,7 +27,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
   categories,
   onTitleChange,
   onPriceChange,
-  enabled
+  active
 }) => {
   const { renderTitle, renderPrice } = useProductInfo({
     title,
@@ -38,6 +39,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
   const [quantity, setQuantity] = useState(1);
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { isAdmin } = useAdmin();
   const handleAddToCart = () => {
     navigate('/cart');
   };
@@ -46,21 +48,28 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
     <div className="product-info-inner">
       <div className="post-main">{renderTitle()}</div>
       <div className="product-price">{renderPrice()}</div>
-      <div className="product-actions">
-        <QuantitySelector value={quantity} onChange={setQuantity} />
-        <AddToCartButton
-          onClick={handleAddToCart}
-          label={t('productPage.buttons.addToCart')}
-          name={title}
-          price={price}
-          image={image}
-          quantity={quantity}
-          slug={slug}
-          variant="secondary"
-          categories={categories}
-          enabled={enabled}
-        />
-      </div>
+      {!isAdmin && active === false && (
+        <div className="out-of-stock-label">
+          Out of stock
+        </div>
+      )}
+      {!isAdmin &&
+        <div className="product-actions">
+          <QuantitySelector value={quantity} onChange={setQuantity} active={active} />
+          <AddToCartButton
+            onClick={handleAddToCart}
+            label={t('productPage.buttons.addToCart')}
+            name={title}
+            price={price}
+            image={image}
+            quantity={quantity}
+            slug={slug}
+            variant="secondary"
+            categories={categories}
+            active={active}
+          />
+        </div>
+      }
     </div>
   );
 };
