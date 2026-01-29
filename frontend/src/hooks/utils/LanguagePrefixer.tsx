@@ -3,11 +3,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import i18n from '../../i18n/i18n';
 
 const supportedLanguages = new Set(['en', 'de', 'bg']);
-const staticPrefixes = ['/en/information/', '/de/information/', '/bg/information/'];
 
 const LanguagePrefixer = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
   const path = location.pathname;
 
   const pathLangRaw = path.split('/')[1] || '';
@@ -17,24 +17,23 @@ const LanguagePrefixer = () => {
   const currentLang = (i18n.language || 'en').split('-')[0];
 
   useEffect(() => {
-    // Skip static files like PDFs or images
-    const isStaticFile = staticPrefixes.some(prefix => path.startsWith(prefix));
-    if (isStaticFile) return;
-
     if (!hasSupportedLang) {
-      const pathWithoutLeadingSlash = path.startsWith('/') ? path.slice(1) : path;
-      const alreadyPrefixed = pathWithoutLeadingSlash.startsWith(`${currentLang}/`);
+      const pathWithoutLeadingSlash = path.startsWith('/')
+        ? path.slice(1)
+        : path;
 
-      if (!alreadyPrefixed) {
-        const target = `/${currentLang}/${pathWithoutLeadingSlash}`;
-        if (location.pathname !== target) {
-          navigate(target, {
-            replace: true,
-            state: location.state,
-          });
-        }
+      const target = `/${currentLang}/${pathWithoutLeadingSlash}`;
+
+      if (location.pathname !== target) {
+        navigate(target, {
+          replace: true,
+          state: location.state,
+        });
       }
-    } else if (pathLang !== pathLangRaw) {
+      return;
+    }
+
+    if (pathLang !== pathLangRaw) {
       const restOfPath = path.split('/').slice(2).join('/');
       const normalizedPath = `/${pathLang}/${restOfPath}`;
 
