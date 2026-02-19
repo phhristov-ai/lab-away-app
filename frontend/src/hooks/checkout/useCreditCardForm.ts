@@ -85,7 +85,23 @@ export const useCreditCardForm = () => {
     language: i18n.language,
   });
 
- 
+  function getGAClientId(): string | null {
+    let clientId: string | null = null;
+
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      const gaCookie = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('_ga='));
+
+      if (gaCookie) {
+        const parts = gaCookie.split('.');
+        clientId = parts.slice(-2).join('.');
+      }
+    }
+
+    return clientId;
+  }
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setError(null);
@@ -98,14 +114,21 @@ export const useCreditCardForm = () => {
 
       if (result.error) {
         console.error('[❌ Payment Error]', result.error.message);
-        setError(result.error.message || 'Payment failed.'); // fallback if undefined
+        setError(result.error.message || 'Payment failed.');
         trackFailure(result.error.message || 'Payment failed.', order.total);
         return;
       }
-      
+
       if (result.paymentIntent?.status === 'succeeded') {
-        await fetch(`${process.env.REACT_APP_API_BASE_URL}/orders/confirm/${order.orderNumber}`, {
+        const gaClientId = getGAClientId();
+
+        await fetch(`${process.env.REACT_APP_API_BASE_URL}/orders/confirm`, {
           method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            orderNumber: order.orderNumber,
+            gaClientId,
+          }),
         });
 
         trackSuccess(order);
