@@ -1,5 +1,6 @@
 package com.labaway.backend.controller.order;
 
+import com.labaway.backend.dto.order.ConfirmOrderRequestDto;
 import com.labaway.backend.dto.order.CreateOrderRequestDto;
 import com.labaway.backend.dto.order.CreateOrderResponseDto;
 import com.labaway.backend.dto.order.OrderDto;
@@ -24,11 +25,13 @@ public class OrderController {
         return new ResponseEntity<>(orderService.createOrder(dto), HttpStatus.CREATED);
     }
 
-    @PostMapping("/confirm/{orderNumber}")
-    public ResponseEntity<Void> confirmOrder(@PathVariable String orderNumber){
-        orderService.confirmOrder(orderNumber);
+    @PostMapping("/confirm")
+    public ResponseEntity<Void> confirmOrder(
+            @RequestBody ConfirmOrderRequestDto dto) {
+        orderService.confirmOrder(dto.getOrderNumber(), dto.getGaClientId());
         return ResponseEntity.ok().build();
     }
+
 
     @GetMapping("/{orderNumber}")
     public ResponseEntity<OrderDto> getOrder(@PathVariable String orderNumber) {

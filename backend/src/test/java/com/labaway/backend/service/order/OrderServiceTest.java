@@ -11,6 +11,7 @@ import com.labaway.backend.entity.repository.order.OrderRepository;
 import com.labaway.backend.entity.repository.product.ProductRepository;
 import com.labaway.backend.enums.Language;
 import com.labaway.backend.enums.OrderStatus;
+import com.labaway.backend.service.analytics.GoogleAnalyticsService;
 import com.labaway.backend.service.communication.EmailService;
 import com.labaway.backend.strategy.PaymentProvider;
 import com.labaway.backend.strategy.PaymentStrategy;
@@ -39,6 +40,8 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class OrderServiceTest {
 
+    @InjectMocks
+    private OrderService orderService;
     @Mock
     private OrderRepository orderRepository;
     @Mock
@@ -55,15 +58,13 @@ class OrderServiceTest {
     private OrderTransformer orderTransformer;
     @Mock
     private AddressTransformer addressTransformer;
-
-    @InjectMocks
-    private OrderService orderService;
-
     private String orderNumber;
     private Order sampleOrder;
     private final OrderNumberGenerator generator = new OrderNumberGenerator();
     @Mock
     private OrderNumberGenerator orderNumberGenerator;
+    @Mock
+    private GoogleAnalyticsService analyticsService;
 
     @BeforeEach
     void setUp() {
@@ -96,7 +97,8 @@ class OrderServiceTest {
         when(orderRepository.findByOrderNumber(orderNumber)).thenReturn(Optional.of(sampleOrder));
         when(paymentStrategyFactory.getStrategy(PaymentProvider.STRIPE)).thenReturn(paymentStrategy);
         when(paymentStrategy.isPaymentCompleted(anyString())).thenReturn(true);
-        orderService.confirmOrder(orderNumber);
+        String clientId = "clientId";
+        orderService.confirmOrder(orderNumber, clientId);
 
         assertEquals(OrderStatus.PAID, sampleOrder.getStatus());
         verify(orderRepository).save(sampleOrder);

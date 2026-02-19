@@ -1,5 +1,6 @@
 package com.labaway.backend.controller.order;
 
+import com.labaway.backend.dto.order.ConfirmOrderRequestDto;
 import com.labaway.backend.dto.order.CreateOrderRequestDto;
 import com.labaway.backend.dto.order.CreateOrderResponseDto;
 import com.labaway.backend.dto.order.OrderDto;
@@ -50,13 +51,17 @@ class OrderControllerTest {
     @Test
     void testConfirmOrder() {
         String orderNumber = generator.generate();
+        String clientId = "clientId";
+        ConfirmOrderRequestDto confirmOrderRequestDto = new ConfirmOrderRequestDto();
+        confirmOrderRequestDto.setOrderNumber(orderNumber);
+        confirmOrderRequestDto.setGaClientId(clientId);
 
-        doNothing().when(orderService).confirmOrder(orderNumber);
+        doNothing().when(orderService).confirmOrder(orderNumber, clientId);
 
-        ResponseEntity<Void> response = orderController.confirmOrder(orderNumber);
+        ResponseEntity<Void> response = orderController.confirmOrder(confirmOrderRequestDto);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        verify(orderService, times(1)).confirmOrder(orderNumber);
+        verify(orderService, times(1)).confirmOrder(orderNumber, clientId);
     }
 
     @Test
