@@ -186,9 +186,6 @@ export function useBlogPost() {
 
   function useBlogScrollTracking(slug: string, title: string) {
     useEffect(() => {
-      console.log(title);
-      console.log(slug);
-
       if (!slug || !title) return;
 
       const scrollDepths = [25, 50, 75, 100];

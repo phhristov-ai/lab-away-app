@@ -46,10 +46,6 @@ export const useCreditCardForm = () => {
     trackAddPaymentInfo(mapItemsToGA(state.items), PaymentProvider.STRIPE);
   };
 
-  const trackSuccess = (order: any) => {
-    trackPurchase(order.orderNumber, mapItemsToGA(state.items), Number(order.total), 'EUR');
-  };
-
   const trackFailure = (reason?: string, value?: number) => {
     trackGAEvent('purchase_failed', {
       method: PaymentProvider.STRIPE,
@@ -113,7 +109,6 @@ export const useCreditCardForm = () => {
       const result = await confirmPayment(order.clientSecret, billingData);
 
       if (result.error) {
-        console.error('[❌ Payment Error]', result.error.message);
         setError(result.error.message || 'Payment failed.');
         trackFailure(result.error.message || 'Payment failed.', order.total);
         return;
@@ -131,7 +126,6 @@ export const useCreditCardForm = () => {
           }),
         });
 
-        trackSuccess(order);
         dispatch({ type: 'CLEAR_CART', payload: { reason: 'purchase' } });
 
         navigate('/success', {
@@ -147,10 +141,10 @@ export const useCreditCardForm = () => {
       }
     } catch (error: any) {
       console.error('❌ Error during checkout:', error);
-      setError(error?.message || t('checkout.payment.creditCard.genericError')); // <-- fallback message
+      setError(error?.message || t('checkout.payment.creditCard.genericError'));
       trackFailure(error?.message);
     }
   };
 
-  return { stripe, t, handleSubmit, cardStyle, error }; // <-- return error
+  return { stripe, t, handleSubmit, cardStyle, error };
 };

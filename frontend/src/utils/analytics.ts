@@ -11,7 +11,6 @@ export type GAItem = {
 };
 
 export function trackGAEvent(eventName: string, eventData: Record<string, any>) {
-  console.log('[GA Event]', eventName, eventData);
   sendGAEvent(eventName, eventData);
 }
 
@@ -190,8 +189,6 @@ export function trackShareBlogPost(postId: string, title: string, method: 'copy_
 }
 
 export function trackClickBlogToProduct(postId: string, title: string, productId: string, productName: string) {
-  console.log(title);
-  console.log(postId);
   trackGAEvent('click_blog_to_product', {
     page_title: title,
     post_id: postId,

@@ -8,7 +8,6 @@ declare global {
   var gtag: ((...args: any[]) => void) | undefined;
 }
 
-
 export function getStoredConsent(): ConsentState {
   const stored = localStorage.getItem("cookieConsent");
   if (!stored) return { hasInteracted: false };
@@ -28,13 +27,6 @@ export function saveConsent(consent: ConsentState) {
   localStorage.setItem("cookieConsent", JSON.stringify(consent));
 }
 
-export function ensureGoogleAnalytics() {
-  if (typeof globalThis.gtag === 'function') {
-    console.log('[GA] Ready');
-  } else {
-    console.warn('[GA] gtag not found. Is the GA script in index.html?');
-  }
-}
 
 export function sendGAEvent(
   event: string,
@@ -42,7 +34,6 @@ export function sendGAEvent(
 ) {
   if (typeof globalThis.gtag === 'function') {
     globalThis.gtag('event', event, params);
-    console.log('[GA Event]', event, params);
   } else {
     console.warn('[GA] Tried to send event before GA loaded:', event);
   }

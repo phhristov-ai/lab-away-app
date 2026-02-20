@@ -11,37 +11,48 @@ import java.util.Map;
 @Profile("local")
 public class LocalSecretsManagerHelper implements SecretsManagerHelper {
 
-    @Value("${db.username}") private String dbUsername;
-    @Value("${db.password}") private String dbPassword;
-    @Value("${db.engine}") private String dbEngine;
-    @Value("${db.host}") private String dbHost;
-    @Value("${db.port}") private String dbPort;
-    @Value("${db.name}") private String dbName;
-    @Value("${db.instanceIdentifier}") private String dbInstanceIdentifier;
-
-    @Value("${smtp.username}") private String smtpUsername;
-    @Value("${smtp.password}") private String smtpPassword;
-    @Value("${smtp.fromEmail}") private String smtpFromEmail;
-
-    @Value("${jwt.secret}") private String jwtSecret;
-
-    @Value("${aws.accessKeyId}") private String awsAccessKeyId;
-    @Value("${aws.secretAccessKey}") private String awsSecretAccessKey;
-    @Value("${aws.s3.bucketName}") private String awsS3BucketName;
-    @Value("${aws.region}") private String awsRegion;
-
+    @Value("${db.username}")
+    private String dbUsername;
+    @Value("${db.password}")
+    private String dbPassword;
+    @Value("${db.engine}")
+    private String dbEngine;
+    @Value("${db.host}")
+    private String dbHost;
+    @Value("${db.port}")
+    private String dbPort;
+    @Value("${db.name}")
+    private String dbName;
+    @Value("${db.instanceIdentifier}")
+    private String dbInstanceIdentifier;
+    @Value("${smtp.username}")
+    private String smtpUsername;
+    @Value("${smtp.password}")
+    private String smtpPassword;
+    @Value("${smtp.fromEmail}")
+    private String smtpFromEmail;
+    @Value("${jwt.secret}")
+    private String jwtSecret;
+    @Value("${aws.accessKeyId}")
+    private String awsAccessKeyId;
+    @Value("${aws.secretAccessKey}")
+    private String awsSecretAccessKey;
+    @Value("${aws.s3.bucketName}")
+    private String awsS3BucketName;
+    @Value("${aws.region}")
+    private String awsRegion;
     @Value("${paypal.clientId}")
     private String paypalClientId;
-
     @Value("${paypal.secret}")
     private String paypalSecret;
-
     @Value("${stripe.publicKey}")
     private String stripePublicKey;
-
     @Value("${stripe.secretKey}")
     private String stripeSecretKey;
-
+    @Value("${ga4.measurement-id}")
+    private String measurementId;
+    @Value("${ga4.api-secret}")
+    private String apiSecret;
     @Override
     public Map<String, String> getSecret(String secretName) {
         Map<String, String> secrets = new HashMap<>();
@@ -83,6 +94,10 @@ public class LocalSecretsManagerHelper implements SecretsManagerHelper {
                 secrets.put("stripeSecretKey", stripeSecretKey);
                 break;
 
+            case "Ga4Keys":
+                secrets.put("measurementId", measurementId);
+                secrets.put("apiSecret", apiSecret);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown secret name: " + secretName);
         }

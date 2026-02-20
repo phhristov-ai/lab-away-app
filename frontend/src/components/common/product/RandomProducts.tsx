@@ -46,8 +46,6 @@ const RandomProducts: React.FC<RandomProductsProps> = ({ direction = 'row', cate
     return <p>No products available.</p>;
   }
 
-  console.log(products);
-
   return (
     <div className={`random-products-section ${direction}`}>
       <ProductGrid products={transformProducts(products)} onProductClick={handleProductClick} />
