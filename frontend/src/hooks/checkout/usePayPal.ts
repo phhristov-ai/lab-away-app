@@ -1,11 +1,14 @@
 import { useCart } from '../../context/CartContext';
+import { useCheckout } from '../../context/CheckoutContext';
 import { trackAddPaymentInfo, trackPurchaseFailed } from '../../utils/analytics';
 import { PaymentProvider } from './useCreditCardForm';
+import { useNavigate } from "react-router-dom";
 
 export const usePayPal = () => {
-  const { state } = useCart();
-
+  const { state, dispatch } = useCart();
+  const navigate = useNavigate();
   const PAYPAL_CLIENT_ID = process.env.REACT_APP_PAYPAL_CLIENT_ID;
+  const { billingData } = useCheckout();
 
   if (!PAYPAL_CLIENT_ID) {
     throw new Error('Missing REACT_APP_PAYPAL_CLIENT_ID environment variable');
@@ -44,7 +47,22 @@ export const usePayPal = () => {
 
   const onApprove = async (actions: any) => {
     try {
-      await actions.order.capture();
+      const order = await actions.order.capture();
+
+      const orderId = order.id;
+
+      dispatch({ type: 'CLEAR_CART', payload: { reason: 'purchase' } });
+
+      navigate('/success', {
+        state: {
+          orderNumber: orderId,
+          email: billingData.email,
+          total: cartTotal,
+          paymentMethod: 'PayPal',
+          fromCheckout: true,
+        },
+      });
+
     } catch (error: any) {
       trackPurchaseFailed(
         PaymentProvider.PAYPAL,

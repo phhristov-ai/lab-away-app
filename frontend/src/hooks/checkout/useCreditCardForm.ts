@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import { useTranslation } from "react-i18next";
 import { cardStyle } from "../../types/stripeStyles";
-import { trackAddPaymentInfo, trackGAEvent, trackPurchase } from "../../utils/analytics";
+import { trackAddPaymentInfo, trackGAEvent } from "../../utils/analytics";
 import { useState } from "react";
 
 export enum PaymentProvider {
