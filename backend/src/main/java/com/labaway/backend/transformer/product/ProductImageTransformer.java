@@ -1,6 +1,6 @@
 package com.labaway.backend.transformer.product;
 
-import com.labaway.backend.dto.product.image.ProductImageDto;
+import com.labaway.backend.dto.product.media.ProductImageDto;
 import com.labaway.backend.entity.product.ProductImage;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +12,6 @@ public class ProductImageTransformer {
                 .imageUrlSmall(image.getImageUrlSmall())
                 .imageUrlMedium(image.getImageUrlMedium())
                 .imageUrlLarge(image.getImageUrlLarge())
-                .main(image.isMain())
                 .build();
     }
 }

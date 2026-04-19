@@ -8,11 +8,7 @@ countries.registerLocale(de);
 countries.registerLocale(bg);
 
 
-const EU_COUNTRY_CODES = [
-  'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR',
-  'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL',
-  'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE'
-];
+const EU_COUNTRY_CODES = ['DE', 'AT', 'CH'];
 
 export const getEUCountryOptions = (language: string): { code: string; name: string }[] => {
   return EU_COUNTRY_CODES.map((code) => ({

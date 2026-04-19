@@ -1,37 +1,62 @@
-import { ProductImage } from "../types/ProductImage";
-
-const EMPTY_IMAGE: ProductImage = {
-  imageUrlSmall: "/images/placeholder-small.png",
-  imageUrlMedium: "/images/placeholder-medium.png",
-  imageUrlLarge: "/images/placeholder-large.png",
-  main: true,
-};
+import { Media } from "../components/common/layout/ImageTextSection";
 
 export const mapProductImages = (product: any): ProductImage[] => {
   let images: ProductImage[] = [];
 
-  // New BE format
+  const makeStableId = (img: any, index: number) =>
+    img.id ??
+    img.imageUrlSmall ??
+    `legacy-${index}`; // ✅ stable, deterministic
+
   if (Array.isArray(product.images) && product.images.length > 0) {
-    images = product.images.map((img: any) => ({
+    images = product.images.map((img: any, index: number) => ({
+      id: makeStableId(img, index), // ✅ NEVER random
       imageUrlSmall: img.imageUrlSmall ?? "",
       imageUrlMedium: img.imageUrlMedium ?? "",
       imageUrlLarge: img.imageUrlLarge ?? "",
-      main: Boolean(img.main),
+      order: img.order ?? index,
     }));
-  }
-  // Legacy BE format
-  else if (product.imageUrls) {
+  } else if (product.imageUrls) {
     const { small = "", medium = "", large = "" } = product.imageUrls;
 
     images = [
       {
+        id: small || "single-image", // ✅ stable fallback
         imageUrlSmall: small,
         imageUrlMedium: medium,
         imageUrlLarge: large,
-        main: true,
+        order: 0,
       },
     ];
   }
 
-  return images.length ? images : [EMPTY_IMAGE];
+  return images.length
+    ? images
+    : [
+        {
+          id: "placeholder",
+          imageUrlSmall: "/images/placeholder-small.png",
+          imageUrlMedium: "/images/placeholder-medium.png",
+          imageUrlLarge: "/images/placeholder-large.png",
+          order: 0,
+        },
+      ];
+};
+
+export const mapBannerFromApi = (banner: any): Media | undefined => {
+  if (!banner) return undefined;
+
+  const type = banner.type?.toLowerCase();
+
+  if (type === 'video') {
+    return {
+      type: 'video',
+      src: banner.url,
+    };
+  }
+
+  return {
+    type: 'image',
+    src: banner.url,
+  };
 };

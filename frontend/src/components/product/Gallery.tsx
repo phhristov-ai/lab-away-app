@@ -1,8 +1,8 @@
 import React from 'react';
 import './Gallery.css';
 import SlickDots from './SlickDots';
-import { ProductImage } from '../../types/ProductImage';
 import { useGallery } from '../../hooks/product/useGallery';
+import GalleryThumbnails from './GalleryThumbnails';
 
 interface GalleryProps {
   images: ProductImage[];
@@ -21,7 +21,6 @@ const Gallery: React.FC<GalleryProps> = ({ images, setImages, isAdmin, active })
     goToImage,
     handleUpload,
     handleDelete,
-    setAsMainImage,
     handleDragOver,
     handleDragLeave,
     handleDrop,
@@ -120,45 +119,12 @@ const Gallery: React.FC<GalleryProps> = ({ images, setImages, isAdmin, active })
         </button>
 
         {isAdmin && (
-          <div className="gallery-thumbnails">
-            {images.map((img, idx) => (
-              <div
-                key={img.imageUrlSmall}
-                className={`thumbnail-wrapper ${img.main ? 'main-thumbnail-image' : ''}`}
-              >
-                <button
-                  type="button"
-                  className="thumbnail-button"
-                  onClick={() => goToImage(idx)}
-                  aria-label={`View image thumbnail ${idx + 1}`}
-                >
-                  <img
-                    src={img.imageUrlSmall} // fallback for very small or unsupported browsers
-                    srcSet={`
-                      ${img.imageUrlSmall} 480w,
-                      ${img.imageUrlMedium} 768w,
-                      ${img.imageUrlLarge} 1200w
-                    `}
-                    sizes="(max-width: 480px) 480px, (max-width: 768px) 768px, 1200px"
-                    alt={`Thumbnail ${idx + 1}`}
-                    className="thumbnail-image"
-                  />
-
-                </button>
-
-                <button
-                  className="set-main-button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setAsMainImage(idx);
-                  }}
-                  title="Set as main image"
-                >
-                  {img.main ? '★' : '☆'}
-                </button>
-              </div>
-            ))}
-          </div>
+          <GalleryThumbnails
+            images={images}
+            currentIndex={currentIndex}
+            goToImage={goToImage}
+            setImages={setImages}
+          />
         )}
       </div>
 

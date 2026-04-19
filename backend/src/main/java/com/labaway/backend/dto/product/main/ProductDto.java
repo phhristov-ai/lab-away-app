@@ -1,7 +1,8 @@
 package com.labaway.backend.dto.product.main;
 
 import com.labaway.backend.dto.category.CategoryDto;
-import com.labaway.backend.dto.product.image.ProductImageDto;
+import com.labaway.backend.dto.product.media.BannerDto;
+import com.labaway.backend.dto.product.media.ProductImageDto;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Data;
@@ -48,5 +49,7 @@ public class ProductDto {
 
     @NotNull
     private boolean active;
+
+    private BannerDto banner;
 
 }

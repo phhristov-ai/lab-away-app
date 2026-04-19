@@ -1,6 +1,7 @@
 package com.labaway.backend.entity.product;
 
 import com.labaway.backend.entity.category.Category;
+import com.labaway.backend.enums.BannerType;
 import com.labaway.backend.enums.Language;
 import jakarta.persistence.*;
 import lombok.*;
@@ -58,6 +59,13 @@ public class Product {
     @UpdateTimestamp
     private Instant updatedAt;
 
+    @Column(name = "banner_url")
+    private String bannerUrl;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "banner_type")
+    private BannerType bannerType;
+
     public String getTranslatedName(Language language) {
         return translations.stream()
                 .filter(t -> t.getLanguage() == language)
@@ -65,5 +73,4 @@ public class Product {
                 .findFirst()
                 .orElse("Unnamed Product");
     }
-
 }

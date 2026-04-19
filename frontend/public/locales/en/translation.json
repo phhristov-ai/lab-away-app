@@ -169,7 +169,7 @@
         "cardNumber": "Card Number",
         "expiryDate": "Expiry Date",
         "cvc": "CVC",
-        "placeOrder": "Complete Secure Payment"
+        "placeOrder": "Pay Now"
       },
       "paypal": {
         "methodLabel": "PayPal"
@@ -185,7 +185,7 @@
     "actions": {
       "next": "Next",
       "back": "Back",
-      "placeOrder": "Complete Secure Payment",
+      "placeOrder": "Pay Now",
       "continue": "Continue"
     }
   },

@@ -8,7 +8,7 @@ import com.labaway.backend.enums.Language;
 import com.labaway.backend.exception.ResourceNotFoundException;
 import com.labaway.backend.entity.repository.blog.BlogRepository;
 import com.labaway.backend.entity.repository.category.CategoryRepository;
-import com.labaway.backend.service.media.ImageService;
+import com.labaway.backend.service.media.MediaService;
 import com.labaway.backend.service.storage.S3Service;
 import com.labaway.backend.transformer.blog.BlogTransformer;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class BlogService {
     private final BlogTransformer blogTransformer;
     private final S3Service s3Service;
 
-    private final ImageService imageService;
+    private final MediaService mediaService;
 
     @Transactional(readOnly = true)
     public List<BlogPreviewDto> getAllBlogsForPreview(Language lang) {
@@ -78,7 +78,7 @@ public class BlogService {
 
     private void uploadImageIfPresent(Blog blog, MultipartFile file) {
         if (file != null && !file.isEmpty()) {
-            ImageUrls imageUrls = imageService.processAndUploadImage(file);
+            ImageUrls imageUrls = mediaService.processAndUploadImage(file);
 
             blog.setImageUrlSmall(imageUrls.getSmall());
             blog.setImageUrlMedium(imageUrls.getMedium());
@@ -101,7 +101,7 @@ public class BlogService {
                 s3Service.deleteFile(blog.getImageUrlLarge());
             }
 
-            ImageUrls newImageUrls = imageService.processAndUploadImage(file);
+            ImageUrls newImageUrls = mediaService.processAndUploadImage(file);
 
             blog.setImageUrlSmall(newImageUrls.getSmall());
             blog.setImageUrlMedium(newImageUrls.getMedium());

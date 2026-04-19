@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { ProductFullType } from '../../types/ProductFullType';
-import { ProductImage } from '../../types/ProductImage';
-
 
 type AdminProductEditorProps = {
   product: ProductFullType;
@@ -69,21 +67,6 @@ const AdminProductEditor: React.FC<AdminProductEditorProps> = ({
               }}
               placeholder="Image URL"
             />
-            <label style={{ marginLeft: '1rem' }}>
-              <input
-                type="radio"
-                name="mainImage"
-                checked={img.main}
-                onChange={() => {
-                  const newImages = images.map((image, i) => ({
-                    ...image,
-                    main: i === idx,
-                  }));
-                  setImages(newImages);
-                }}
-              />
-              <span>Main</span>
-            </label>
             <button
               onClick={() => setImages(images.filter((_, i) => i !== idx))}
               style={{ marginLeft: '1rem' }}
@@ -97,8 +80,11 @@ const AdminProductEditor: React.FC<AdminProductEditorProps> = ({
             setImages([
               ...images,
               {
+                id: crypto.randomUUID(),
                 imageUrlSmall: '',
-                main: images.length === 0,
+                imageUrlMedium: '',
+                imageUrlLarge: '',
+                order: images.length,
               },
             ])
           }

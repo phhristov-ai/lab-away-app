@@ -8,6 +8,7 @@ const Product: React.FC<ProductPreviewType> = ({ name, price, images, slug, cate
   const product = { name, price, images, slug, categories, active };
 
   const isDisabled = !active;
+  console.log(images);
   return (
     <div className={`product ${isDisabled ? 'inactive' : ''}`}>
       <Link

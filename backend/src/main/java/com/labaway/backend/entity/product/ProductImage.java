@@ -32,7 +32,7 @@ public class ProductImage {
 
     private String imageUrlLarge;
 
-    private boolean main;
+    private Integer position;
 
     @CreationTimestamp
     private Instant createdAt;

@@ -1,4 +1,4 @@
-package com.labaway.backend.dto.product.image;
+package com.labaway.backend.dto.product.media;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -25,5 +25,5 @@ public class ProductImageDto {
     @Size(max = 500, message = "Large image URL must not exceed 500 characters")
     private String imageUrlLarge;
 
-    private boolean main;
+    private Integer position;
 }

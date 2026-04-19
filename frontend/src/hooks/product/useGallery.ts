@@ -1,28 +1,37 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { ProductImage } from '../../types/ProductImage';
 
 export function useGallery(images: ProductImage[], setImages: React.Dispatch<React.SetStateAction<ProductImage[]>>) {
-  const [currentIndex, setCurrentIndex] = useState(() => {
-    const mainIndex = images.findIndex((img) => img.main);
-    return mainIndex === -1 ? 0 : mainIndex;
-  });
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const mainIndex = images.findIndex((img) => img.main);
-    if (mainIndex !== -1 && mainIndex !== currentIndex) {
-      setCurrentIndex(mainIndex);
+    if (images.length === 0) {
+      setCurrentIndex(0);
+      return;
     }
-  }, [images]);
+
+    setCurrentIndex((prev) => {
+      if (prev >= images.length) return images.length - 1;
+      return prev;
+    });
+  }, [images, currentIndex]);
 
   const goToPrev = useCallback(() => {
-    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+    setCurrentIndex((prev) => {
+      const len = images.length;
+      if (len === 0) return 0;
+      return prev === 0 ? len - 1 : prev - 1;
+    });
   }, [images.length]);
 
   const goToNext = useCallback(() => {
-    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    setCurrentIndex((prev) => {
+      const len = images.length;
+      if (len === 0) return 0;
+      return prev === len - 1 ? 0 : prev + 1;
+    });
   }, [images.length]);
 
   const goToImage = useCallback((index: number) => {
@@ -32,48 +41,46 @@ export function useGallery(images: ProductImage[], setImages: React.Dispatch<Rea
   const handleUpload = (
     event: React.ChangeEvent<HTMLInputElement> | React.DragEvent<HTMLDivElement>
   ) => {
-    const files = 'dataTransfer' in event ? event.dataTransfer.files : event.target.files;
+    const files =
+      'dataTransfer' in event ? event.dataTransfer.files : event.target.files;
+
     if (!files || files.length === 0) return;
 
-    const newImages: ProductImage[] = Array.from(files).map((file) => ({
-      imageUrlSmall: URL.createObjectURL(file),
-      main: false,
-      file,
-    }));
+    const newImages: ProductImage[] = Array.from(files).map((file) => {
+      const url = URL.createObjectURL(file);
 
-    setImages((prevImages) => {
-      const updatedImages = [...prevImages, ...newImages];
-      return updatedImages;
-    }); 
+      return {
+        id: crypto.randomUUID(),
+        imageUrlSmall: url,
+        imageUrlMedium: url,
+        imageUrlLarge: url,
+        file,
+      };
+    });
 
+    setImages((prev) => {
+      const updated = [...prev, ...newImages];
+      return updated;
+    });
   };
+
+  useEffect(() => {
+  if (images.length > 0) {
+    setCurrentIndex(images.length - 1);
+  }
+}, [images.length]);
 
   const handleDelete = useCallback(() => {
     setImages((prevImages) => {
       if (prevImages.length === 0) return prevImages;
 
-      const updatedImages = prevImages.filter((_, index) => index !== currentIndex);
+      const updated = prevImages.filter((_, index) => index !== currentIndex);
 
-      return updatedImages;
+      setCurrentIndex((prev) => Math.max(0, Math.min(prev, updated.length - 1)));
+
+      return updated;
     });
-
-    setCurrentIndex((prevIndex) =>
-      prevIndex >= images.length - 1 ? Math.max(0, images.length - 2) : prevIndex
-    );
-  }, [currentIndex, images.length]);
-
-
-
-  const setAsMainImage = (index: number) => {
-    setImages((prevImages) =>
-      prevImages.map((img, idx) => ({
-        ...img,
-        main: idx === index,
-      }))
-    );
-
-    setCurrentIndex(index);
-  };
+  }, [currentIndex]);
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -108,7 +115,6 @@ export function useGallery(images: ProductImage[], setImages: React.Dispatch<Rea
     goToImage,
     handleUpload,
     handleDelete,
-    setAsMainImage,
     handleDragOver,
     handleDragLeave,
     handleDrop,

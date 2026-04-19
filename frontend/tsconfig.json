@@ -2,9 +2,9 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "module": "ESNext",
-    "target": "ES6",
+    "target": "ES2021",
     "strict": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
 
     /* Projects */
     // "incremental": true,                              /* Save .tsbuildinfo files to allow for incremental compilation of projects. */

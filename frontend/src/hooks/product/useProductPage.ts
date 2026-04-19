@@ -8,8 +8,10 @@ import { useAdmin } from '../../context/AdminContext';
 import { getColumns, getFaqItems, getFeatureItems } from '../../services/product/productPageContent';
 import { t } from 'i18next';
 import { Category, fetchCategories } from '../../services/category/categoriesService';
-import { ProductImage } from '../../types/ProductImage';
 import { trackViewItem } from '../../utils/analytics';
+import { Media } from '../../components/common/layout/ImageTextSection';
+import ScientistImageLarge from '../../assets/images/product/Scientist_768.webp';
+import { mapBannerFromApi } from '../../utils/productImage.mapper';
 
 export const useProductPage = () => {
     const { slug } = useParams<{ slug: string }>();
@@ -46,9 +48,14 @@ export const useProductPage = () => {
     const [description, setDescription] = useState('');
     const [active, setActive] = useState<boolean | undefined>(undefined);
     const [price, setPrice] = useState(0);
+    const [bannerFile, setBannerFile] = useState<File | null>(null);
     const [showConfirmDelete, setShowConfirmDelete] = useState(false);
     const handleDeleteClick = () => {
         setShowConfirmDelete(true);
+    };
+    const fallbackMedia: Media = {
+        type: 'image',
+        src: ScientistImageLarge
     };
 
     useEffect(() => {
@@ -64,7 +71,6 @@ export const useProductPage = () => {
         }
     }, [product]);
 
-    // Fetch categories
     useEffect(() => {
         fetchCategories()
             .then(setAllCategories)
@@ -78,17 +84,17 @@ export const useProductPage = () => {
             product.categories.length > 0 &&
             allCategories.length > 0
         ) {
-            // Extract slugs from product.categories
-            const productCategorySlugs = product.categories.map(cat => cat.slug);
+            const productCategorySlugs = new Set(
+                product.categories.map(cat => cat.slug)
+            );
 
             const selected = allCategories.filter(cat =>
-                productCategorySlugs.includes(cat.slug)
+                productCategorySlugs.has(cat.slug)
             );
+
             setSelectedCategories(selected);
         }
     }, [product, allCategories]);
-
-
 
     const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedOptions = Array.from(e.target.selectedOptions);
@@ -132,10 +138,11 @@ export const useProductPage = () => {
                 setPrice(fullProduct.price);
                 setDescription(fullProduct.description);
                 setActive(fullProduct.active);
-
-                if (fullProduct.images) {
-                    setImages(fullProduct.images);
-                }
+                setProduct({
+                    ...fullProduct,
+                    banner: mapBannerFromApi(fullProduct.banner)
+                });
+                setImages(fullProduct.images ?? []);
 
             } catch (error) {
                 console.error('Error fetching product by slug:', error);
@@ -144,8 +151,6 @@ export const useProductPage = () => {
 
         loadProduct();
     }, [slug, i18n.language]);
-
-
 
     const handleSave = async () => {
         try {
@@ -158,7 +163,6 @@ export const useProductPage = () => {
             }
 
             const {
-                mainImageIndex,
                 filesToUpload,
                 existingImages,
             } = processImagesForPayload(images);
@@ -167,15 +171,12 @@ export const useProductPage = () => {
                 imageUrlSmall: img.imageUrlSmall,
                 imageUrlMedium: img.imageUrlMedium,
                 imageUrlLarge: img.imageUrlLarge,
-                main: img.main,
             }));
-
 
             const payload: ProductPayloadDto = {
                 price,
                 stock: 10,
                 active: active,
-                mainImageIndex,
                 categories: selectedCategories.map(cat => cat.slug),
                 translation: {
                     language,
@@ -186,8 +187,8 @@ export const useProductPage = () => {
             };
 
             const result = isNew
-                ? await createProduct(payload, filesToUpload)
-                : await updateProduct(slug!, payload, filesToUpload);
+                ? await createProduct(payload, filesToUpload, bannerFile ?? undefined)
+                : await updateProduct(slug!, payload, filesToUpload, bannerFile ?? undefined);
 
             setSuccessMessage(isNew ? 'Product created successfully!' : 'Product updated successfully!');
             setShowSuccessModal(true);
@@ -201,41 +202,65 @@ export const useProductPage = () => {
     };
 
     type NormalizedImageData = {
-        mainImageIndex: number;
         filesToUpload: File[];
         existingImages: ProductImage[];
     };
 
     function processImagesForPayload(images: ProductImage[]): NormalizedImageData {
-        const normalizedImages = normalizeMainImage(images);
-
-        const mainImageIndex = normalizedImages.findIndex(img => img.main);
-
-        const filesToUpload = normalizedImages
+        const filesToUpload = images
             .filter(img => img.file)
             .map(img => img.file!);
 
-        const existingImages = normalizedImages.filter(img => !img.file);
+        const existingImages = images.filter(img => !img.file);
 
         return {
-            mainImageIndex,
             filesToUpload,
             existingImages,
         };
     }
+    const updateBannerFromFile = (file: File) => {
+        setBannerFile(file);
+        setBannerPreview(file);
+    };
 
+    const setBannerPreview = (file: File) => {
+        const media = createMediaFromFile(file);
+        setProduct(prev => {
+            if (!prev || !isFullProduct(prev)) return prev;
 
-    function normalizeMainImage(images: ProductImage[]): ProductImage[] {
-        if (images.length === 0) return [];
-        const mainIndex = images.findIndex(img => img.main);
+            return {
+                ...prev,
+                banner: media
+            };
+        });
+    };
 
-        const validMainIndex = Math.max(mainIndex, 0);
+    const createMediaFromFile = (file: File): Media => {
+        const url = URL.createObjectURL(file);
 
-        return images.map((img, idx) => ({
-            ...img,
-            main: idx === validMainIndex,
-        }));
-    }
+        if (file.type.startsWith('video')) {
+            return {
+                type: 'video',
+                src: url,
+                mime: file.type
+            };
+        }
+
+        return {
+            type: 'image',
+            src: url
+        };
+    };
+
+    const getBannerMedia = (
+        product: ProductFullType | ProductPreviewType | null | undefined
+    ): Media => {
+        if (product && 'banner' in product && product.banner) {
+            return product.banner;
+        }
+
+        return fallbackMedia;
+    };
 
     return {
         slug,
@@ -267,6 +292,8 @@ export const useProductPage = () => {
         images,
         setImages,
         active,
-        setActive
+        setActive,
+        updateBannerFromFile,
+        getBannerMedia
     };
 };

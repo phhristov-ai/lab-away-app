@@ -1,6 +1,6 @@
 package com.labaway.backend.dto.product.main;
 
-import com.labaway.backend.dto.product.image.ProductImageDto;
+import com.labaway.backend.dto.product.media.ProductImageDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;

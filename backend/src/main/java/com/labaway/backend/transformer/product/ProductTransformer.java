@@ -2,6 +2,7 @@ package com.labaway.backend.transformer.product;
 
 import com.labaway.backend.dto.image.ImageUrls;
 import com.labaway.backend.dto.product.main.*;
+import com.labaway.backend.dto.product.media.BannerDto;
 import com.labaway.backend.entity.category.Category;
 import com.labaway.backend.entity.product.Product;
 import com.labaway.backend.entity.product.ProductTranslation;
@@ -41,6 +42,9 @@ public class ProductTransformer {
                 .images(product.getImages().stream()
                         .map(productImageTransformer::toDto)
                         .toList())
+                .banner(product.getBannerUrl() == null && product.getBannerType() == null
+                        ? null
+                        : new BannerDto(product.getBannerType(), product.getBannerUrl()))
                 .build();
     }
 

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.labaway.backend.dto.category.CategoryDto;
 import com.labaway.backend.dto.image.ImageUrls;
 import com.labaway.backend.dto.product.main.*;
-import com.labaway.backend.dto.product.image.ProductImageDto;
+import com.labaway.backend.dto.product.media.ProductImageDto;
 import com.labaway.backend.enums.Language;
 import com.labaway.backend.service.product.ProductService;
 import com.labaway.backend.service.storage.S3Service;
@@ -50,8 +50,7 @@ class ProductControllerTest {
         productImageDto = createProductImageDto(
                 "http://example.com/image-small.jpg",
                 "http://example.com/image-medium.jpg",
-                "http://example.com/image-large.jpg",
-                true
+                "http://example.com/image-large.jpg"
         );
 
         productDto = createProductDto("Test Product", "test-product", BigDecimal.TEN, 5,
@@ -85,8 +84,7 @@ class ProductControllerTest {
         ProductImageDto imageDto = createProductImageDto(
                 "http://example.com/image-small.jpg",
                 "http://example.com/image-medium.jpg",
-                "http://example.com/image-large.jpg",
-                true
+                "http://example.com/image-large.jpg"
         );
 
         productDto.setImages(List.of(imageDto));
@@ -103,59 +101,107 @@ class ProductControllerTest {
         assertThat(dtoImage.getImageUrlSmall()).isEqualTo("http://example.com/image-small.jpg");
         assertThat(dtoImage.getImageUrlMedium()).isEqualTo("http://example.com/image-medium.jpg");
         assertThat(dtoImage.getImageUrlLarge()).isEqualTo("http://example.com/image-large.jpg");
-        assertThat(dtoImage.isMain()).isTrue();
 
         verify(productService, times(1)).getProductBySlug(slug, Language.EN);
     }
 
     @Test
     void create_shouldReturnCreatedProductWithImages() throws IOException {
-        when(productService.createProduct(any(ProductPayloadDto.class), any(MultipartFile[].class)))
-                .thenReturn(productDto);
 
-        MultipartFile[] mockFiles = new MultipartFile[] {
+        when(productService.createProduct(
+                any(ProductPayloadDto.class),
+                any(MultipartFile[].class),
+                any(MultipartFile.class)
+        )).thenReturn(productDto);
+
+        MultipartFile[] mockGalleryFiles = new MultipartFile[] {
                 createMockMultipartFile("image.jpg", "image content")
         };
 
-        ResponseEntity<ProductDto> response = productController.createProductWithImages(productPayloadDtoJson, mockFiles);
+        MultipartFile mockBannerFile =
+                createMockMultipartFile("video.mp4", "video content");
+
+        ResponseEntity<ProductDto> response =
+                productController.createProductWithImages(
+                        productPayloadDtoJson,
+                        mockGalleryFiles,
+                        mockBannerFile
+                );
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(response.getBody()).isEqualTo(productDto);
 
-        verify(productService, times(1)).createProduct(any(ProductPayloadDto.class), aryEq(mockFiles));
+        verify(productService, times(1))
+                .createProduct(
+                        any(ProductPayloadDto.class),
+                        argThat(arr -> arr.length == 1),
+                        eq(mockBannerFile)
+                );
+
         verifyNoMoreInteractions(productService);
-        verify(productService).createProduct(any(ProductPayloadDto.class), aryEq(mockFiles));
     }
 
     @Test
     void create_shouldHandleMultipleImages() throws IOException {
+
         MultipartFile[] mockFiles = new MultipartFile[] {
                 createMockMultipartFile("image1.jpg", "content1"),
                 createMockMultipartFile("image2.jpg", "content2")
         };
 
-        when(productService.createProduct(any(ProductPayloadDto.class), any(MultipartFile[].class)))
-                .thenReturn(productDto);
+        MultipartFile mockBanner =
+                createMockMultipartFile("banner.mp4", "banner content");
+        when(productService.createProduct(
+                any(ProductPayloadDto.class),
+                any(MultipartFile[].class),
+                any(MultipartFile.class)
+        )).thenReturn(productDto);
 
-        ResponseEntity<ProductDto> response = productController.createProductWithImages(productPayloadDtoJson, mockFiles);
+        ResponseEntity<ProductDto> response =
+                productController.createProductWithImages(
+                        productPayloadDtoJson,
+                        mockFiles,
+                        mockBanner
+                );
+
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(response.getBody()).isEqualTo(productDto);
 
-        verify(productService).createProduct(any(ProductPayloadDto.class), aryEq(mockFiles));
+        verify(productService).createProduct(
+                any(ProductPayloadDto.class),
+                aryEq(mockFiles),
+                eq(mockBanner)
+        );
+
+        verifyNoMoreInteractions(productService);
     }
 
     @Test
     void create_whenServiceThrowsIOException_returnsInternalServerError() throws IOException {
+
         MultipartFile[] mockFiles = new MultipartFile[] {
                 createMockMultipartFile("image.jpg", "content")
         };
 
-        when(productService.createProduct(any(), any()))
-                .thenThrow(new IOException("S3 upload failed"));
+        MultipartFile mockBanner =
+                createMockMultipartFile("banner.mp4", "banner content");
 
-        ResponseEntity<ProductDto> response = productController.createProductWithImages(productPayloadDtoJson, mockFiles);
+        when(productService.createProduct(
+                any(ProductPayloadDto.class),
+                any(MultipartFile[].class),
+                any(MultipartFile.class)
+        )).thenThrow(new RuntimeException("S3 upload failed"));
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+        ResponseEntity<ProductDto> response =
+                productController.createProductWithImages(
+                        productPayloadDtoJson,
+                        mockFiles,
+                        mockBanner
+                );
+
+        assertThat(response.getStatusCode())
+                .isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+
         assertThat(response.getBody()).isNull();
     }
 
@@ -205,40 +251,90 @@ class ProductControllerTest {
 
     @Test
     void updateProduct_shouldReturnUpdatedProduct_whenProductExists() throws IOException {
+
         String slug = "test-slug";
+
         MultipartFile[] mockFiles = new MultipartFile[] {
                 createMockMultipartFile("image.jpg", "image content")
         };
+
+        MultipartFile mockBanner =
+                createMockMultipartFile("banner.mp4", "banner content");
+
         ProductDto updatedProductDto = ProductDto.builder()
                 .slug(slug)
                 .name("Updated Product")
                 .active(true)
                 .build();
 
-        when(productService.updateProduct(anyString(), any(ProductPayloadDto.class), aryEq(mockFiles))).thenReturn(updatedProductDto);
+        when(productService.updateProduct(
+                anyString(),
+                any(ProductPayloadDto.class),
+                any(MultipartFile[].class),
+                any(MultipartFile.class)
+        )).thenReturn(updatedProductDto);
 
-        ResponseEntity<ProductDto> response = productController.updateProduct(slug, productPayloadDtoJson, mockFiles);
+        ResponseEntity<ProductDto> response =
+                productController.updateProduct(
+                        slug,
+                        productPayloadDtoJson,
+                        mockFiles,
+                        mockBanner
+                );
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(updatedProductDto);
+        assertThat(response.getStatusCode())
+                .isEqualTo(HttpStatus.OK);
 
-        verify(productService).updateProduct(anyString(), any(ProductPayloadDto.class), aryEq(mockFiles));
+        assertThat(response.getBody())
+                .isEqualTo(updatedProductDto);
+
+        verify(productService).updateProduct(
+                eq(slug),
+                any(),
+                argThat(arr -> arr.length == 1),
+                eq(mockBanner)
+        );
     }
 
     @Test
     void updateProduct_shouldReturnNotFound_whenProductDoesNotExist() throws IOException {
+
         String slug = "nonexistent-slug";
+
         MultipartFile[] mockFiles = new MultipartFile[] {
                 createMockMultipartFile("image.jpg", "image content")
         };
-        when(productService.updateProduct(anyString(), any(ProductPayloadDto.class), aryEq(mockFiles))).thenReturn(null);
 
-        ResponseEntity<ProductDto> response = productController.updateProduct(slug, productPayloadDtoJson, mockFiles);
+        MultipartFile mockBanner =
+                createMockMultipartFile("banner.mp4", "banner content");
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(response.getBody()).isNull();
+        when(productService.updateProduct(
+                anyString(),
+                any(ProductPayloadDto.class),
+                any(MultipartFile[].class),
+                any(MultipartFile.class)
+        )).thenReturn(null);
 
-        verify(productService).updateProduct(anyString(), any(ProductPayloadDto.class), aryEq(mockFiles));
+        ResponseEntity<ProductDto> response =
+                productController.updateProduct(
+                        slug,
+                        productPayloadDtoJson,
+                        mockFiles,
+                        mockBanner
+                );
+
+        assertThat(response.getStatusCode())
+                .isEqualTo(HttpStatus.NOT_FOUND);
+
+        assertThat(response.getBody())
+                .isNull();
+
+        verify(productService).updateProduct(
+                eq(slug),
+                any(ProductPayloadDto.class),
+                aryEq(mockFiles),
+                eq(mockBanner)
+        );
     }
 
     @Test
@@ -300,12 +396,11 @@ class ProductControllerTest {
         );
     }
 
-    private static ProductImageDto createProductImageDto(String smallUrl, String mediumUrl, String largeUrl, boolean isMain) {
+    private static ProductImageDto createProductImageDto(String smallUrl, String mediumUrl, String largeUrl) {
         return ProductImageDto.builder()
                 .imageUrlSmall(smallUrl)
                 .imageUrlMedium(mediumUrl)
                 .imageUrlLarge(largeUrl)
-                .main(isMain)
                 .build();
     }
 
@@ -334,7 +429,6 @@ class ProductControllerTest {
                 .stock(stock)
                 .active(active)
                 .categories(categories)
-                .mainImageIndex(0)
                 .translation(ProductTranslationDto.builder()
                         .language(Language.EN)
                         .name(name)

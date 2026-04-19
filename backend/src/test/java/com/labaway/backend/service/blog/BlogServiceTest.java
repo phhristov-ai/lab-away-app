@@ -11,7 +11,7 @@ import com.labaway.backend.entity.repository.blog.BlogTranslationRepository;
 import com.labaway.backend.entity.repository.category.CategoryRepository;
 import com.labaway.backend.enums.Language;
 import com.labaway.backend.exception.ResourceNotFoundException;
-import com.labaway.backend.service.media.ImageService;
+import com.labaway.backend.service.media.MediaService;
 import com.labaway.backend.service.storage.S3Service;
 import com.labaway.backend.transformer.blog.BlogTransformer;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,7 +52,7 @@ class BlogServiceTest {
     @Mock
     private S3Service s3Service;
     @Mock
-    private ImageService imageService;
+    private MediaService mediaService;
     private String slug;
     private String categorySlug;
     private Blog blog;
@@ -126,7 +126,7 @@ class BlogServiceTest {
         MultipartFile file = createMockImageFile();
 
         when(blogTransformer.fromCreateDto(blogDto)).thenReturn(blog);
-        when(imageService.processAndUploadImage(file)).thenReturn(getImageUrls());
+        when(mediaService.processAndUploadImage(file)).thenReturn(getImageUrls());
 
         mockSaveBlog(blog);
         mockFindCategories(List.of(category));
@@ -160,7 +160,7 @@ class BlogServiceTest {
         BlogResponseDto result = blogService.createBlog(blogDto, null);
 
         verify(blogTransformer).toDto(eq(blog), any(Language.class));
-        verify(imageService, never()).processAndUploadImage(any());
+        verify(mediaService, never()).processAndUploadImage(any());
 
         assertBlogDto(result);
 
@@ -184,7 +184,7 @@ class BlogServiceTest {
 
         assertBlogDto(result);
 
-        verify(imageService, never()).processAndUploadImage(any());
+        verify(mediaService, never()).processAndUploadImage(any());
 
         assertNull(blog.getImageUrlSmall());
         assertNull(blog.getImageUrlMedium());
@@ -216,7 +216,7 @@ class BlogServiceTest {
 
         when(categoryRepository.findBySlugIn(updateDto.getCategorySlugs()))
                 .thenReturn(List.of(category));
-        when(imageService.processAndUploadImage(file))
+        when(mediaService.processAndUploadImage(file))
                 .thenReturn(imageUrls);
 
         mockSaveBlog(blog);
@@ -232,7 +232,7 @@ class BlogServiceTest {
 
         verify(blogRepository).findBySlug(slug);
         verify(blogRepository).save(blog);
-        verify(imageService).processAndUploadImage(file);
+        verify(mediaService).processAndUploadImage(file);
         verify(blogTransformer).updateEntity(blog, updateDto);
     }
 

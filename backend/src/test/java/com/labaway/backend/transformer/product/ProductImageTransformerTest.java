@@ -1,11 +1,10 @@
 package com.labaway.backend.transformer.product;
 
-import com.labaway.backend.dto.product.image.ProductImageDto;
+import com.labaway.backend.dto.product.media.ProductImageDto;
 import com.labaway.backend.entity.product.Product;
 import com.labaway.backend.entity.product.ProductImage;
 import com.labaway.backend.entity.product.ProductTranslation;
 import com.labaway.backend.enums.Language;
-import com.labaway.backend.transformer.product.ProductImageTransformer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -35,7 +34,6 @@ class ProductImageTransformerTest {
         assertThat(dto.getImageUrlSmall()).isEqualTo("http://example.com/image-small.jpg");
         assertThat(dto.getImageUrlMedium()).isEqualTo("http://example.com/image-medium.jpg");
         assertThat(dto.getImageUrlLarge()).isEqualTo("http://example.com/image-large.jpg");
-        assertThat(dto.isMain()).isTrue();
     }
 
     private Product createSampleProduct() {
@@ -67,7 +65,6 @@ class ProductImageTransformerTest {
                 .imageUrlSmall("http://example.com/image-small.jpg")
                 .imageUrlMedium("http://example.com/image-medium.jpg")
                 .imageUrlLarge("http://example.com/image-large.jpg")
-                .main(true)
                 .product(product)
                 .build();
     }

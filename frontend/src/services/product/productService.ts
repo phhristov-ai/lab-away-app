@@ -11,14 +11,12 @@ export type ProductImageDto = {
   imageUrlSmall?: string;
   imageUrlMedium?: string;
   imageUrlLarge?: string;
-  main: boolean;
 };
 
 export type ProductPayloadDto = {
   price: number;
   stock: number;
   active: boolean | undefined
-  mainImageIndex: number;
   categories: string[];
   translation: ProductTranslationDto;
   images: ProductImageDto[];
@@ -57,7 +55,8 @@ export const fetchRandomProductsByCategory = async (slug: string, lang: string) 
 
 export const createProduct = async (
   productPayload: ProductPayloadDto,
-  imageFiles: File[]
+  imageFiles: File[],
+  bannerFile?: File
 ) => {
   const token = localStorage.getItem('adminToken');
 
@@ -68,6 +67,10 @@ export const createProduct = async (
     imageFiles.forEach((file) => {
       formData.append('files', file);
     });
+  }
+
+  if (bannerFile) {
+    formData.append('banner', bannerFile);
   }
 
   const response = await axiosInstance.post('/products', formData, {
@@ -83,7 +86,8 @@ export const createProduct = async (
 export const updateProduct = async (
   slug: string,
   productPayload: ProductPayloadDto,
-  imageFiles: File[]
+  imageFiles: File[],
+  bannerFile?: File
 ) => {
   const token = localStorage.getItem('adminToken');
 
@@ -94,6 +98,10 @@ export const updateProduct = async (
     imageFiles.forEach((file) => {
       formData.append('files', file);
     });
+  }
+
+  if (bannerFile) {
+    formData.append('banner', bannerFile);
   }
 
   const response = await axiosInstance.put(`/products/${slug}`, formData, {

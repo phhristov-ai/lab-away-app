@@ -1,5 +1,4 @@
 import { Category } from "../services/category/categoriesService";
-import { ProductImage } from "./ProductImage";
 
 export type ProductPreviewType = {
   name: string;

@@ -6,8 +6,6 @@ import './ProductPage.css';
 import ThreeColumnLayout from '../../components/product/ThreeColumnLayout';
 import Accordion from '../../components/product/Accordion';
 import ImageTextSection from '../../components/common/layout/ImageTextSection';
-import ScientistImageSmall from '../../assets/images/product/Scientist_480.webp';
-import ScientistImageLarge from '../../assets/images/product/Scientist_768.webp';
 import RandomProductRow from '../../components/common/product/RandomProducts';
 import AdminActionButtons from '../../components/admin/AdminActionButtons';
 import { useProductPage } from '../../hooks/product/useProductPage';
@@ -45,9 +43,10 @@ const ProductPage: React.FC = () => {
     images,
     setImages,
     active,
-    setActive
+    setActive,
+    updateBannerFromFile,
+    getBannerMedia
   } = useProductPage();
-
 
   if (!product) return <div>Product not found</div>;
 
@@ -127,15 +126,15 @@ const ProductPage: React.FC = () => {
         </div>
 
         <ImageTextSection
-          smallSrc={ScientistImageSmall}
-          mediumSrc={ScientistImageLarge}
-          imageAlt="No sample"
+          media={getBannerMedia(product)}
           title={t('productPage.banner.title')}
           text={t('productPage.banner.subtitle')}
           buttonText={t('productPage.buttons.addToCart')}
           reverse={true}
           displayButton={false}
           buttonLink="/shop"
+          isAdmin={isAdmin}
+          onMediaChange={updateBannerFromFile}
         />
 
         <RandomProductRow />

@@ -42,9 +42,6 @@ public class ProductController {
             @PathVariable String slug,
             @RequestParam(defaultValue = "EN") Language lang) {
         ProductDto productDto = productService.getProductBySlug(slug, lang);
-        if (productDto == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
         return ResponseEntity.ok(productDto);
     }
 
@@ -52,12 +49,12 @@ public class ProductController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProductDto> createProductWithImages(
             @RequestPart(value = "product") String productJson,
-            @RequestPart("files") MultipartFile[] files) {
-
+            @RequestPart("files") MultipartFile[] files,
+            @RequestPart(value = "banner", required = false) MultipartFile banner) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             ProductPayloadDto productPayloadDto = mapper.readValue(productJson, ProductPayloadDto.class);
-            ProductDto createdProduct = productService.createProduct(productPayloadDto, files);
+            ProductDto createdProduct = productService.createProduct(productPayloadDto, files, banner);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,13 +67,14 @@ public class ProductController {
     public ResponseEntity<ProductDto> updateProduct(
             @PathVariable String slug,
             @RequestPart("product") String productJson,
-            @RequestPart(value = "files", required = false) MultipartFile[] files) {
+            @RequestPart(value = "files", required = false) MultipartFile[] files,
+            @RequestPart(value = "banner", required = false) MultipartFile banner) {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
             ProductPayloadDto updateProductDto = mapper.readValue(productJson, ProductPayloadDto.class);
 
-            ProductDto updatedProduct = productService.updateProduct(slug, updateProductDto, files);
+            ProductDto updatedProduct = productService.updateProduct(slug, updateProductDto, files, banner);
             if (updatedProduct == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }

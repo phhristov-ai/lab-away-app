@@ -1,9 +1,7 @@
 import HeroSection from '../../components/homepage/HeroSection';
 import FeatureImages from '../../components/homepage/FeatureImages';
 import ImageTextSection from '../../components/common/layout/ImageTextSection';
-import FeaturedImage4Small from '../../assets/images/home/FeaturedImage4_480.webp';
 import FeaturedImage4Medium from '../../assets/images/home/FeaturedImage4_768.webp';
-import FeaturedImage5Small from '../../assets/images/home/FeaturedImage5_480.webp';
 import FeaturedImage5Medium from '../../assets/images/home/FeaturedImage5_768.webp';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -30,9 +28,9 @@ const HomePage = () => {
     <div>
       <Helmet>
         <title>Lab-Away | Home - High-Quality Home Health Test Kits</title>
-        <meta 
-          name="description" 
-          content="Lab-Away provides high-quality home test kits for STI/STD tests, drug tests, and fertility tests with fast and discreet delivery. Get accurate results without the hassle of sending samples back." 
+        <meta
+          name="description"
+          content="Lab-Away provides high-quality home test kits for STI/STD tests, drug tests, and fertility tests with fast and discreet delivery. Get accurate results without the hassle of sending samples back."
         />
 
         <script type="application/ld+json">
@@ -50,11 +48,12 @@ const HomePage = () => {
 
       <HeroSection />
       <FeatureImages />
-      
+
       <ImageTextSection
-        smallSrc={FeaturedImage4Small}
-        mediumSrc={FeaturedImage4Medium}
-        imageAlt={t('homepage.firstParagraph.alt', 'No sample')}
+        media={{
+          type: 'image',
+          src: FeaturedImage4Medium,
+        }}
         title={t('homepage.firstParagraph.title')}
         text={t('homepage.firstParagraph.text')}
         buttonText={t('homepage.hero.shopButton')}
@@ -69,9 +68,10 @@ const HomePage = () => {
       <RandomProductRow />
 
       <ImageTextSection
-        smallSrc={FeaturedImage5Small}
-        mediumSrc={FeaturedImage5Medium}
-        imageAlt={t('homepage.secondParagraph.text')}
+        media={{
+          type: 'image',
+          src: FeaturedImage5Medium
+        }}
         title={t('homepage.secondParagraph.title')}
         text={t('homepage.secondParagraph.text')}
         buttonText={t('homepage.hero.shopButton')}

@@ -169,7 +169,7 @@
         "cardNumber": "Kartennummer",
         "expiryDate": "Ablaufdatum",
         "cvc": "CVC",
-        "placeOrder": "Komplette sichere Zahlung"
+        "placeOrder": "JETZT KAUFEN"
       },
       "paypal": {
         "methodLabel": "PayPal"
@@ -185,7 +185,7 @@
     "actions": {
       "next": "Weiter",
       "back": "Zurück",
-      "placeOrder": "Komplette sichere Zahlung",
+      "placeOrder": "JETZT KAUFEN",
       "continue": "Weiter"
     }
   },

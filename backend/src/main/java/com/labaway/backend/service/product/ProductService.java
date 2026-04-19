@@ -1,23 +1,27 @@
 package com.labaway.backend.service.product;
 
 import com.labaway.backend.dto.image.ImageUrls;
-import com.labaway.backend.dto.product.image.ProductImageDto;
+import com.labaway.backend.dto.product.media.ProductImageDto;
 import com.labaway.backend.dto.product.main.*;
 import com.labaway.backend.entity.category.Category;
 import com.labaway.backend.entity.product.Product;
 import com.labaway.backend.entity.product.ProductImage;
+import com.labaway.backend.enums.BannerType;
 import com.labaway.backend.enums.Language;
+import com.labaway.backend.event.BannerReplacedEvent;
 import com.labaway.backend.exception.CategoryNotFoundException;
 import com.labaway.backend.exception.ProductNotFoundException;
 import com.labaway.backend.entity.repository.category.CategoryRepository;
 import com.labaway.backend.entity.repository.product.ProductImageRepository;
 import com.labaway.backend.entity.repository.product.ProductRepository;
-import com.labaway.backend.service.media.ImageService;
+import com.labaway.backend.service.media.MediaService;
+import com.labaway.backend.service.model.BannerData;
 import com.labaway.backend.service.storage.S3Service;
 import com.labaway.backend.transformer.product.ProductTransformer;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,27 +38,46 @@ public class ProductService {
     private final ProductTransformer productTransformer;
     private final ProductImageRepository productImageRepository;
     private final S3Service s3Service;
-    private final ImageService imageService;
-
+    private final MediaService mediaService;
+    private final ApplicationEventPublisher eventPublisher;
     private static final Logger log =
             LoggerFactory.getLogger(ProductService.class);
 
-    public ProductDto createProduct(ProductPayloadDto productPayloadDto, MultipartFile[] files) throws IOException {
-        List<ProductImage> productImages = processImageFiles(files, productPayloadDto.getMainImageIndex());
-        Product savedProduct = prepareAndSaveProduct(productPayloadDto, productImages);
+    public ProductDto createProduct(ProductPayloadDto productPayloadDto, MultipartFile[] files, MultipartFile banner)  {
+        List<ProductImage> productImages = processImageFiles(files);
+        BannerData bannerData = processBanner(banner);
+        Product savedProduct = prepareAndSaveProduct(productPayloadDto, productImages, bannerData);
         return productTransformer.toDto(savedProduct, productPayloadDto.getTranslation().getLanguage());
     }
 
     @Transactional
-    public ProductDto updateProduct(String slug, ProductPayloadDto dto, MultipartFile[] files) throws IOException {
+    public ProductDto updateProduct(
+            String slug,
+            ProductPayloadDto dto,
+            MultipartFile[] files,
+            MultipartFile banner
+    ) throws IOException {
+
         Product product = findProductBySlug(slug);
+
+        String oldBannerUrl = product.getBannerUrl();
 
         updateProductImages(product, dto, files);
 
         List<Category> categories = resolveCategories(dto);
         productTransformer.updateEntity(product, dto, categories);
 
+        BannerData bannerData = processBanner(banner);
+        applyBanner(product, bannerData);
+
         Product savedProduct = productRepository.save(product);
+
+        String newBannerUrl = savedProduct.getBannerUrl();
+
+        if (oldBannerUrl != null && !oldBannerUrl.equals(newBannerUrl)) {
+            eventPublisher.publishEvent(new BannerReplacedEvent(oldBannerUrl));
+        }
+
         return productTransformer.toDto(savedProduct, dto.getTranslation().getLanguage());
     }
 
@@ -67,23 +90,7 @@ public class ProductService {
         Set<String> retainedUrls = extractRetainedImageKeys(dto);
 
         deleteRemovedImages(product, retainedUrls);
-        uploadNewImages(product, dto.getMainImageIndex(), files);
-        updateMainImageFlag(product, dto.getMainImageIndex());
-    }
-
-    private void updateMainImageFlag(Product product, Integer mainImageIndex) {
-        List<ProductImage> images = product.getImages();
-
-        if (mainImageIndex == null || mainImageIndex < 0 || mainImageIndex >= images.size()) {
-            for (int i = 0; i < images.size(); i++) {
-                images.get(i).setMain(i == 0);
-            }
-            return;
-        }
-
-        for (int i = 0; i < images.size(); i++) {
-            images.get(i).setMain(i == mainImageIndex);
-        }
+        uploadNewImages(product, files);
     }
 
     private Set<String> extractRetainedImageKeys(ProductPayloadDto dto) {
@@ -123,12 +130,12 @@ public class ProductService {
         product.getImages().removeAll(toRemove);
     }
 
-    private void uploadNewImages(Product product, Integer mainImageIndex, MultipartFile[] files) throws IOException {
+    private void uploadNewImages(Product product, MultipartFile[] files) {
         if (files == null || files.length == 0) {
             return;
         }
 
-        List<ProductImage> newImages = processImageFiles(files, mainImageIndex);
+        List<ProductImage> newImages = processImageFiles(files);
         for (ProductImage image : newImages) {
             image.setProduct(product);
         }
@@ -146,7 +153,28 @@ public class ProductService {
         return categories;
     }
 
-    private Product prepareAndSaveProduct(ProductPayloadDto productPayloadDto, List<ProductImage> productImages) {
+    private BannerData processBanner(MultipartFile banner) {
+        if (banner == null || banner.isEmpty()) {
+            return null;
+        }
+        String url = mediaService.uploadBanner(banner);
+        BannerType type = resolveBannerType(banner);
+
+        return new BannerData(url, type);
+    }
+    private BannerType resolveBannerType(MultipartFile file) {
+        String contentType = file.getContentType();
+
+        if (contentType != null && contentType.startsWith("video")) {
+            return BannerType.VIDEO;
+        }
+
+        return BannerType.IMAGE;
+    }
+
+    private Product prepareAndSaveProduct(ProductPayloadDto productPayloadDto,
+                                          List<ProductImage> productImages,
+                                          BannerData bannerData) {
         Language language = productPayloadDto.getTranslation().getLanguage();
         List<Category> categories = categoryRepository.findBySlugInAndLanguage(productPayloadDto.getCategories(), language);
 
@@ -159,8 +187,8 @@ public class ProductService {
         for (ProductImage image : productImages) {
             image.setProduct(product);
         }
-
-        product.setImages(productImages);
+        product.getImages().addAll(productImages);
+        applyBanner(product, bannerData);
 
         return productRepository.save(product);
     }
@@ -183,27 +211,24 @@ public class ProductService {
                 log.error("Failed to delete S3 file: " + oldImage + " - " + e.getMessage());
             }
         }
-
         productImageRepository.deleteAllByProductId(product.getId());
     }
 
-
-    private List<ProductImage> processImageFiles(MultipartFile[] files, Integer mainIndex) {
+    private List<ProductImage> processImageFiles(MultipartFile[] files) {
         List<ProductImage> productImages = new ArrayList<>();
+
         if (files == null || files.length == 0) {
             return productImages;
         }
 
-        for (int i = 0; i < files.length; i++) {
-            MultipartFile file = files[i];
+        for (MultipartFile file : files) {
             if (file != null && !file.isEmpty()) {
-                ImageUrls imageUrls = imageService.processAndUploadImage(file);
+                ImageUrls imageUrls = mediaService.processAndUploadImage(file);
 
                 ProductImage productImage = ProductImage.builder()
                         .imageUrlSmall(imageUrls.getSmall())
                         .imageUrlMedium(imageUrls.getMedium())
                         .imageUrlLarge(imageUrls.getLarge())
-                        .main(i == mainIndex)
                         .build();
 
                 productImages.add(productImage);
@@ -213,6 +238,11 @@ public class ProductService {
         return productImages;
     }
 
+    private void applyBanner(Product product, BannerData bannerData) {
+        if (bannerData == null) return;
+        product.setBannerUrl(bannerData.getUrl());
+        product.setBannerType(bannerData.getType());
+    }
 
     public List<ProductPreviewDto> getAllProductPreviews(Language lang) {
         return productRepository.findAllProductPreviewsByLanguage(lang.name()).stream()
@@ -242,7 +272,6 @@ public class ProductService {
 
     public ProductDto getProductBySlug(String slug, Language lang) {
         Product product = findProductBySlug(slug);
-
         return productTransformer.toDto(product, lang);
     }
 

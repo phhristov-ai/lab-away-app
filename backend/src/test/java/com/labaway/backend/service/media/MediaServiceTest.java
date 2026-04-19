@@ -1,7 +1,6 @@
 package com.labaway.backend.service.media;
 
 import com.labaway.backend.dto.image.ImageUrls;
-import com.labaway.backend.service.media.ImageService;
 import com.labaway.backend.service.storage.S3Service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,10 +13,11 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-class ImageServiceTest {
+class MediaServiceTest {
 
     @Mock
     private S3Service s3Service;
@@ -26,7 +26,7 @@ class ImageServiceTest {
     private MultipartFile file;
 
     @InjectMocks
-    private ImageService imageService;
+    private MediaService mediaService;
 
     private byte[] validImageContent;
 
@@ -52,7 +52,7 @@ class ImageServiceTest {
         when(s3Service.uploadFileWithName(any(byte[].class), anyString()))
                 .thenAnswer(invocation -> expectedUrls.get(invocation.getArgument(1)));
 
-        ImageUrls result = imageService.processAndUploadImage(file);
+        ImageUrls result = mediaService.processAndUploadImage(file);
 
         assertNotNull(result);
         assertEquals(expectedUrls.get("Gonorrhea-480.webp"), result.getSmall());
@@ -80,7 +80,7 @@ class ImageServiceTest {
         when(s3Service.uploadFileWithName(any(byte[].class), anyString()))
                 .thenAnswer(invocation -> expectedUrls.get(invocation.getArgument(1)));
 
-        ImageUrls result = imageService.processAndUploadImage(file);
+        ImageUrls result = mediaService.processAndUploadImage(file);
 
         assertNotNull(result);
         assertEquals(expectedUrls.get(defaultFileName + "-480.webp"), result.getSmall());
@@ -115,10 +115,32 @@ class ImageServiceTest {
                     return null;
                 });
 
-        RuntimeException thrown = assertThrows(RuntimeException.class, () -> imageService.processAndUploadImage(file));
+        RuntimeException thrown = assertThrows(RuntimeException.class, () -> mediaService.processAndUploadImage(file));
 
         assertEquals("Error processing and uploading image", thrown.getMessage());
     }
 
+    @Test
+    void uploadBanner_shouldReturnS3Url() throws Exception {
+        MultipartFile file = mock(MultipartFile.class);
 
+        when(file.getOriginalFilename()).thenReturn("banner.mp4");
+        when(file.getBytes()).thenReturn("file-content".getBytes());
+
+        when(s3Service.uploadFileWithName(any(byte[].class), anyString()))
+                .thenReturn("https://s3.com/banner.mp4");
+
+        String result = mediaService.uploadBanner(file);
+
+        assertThat(result).isEqualTo("https://s3.com/banner.mp4");
+
+        verify(file).getBytes();
+        verify(s3Service).uploadFileWithName(
+                eq("file-content".getBytes()),
+                argThat(name ->
+                        name.endsWith("-banner.mp4") &&
+                                name.contains("-")
+                )
+        );
+    }
 }

@@ -2,7 +2,7 @@ package com.labaway.backend.service.product;
 
 import com.labaway.backend.dto.category.CategoryDto;
 import com.labaway.backend.dto.image.ImageUrls;
-import com.labaway.backend.dto.product.image.ProductImageDto;
+import com.labaway.backend.dto.product.media.ProductImageDto;
 import com.labaway.backend.dto.product.main.*;
 import com.labaway.backend.entity.category.Category;
 import com.labaway.backend.entity.product.Product;
@@ -14,7 +14,7 @@ import com.labaway.backend.exception.ProductNotFoundException;
 import com.labaway.backend.entity.repository.category.CategoryRepository;
 import com.labaway.backend.entity.repository.product.ProductImageRepository;
 import com.labaway.backend.entity.repository.product.ProductRepository;
-import com.labaway.backend.service.media.ImageService;
+import com.labaway.backend.service.media.MediaService;
 import com.labaway.backend.service.storage.S3Service;
 import com.labaway.backend.transformer.product.ProductTransformer;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,7 +44,7 @@ class ProductServiceTest {
     @Mock private CategoryRepository categoryRepository;
     @Mock private ProductTransformer productTransformer;
     @Mock private S3Service s3Service;
-    @Mock private ImageService imageService;
+    @Mock private MediaService mediaService;
     private final UUID productId = UUID.randomUUID();
     private static final String LANGUAGE_EN_CODE = "EN";
     private final String categorySlug1 = "test-cat-1";
@@ -64,17 +64,16 @@ class ProductServiceTest {
 
     @Test
     void shouldCreateProductSuccessfully() throws IOException {
+
         ProductPayloadDto createDto = createSampleCreateDto();
         List<Category> categories = createSampleCategories();
         Product product = createSampleProduct();
         Product savedProduct = createSampleSavedProduct("test-product");
 
-        // Mocked image DTO with multiple sizes
         ProductImageDto imageDto = ProductImageDto.builder()
                 .imageUrlSmall("http://example.com/image-small.jpg")
                 .imageUrlMedium("http://example.com/image-medium.jpg")
                 .imageUrlLarge("http://example.com/image-large.jpg")
-                .main(true)
                 .build();
 
         ImageUrls imageUrls = new ImageUrls(
@@ -87,26 +86,49 @@ class ProductServiceTest {
                 createMockMultipartFile("image.jpg", "image content")
         };
 
-        when(imageService.processAndUploadImage(any(MultipartFile.class))).thenReturn(imageUrls);
+        MultipartFile mockBanner =
+                createMockMultipartFile("banner.mp4", "banner content");
 
-        when(categoryRepository.findBySlugInAndLanguage(createDto.getCategories(), Language.EN))
-                .thenReturn(categories);
-        when(productTransformer.fromCreateDto(createDto, categories)).thenReturn(product);
-        when(productRepository.save(product)).thenReturn(savedProduct);
+        when(mediaService.processAndUploadImage(any(MultipartFile.class)))
+                .thenReturn(imageUrls);
+
+        when(categoryRepository.findBySlugInAndLanguage(
+                createDto.getCategories(),
+                Language.EN
+        )).thenReturn(categories);
+
+        when(productTransformer.fromCreateDto(createDto, categories))
+                .thenReturn(product);
+
+        when(productRepository.save(product))
+                .thenReturn(savedProduct);
+
         when(productTransformer.toDto(savedProduct, Language.EN))
-                .thenReturn(createSampleProductDtoWithImages("test-product", List.of(imageDto)));
+                .thenReturn(createSampleProductDtoWithImages(
+                        "test-product",
+                        List.of(imageDto)
+                ));
 
-        ProductDto result = productService.createProduct(createDto, mockFiles);
+        ProductDto result = productService.createProduct(
+                createDto,
+                mockFiles,
+                mockBanner
+        );
 
         assertThat(result).isNotNull();
         assertThat(result.getSlug()).isEqualTo("test-product");
         assertThat(result.getImages()).hasSize(1);
-        assertThat(result.getImages().get(0).getImageUrlSmall()).isEqualTo("http://example.com/image-small.jpg");
+        assertThat(result.getImages().get(0).getImageUrlSmall())
+                .isEqualTo("http://example.com/image-small.jpg");
         assertThat(result.isActive()).isTrue();
 
-        verify(categoryRepository).findBySlugInAndLanguage(createDto.getCategories(), Language.EN);
+        verify(categoryRepository)
+                .findBySlugInAndLanguage(createDto.getCategories(), Language.EN);
+
         verify(productRepository).save(product);
-        verify(imageService, times(1)).processAndUploadImage(any(MultipartFile.class));
+
+        verify(mediaService, times(1))
+                .processAndUploadImage(any(MultipartFile.class));
     }
 
     private ProductDto createSampleProductDtoWithImages(String slug, List<ProductImageDto> images) {
@@ -122,8 +144,6 @@ class ProductServiceTest {
                 .build();
     }
 
-
-
     @Test
     void shouldUpdateProductSuccessfully() throws IOException {
         ProductPayloadDto createDto = createSampleCreateDto();
@@ -135,29 +155,39 @@ class ProductServiceTest {
                 .large("http://example.com/image-large.jpg")
                 .build();
 
-        when(imageService.processAndUploadImage(any(MultipartFile.class)))
+        when(mediaService.processAndUploadImage(any(MultipartFile.class)))
                 .thenReturn(sampleImageUrls);
-
 
         Product product = createSampleSavedProduct(slug);
         List<Category> categories = createSampleCategories();
+
         ProductDto expectedDto = createSampleProductDto(slug);
         expectedDto.setName(createDto.getTranslation().getName());
+
         MultipartFile[] mockFiles = new MultipartFile[] {
                 createMockMultipartFile("image.jpg", "image content")
         };
+
+        MultipartFile mockBanner = createMockMultipartFile("banner.mp4", "banner content");
+
         mockFindProductAndCategories(slug, createDto.getCategories(), product, categories);
 
         mockSaveAndTransform(product, expectedDto);
+
         when(productTransformer.fromCreateDto(any(), any())).thenReturn(product);
-        ProductDto result = productService.updateProduct(slug, createDto, mockFiles);
+
+        ProductDto result = productService.updateProduct(slug, createDto, mockFiles, mockBanner);
 
         assertThat(result).isNotNull();
         assertThat(result.getName()).isEqualTo(createDto.getTranslation().getName());
 
         verifyInteractions(slug, createDto.getCategories(), product);
+
         verify(productRepository).save(product);
-        verify(imageService, times(mockFiles.length)).processAndUploadImage(any(MultipartFile.class));
+
+        verify(mediaService, times(mockFiles.length)).processAndUploadImage(any(MultipartFile.class));
+
+        verify(mediaService).uploadBanner(mockBanner);
     }
 
     private MockMultipartFile createMockMultipartFile(String filename, String content) {
@@ -405,7 +435,6 @@ class ProductServiceTest {
                 .price(BigDecimal.valueOf(100))
                 .stock(10)
                 .active(true)
-                .mainImageIndex(0)
                 .categories(List.of(categorySlug1, categorySlug2))
                 .translation(productTranslationDto)
                 .build();

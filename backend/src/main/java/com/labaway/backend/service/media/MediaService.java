@@ -9,13 +9,14 @@ import javax.imageio.ImageIO;
 import java.io.*;
 import java.awt.*;
 import java.awt.image.*;
+import java.util.UUID;
 
 @Service
-public class ImageService {
+public class MediaService {
 
     private final S3Service s3Service;
 
-    public ImageService(S3Service s3Service) {
+    public MediaService(S3Service s3Service) {
         this.s3Service = s3Service;
     }
 
@@ -104,6 +105,17 @@ public class ImageService {
     private String uploadToS3(byte[] imageBytes, String baseFileName, int width) {
         String fileName = baseFileName + "-" + width + ".webp";
         return s3Service.uploadFileWithName(imageBytes, fileName);
+    }
+
+    public String uploadBanner(MultipartFile file) {
+        try {
+            String original = file.getOriginalFilename();
+            String fileName = UUID.randomUUID() + "-" + (original != null ? original : "banner");
+
+            return s3Service.uploadFileWithName(file.getBytes(), fileName);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to upload banner", e);
+        }
     }
 
 }

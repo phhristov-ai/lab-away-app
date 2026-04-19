@@ -1,12 +1,5 @@
+import { Media } from "../components/common/layout/ImageTextSection";
 import { Category } from "../services/category/categoriesService";
-import { ProductImage } from "./ProductImage";
-
-export type SharedContent = {
-  key: string;
-  title: string;
-  content: string;
-  imageUrl: string;
-};
 
 export type Faq = {
   question: string;
@@ -23,6 +16,6 @@ export type ProductFullType = {
   createdAt: string;
   updatedAt: string;
   images: ProductImage[];
-  sharedContent: SharedContent[];
   faqs: Faq[];
+  banner?: Media;
 };

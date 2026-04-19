@@ -1,7 +1,7 @@
 package com.labaway.backend.transformer.product;
 
 import com.labaway.backend.dto.category.CategoryDto;
-import com.labaway.backend.dto.product.image.ProductImageDto;
+import com.labaway.backend.dto.product.media.ProductImageDto;
 import com.labaway.backend.dto.product.main.*;
 import com.labaway.backend.entity.category.Category;
 import com.labaway.backend.entity.category.CategoryTranslation;
@@ -126,7 +126,6 @@ class ProductTransformerTest {
         assertThat(dtoImage.getImageUrlSmall()).isEqualTo(imageDto.getImageUrlSmall());
         assertThat(dtoImage.getImageUrlMedium()).isEqualTo(imageDto.getImageUrlMedium());
         assertThat(dtoImage.getImageUrlLarge()).isEqualTo(imageDto.getImageUrlLarge());
-        assertThat(dtoImage.isMain()).isTrue();
 
         List<String> expectedSlugs = product.getCategories().stream()
                 .map(Category::getSlug)
@@ -229,7 +228,6 @@ class ProductTransformerTest {
                 .imageUrlSmall("http://example.com/image-small.jpg")
                 .imageUrlMedium("http://example.com/image-medium.jpg")
                 .imageUrlLarge("http://example.com/image-large.jpg")
-                .main(true)
                 .build();
     }
 
@@ -238,7 +236,6 @@ class ProductTransformerTest {
                 .imageUrlSmall("http://example.com/image-small.jpg")
                 .imageUrlMedium("http://example.com/image-medium.jpg")
                 .imageUrlLarge("http://example.com/image-large.jpg")
-                .main(true)
                 .build();
     }
 
