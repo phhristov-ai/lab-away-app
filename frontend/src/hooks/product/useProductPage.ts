@@ -19,6 +19,8 @@ export const useProductPage = () => {
     const { i18n } = useTranslation();
     const { isAdmin } = useAdmin();
     const navigate = useNavigate();
+    const [quantity, setQuantity] = useState(1);
+
     const isFullProduct = (product: any): product is ProductFullType => {
         return 'images' in product && Array.isArray(product.images);
     };
@@ -262,6 +264,10 @@ export const useProductPage = () => {
         return fallbackMedia;
     };
 
+    const handleAddToCart = () => {
+        navigate('/cart');
+    };
+
     return {
         slug,
         product,
@@ -294,6 +300,9 @@ export const useProductPage = () => {
         active,
         setActive,
         updateBannerFromFile,
-        getBannerMedia
+        getBannerMedia,
+        handleAddToCart,
+        quantity,
+        setQuantity
     };
 };

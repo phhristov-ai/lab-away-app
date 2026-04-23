@@ -1,6 +1,5 @@
 import React from 'react';
 import Gallery from '../../components/product/Gallery';
-
 import ProductInfo from '../../components/product/ProductInfo';
 import './ProductPage.css';
 import ThreeColumnLayout from '../../components/product/ThreeColumnLayout';
@@ -14,6 +13,7 @@ import CategorySelect from '../../components/admin/CategorySelect';
 import ProductDescription from '../../components/product/ProductDescription';
 import { Helmet } from 'react-helmet';
 import ProductAvailabilitySelect from '../../components/product/ProductAvailabilitySelect';
+import StickyAddToCart from '../../components/product/StickyAddToCart';
 
 const ProductPage: React.FC = () => {
   const {
@@ -45,7 +45,10 @@ const ProductPage: React.FC = () => {
     active,
     setActive,
     updateBannerFromFile,
-    getBannerMedia
+    getBannerMedia,
+    handleAddToCart,
+    quantity,
+    setQuantity
   } = useProductPage();
 
   if (!product) return <div>Product not found</div>;
@@ -83,6 +86,9 @@ const ProductPage: React.FC = () => {
             onTitleChange={setTitle}
             onPriceChange={setPrice}
             active={active}
+            handleAddToCart={handleAddToCart}
+            quantity={quantity}
+            setQuantity={setQuantity}
           />
           {isAdmin && (
             <ProductAvailabilitySelect
@@ -138,7 +144,18 @@ const ProductPage: React.FC = () => {
         />
 
         <RandomProductRow />
+        <StickyAddToCart
+          title={title}
+          price={price}
+          onAddToCart={handleAddToCart} 
+          slug={product.slug} 
+          image={product.images?.[0]?.imageUrlSmall} 
+          quantity={quantity} 
+          categories={product.categories} 
+          active={active}
+        />
       </div>
+
     </div>
   );
 }
