@@ -1,13 +1,10 @@
-import { useTranslation } from 'react-i18next';
 import { useCart } from '../../context/CartContext';
 
 export const useCheckoutSummary = () => {
   const { state } = useCart();
-  const { t } = useTranslation();
 
   const enrichedItems = state.items.map(item => ({
     ...item,
-    subTitle: t('checkout.cart.columns.immediateResults'),
     subtotal: item.price * item.quantity,
     title: item.name,
     product: item.name,

@@ -28,15 +28,6 @@ const OrderItemRow: React.FC<Props> = ({ item, onQuantityChange }) => {
         <Link to={`/product/${item.slug}`} className="product-title-link">
           {item.title}
         </Link>
-        <br />
-        <small>
-          <img
-            src="/static/media/clock.73a198ac8c0a3163c5ed.webp"
-            alt=""
-            className="feature-icon"
-          />
-          {item.subTitle}
-        </small>
       </td>
       <td>
         <QuantitySelector

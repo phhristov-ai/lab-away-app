@@ -149,7 +149,7 @@
         "price": "Preis",
         "quantity": "Menge",
         "subtotal": "Zwischensumme",
-        "immediateResults": "Sofortige Ergebnisse sicher zu Hause"
+        "immediateResults": ""
       }
     },
     "cartTotals": {

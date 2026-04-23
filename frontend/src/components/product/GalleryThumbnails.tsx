@@ -89,7 +89,7 @@ const GalleryThumbnails: React.FC<Props> = ({
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 5, // prevents accidental drag on click
+        distance: 5,
       },
     })
   );

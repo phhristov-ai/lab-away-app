@@ -26,6 +26,10 @@
   font-weight: 600;
 }
 
+.form-group input-cell {
+  font-size: 18px;
+}
+
 .form-group input,
 .form-group select {
   padding: 1rem 1rem;
@@ -90,4 +94,6 @@ textarea:focus,
     margin-bottom: 0.5rem;
   }
 }
+
+
 
