@@ -101,7 +101,7 @@
       "description": "Erhalten Sie die neuesten Informationen zu Produkten und Unternehmensnachrichten.",
       "form": {
         "placeholder": "E-Mail-Adresse",
-        "button": "Anmelden",
+        "button": "Abonnieren",
         "alert": "Per E-Mail abonniert: {{email}}"
       }
     },

@@ -9,11 +9,10 @@ type Props = {
   city: string;
   countryName: string;
   email: string;
-  countryCode: string;
 };
 
 const ShippingDetails: React.FC<Props> = ({
-  name, address, phone, city, countryName, countryCode, email,
+  name, address, phone, city, countryName, email,
 }) => {
   const { t } = useTranslation();
   return (

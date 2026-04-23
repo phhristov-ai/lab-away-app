@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import SubscribeForm from './SubscribeForm';
-import SocialMediaLinks from './SocialMediaLinks';
 import FooterLine from './FooterLine';
 import './FooterSubscribe.css';
 
@@ -14,7 +13,7 @@ const FooterSubscribe = () => {
 
       <SubscribeForm />
       <FooterLine />
-      <SocialMediaLinks />
+      {/* <SocialMediaLinks /> */}
     </div>
   );
 };

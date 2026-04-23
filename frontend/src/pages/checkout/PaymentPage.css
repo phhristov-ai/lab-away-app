@@ -66,3 +66,17 @@
   .paypal-icon {
     height: 24px;
   }
+
+  @media (max-width: 768px) {
+  .payment-content {
+    flex-direction: column;
+  }
+
+  .order-summary-container {
+    order: -1;
+  }
+
+  .payment-left {
+    order: 1;
+  }
+}

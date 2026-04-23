@@ -28,7 +28,6 @@ const CountryDropdown: React.FC<CountryDropdownProps> = ({
     <div className={`form-group ${error ? 'has-error' : ''}`}>
       <label htmlFor={id}>{label}</label>
       <select id={id} name={id} className="input-cell" value={value} onChange={onChange}>
-        <option value="">{label}</option>
         {options.map(({ code, name }) => (
           <option key={code} value={code}>
             {name}
