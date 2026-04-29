@@ -1,6 +1,7 @@
 import { useCart } from '../../context/CartContext';
 import { Category } from '../../services/category/categoriesService';
 import './AddToCartButton.css';
+import { useAddToCart } from './useAddToCart';
 
 interface AddToCartButtonProps {
   onClick: () => void;
@@ -27,30 +28,23 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
   categories,
   active
 }) => {
-  const { dispatch } = useCart();
+  const addToCart = useAddToCart();
 
   const handleAdd = () => {
+    if (!active) return;
 
-    if (!active) {
-      return;
-    }
-    
-    dispatch({
-      type: 'ADD_ITEM',
-      payload: {
-        slug,
-        name,
-        price,
-        quantity,
-        image,
-        categories,
-        title: name,
-        product: '',
-        subtotal: price * quantity
-      },
+    addToCart({
+      slug,
+      name,
+      price,
+      quantity,
+      image,
+      categories,
     });
+
     onClick();
   };
+  
   const isDisabled = !active;
   return (
     <button

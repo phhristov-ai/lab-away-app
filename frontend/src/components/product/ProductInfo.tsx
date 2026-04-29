@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import AddToCartButton from './AddToCartButton';
 import './ProductInfo.css';
 import QuantitySelector from './QuantitySelector';
@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { useProductInfo } from '../../hooks/product/useProductInfo';
 import { Category } from '../../services/category/categoriesService';
 import { useAdmin } from '../../context/AdminContext';
+import PayPalForm from '../checkout/payment/PayPalForm';
+import { useAddToCart } from './useAddToCart';
 
 type ProductInfoProps = {
   title: string;
@@ -43,7 +45,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
 
   const { t } = useTranslation();
   const { isAdmin } = useAdmin();
-
+  const addToCart = useAddToCart();
 
   return (
     <div className="product-info-inner">
@@ -68,6 +70,16 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
             variant="secondary"
             categories={categories}
             active={active}
+          />
+
+        </div>
+      }
+      {!isAdmin &&
+        <div className="paypal-wrapper">
+          <PayPalForm
+            onBeforePay={() => {
+              addToCart({ slug, name: title, price, quantity, image, categories });
+            }}
           />
         </div>
       }
