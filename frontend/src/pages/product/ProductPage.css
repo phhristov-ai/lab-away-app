@@ -9,7 +9,7 @@
   justify-content: space-between;
   gap: 100px;
   background-color: var(--background-color);
-  padding: 20px var(--spacing-lg);
+  padding: 20px var(--spacing-3xl);
   box-sizing: border-box;
   width: auto;
 }
@@ -26,6 +26,10 @@
   flex-direction: column;
   gap: 20px;
   box-sizing: border-box;
+}
+
+.product-sections {
+  padding: 20px var(--spacing-3xl);
 }
 
 .three-column-container {
@@ -59,5 +63,9 @@
   .product-long-desc {
     font-size: 0.95rem;
     word-break: break-word;
+  }
+
+  .product-sections {
+    padding: var(--spacing-xs);
   }
 }

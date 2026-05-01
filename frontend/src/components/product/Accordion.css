@@ -1,6 +1,5 @@
 .accordion {
   border-top: 1px solid #ddd;
-  margin: 0 var(--spacing-xl);
 }
 
 .accordion-item + .accordion-item {
@@ -38,8 +37,12 @@
   transform: rotate(180deg);
 }
 
+.faq-title {
+  text-align: center;
+}
+
 @media (max-width: 768px) {
-  .accordion {
+  .accordion-section {
     margin: 0 var(--spacing-sm);
   }
 
