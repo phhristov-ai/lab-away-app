@@ -33,6 +33,7 @@ const OrderItemRow: React.FC<Props> = ({ item, onQuantityChange }) => {
         <QuantitySelector
           value={item.quantity}
           onChange={(newQuantity) => onQuantityChange(item.slug, newQuantity, item.categories)}
+          className='compact'
         />
       </td>
       <td className="remove-button-container">

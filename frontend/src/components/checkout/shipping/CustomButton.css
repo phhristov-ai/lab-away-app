@@ -11,6 +11,7 @@
   border-radius: 20px;
   margin-top: 20px;
   min-height: 46px;
+  text-transform: uppercase;
 }
 
 .custom-button.full-width {

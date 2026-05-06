@@ -2,10 +2,13 @@
   position: relative;
   display: inline-block;
   border: 1px solid #AFAFAF;
-  border-radius: 20px;
   background-color: #FFF;
   overflow: hidden;
-  height: 48px;
+  height: 46.4px;
+  min-width: 100px;
+}
+
+.quantity-selector-wrapper.compact {
   min-width: 55px;
 }
 

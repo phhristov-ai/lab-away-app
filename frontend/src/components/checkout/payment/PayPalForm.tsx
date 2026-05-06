@@ -7,7 +7,7 @@ const PayPalForm: React.FC<{ onBeforePay?: () => void }> = ({ onBeforePay }) => 
   return (
     <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID, currency: 'EUR' }}>
       <PayPalButtons
-        style={{ layout: 'vertical', height: 45, color: 'blue' }}
+        style={{ layout: 'vertical', height: 45, color: 'white' }}
         fundingSource="paypal"
         onClick={() => {
           onBeforePay?.();

@@ -4,13 +4,15 @@ import './QuantitySelector.css';
 type QuantitySelectorProps = {
   value: number;
   onChange: (value: number) => void;
-  active?: boolean; // default true
+  active?: boolean;
+  className?: string;
 };
 
 const QuantitySelector: React.FC<QuantitySelectorProps> = ({
   value,
   onChange,
   active = true,
+  className
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     onChange(Number(e.target.value));
@@ -18,7 +20,9 @@ const QuantitySelector: React.FC<QuantitySelectorProps> = ({
   const isDisabled = !active;
 
   return (
-    <div className={`quantity-selector-wrapper ${isDisabled ? 'disabled' : ''}`}>
+    <div
+      className={`quantity-selector-wrapper ${isDisabled ? 'disabled' : ''} ${className || ''}`}
+    >
       <select
         id="quantity"
         className="quantity-dropdown"

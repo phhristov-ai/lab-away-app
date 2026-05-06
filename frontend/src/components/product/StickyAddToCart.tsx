@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Category } from '../../services/category/categoriesService';
 import AddToCartButton from './AddToCartButton';
 import './StickyAddToCart.css';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
     title: string;
@@ -25,7 +26,7 @@ const StickyAddToCart: React.FC<Props> = ({
     onAddToCart,
 }) => {
     const [visible, setVisible] = useState(false);
-
+    const { t } = useTranslation();
     useEffect(() => {
         const handleScroll = () => {
             setVisible(window.scrollY > 300);
@@ -55,7 +56,7 @@ const StickyAddToCart: React.FC<Props> = ({
 
                 <AddToCartButton
                     onClick={onAddToCart}
-                    label="Add to cart"
+                    label={t('productPage.buttons.addToCart')}
                     slug={slug}
                     name={title}
                     image={image}

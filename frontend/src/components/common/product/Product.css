@@ -5,7 +5,6 @@
 }
 
 .product-image-wrapper {
-  width: 390px;
   height: 460px;
   display: flex;
   justify-content: center;
@@ -19,6 +18,7 @@
   max-height: 100%;
   object-fit: contain;
   display: block;
+  margin: auto;
 }
 
 .product-image-wrapper:hover img {
@@ -50,10 +50,16 @@
   color: #fff;
   pointer-events: none;
   z-index: 2;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
 }
 
 .product.inactive .shop-product-image {
   transition: filter 0.3s ease;
-  opacity: 0.6; 
+  opacity: 0.6;
+}
+
+@media only screen and (max-width: 768px) {
+  .product {
+    width: 100%;
+  }
 }

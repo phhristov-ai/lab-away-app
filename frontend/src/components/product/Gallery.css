@@ -60,11 +60,11 @@
   }
 
   .prev-arrow {
-    left: calc(-1 * var(--spacing-sm));
+    left: calc(-1 * var(--spacing-xs));
   }
 
   .next-arrow {
-    right: calc(-1 * var(--spacing-sm));
+    right: calc(-1 * var(--spacing-xs));
   }
 }
 

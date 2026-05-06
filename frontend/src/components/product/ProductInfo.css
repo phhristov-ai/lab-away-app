@@ -1,5 +1,5 @@
 .product-info {
-    font-size: 24px;
+    font-size: 28px;
 }
 
 .product-info .product-title {
@@ -77,4 +77,8 @@
 
 .paypal-wrapper {
   margin-top: 16px;
+}
+
+.product-price {
+  margin: 20px 0px;
 }
