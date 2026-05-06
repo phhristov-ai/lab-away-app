@@ -105,7 +105,7 @@
         "alert": "Per E-Mail abonniert: {{email}}"
       }
     },
-    "copyright": "© 2025 Lab Away – Heimtest-Kits für STI/STDs und Drogentests"
+    "copyright": "© {{year}} Lab Away – Heimtest-Kits für STI/STDs und Drogentests"
   },
   "checkout": {
     "email": "E-Mail-Adresse",

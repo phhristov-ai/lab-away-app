@@ -12,11 +12,12 @@ import { useTranslation } from 'react-i18next';
 
 const FooterBottom = () => {
   const { t } = useTranslation();
+  const year = new Date().getFullYear();
   return (
     <div className="footer-bottom-wrapper">
       <div className="footer-bottom">
         <div className="footer-bottom-left">
-          {t('footer.copyright')}
+          {t('footer.copyright', { year })}
         </div>
         <div className="footer-bottom-right">
           <img
