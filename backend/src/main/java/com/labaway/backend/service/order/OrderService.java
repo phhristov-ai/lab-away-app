@@ -11,7 +11,6 @@ import com.labaway.backend.entity.repository.order.OrderItemRepository;
 import com.labaway.backend.entity.repository.product.ProductRepository;
 import com.labaway.backend.enums.OrderStatus;
 import com.labaway.backend.entity.repository.order.OrderRepository;
-import com.labaway.backend.service.analytics.GoogleAnalyticsService;
 import com.labaway.backend.service.communication.EmailService;
 import com.labaway.backend.strategy.PaymentProvider;
 import com.labaway.backend.strategy.PaymentStrategy;
@@ -40,7 +39,7 @@ public class OrderService {
     private final EmailService emailService;
     private final OrderTransformer orderTransformer;
     private final OrderNumberGenerator orderNumberGenerator;
-    private final GoogleAnalyticsService analyticsService;
+//    private final GoogleAnalyticsService analyticsService;
 
     @Value("${app.frontend-url}")
     private String frontendUrl;
@@ -150,7 +149,7 @@ public class OrderService {
 
         OrderEmailDto emailDto = orderTransformer.mapToEmailDto(order);
         emailService.sendOrderConfirmationEmail(emailDto);
-        analyticsService.sendPurchaseEvent(clientId, order);
+    //    analyticsService.sendPurchaseEvent(clientId, order);
     }
 
 

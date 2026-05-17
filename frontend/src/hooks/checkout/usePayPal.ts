@@ -1,6 +1,6 @@
 import { useCart } from '../../context/CartContext';
 import { useCheckout } from '../../context/CheckoutContext';
-import { trackAddPaymentInfo, trackPurchaseFailed } from '../../utils/analytics';
+import { trackAddPaymentInfo, trackPurchase, trackPurchaseFailed } from '../../utils/analytics';
 import { PaymentProvider } from './useCreditCardForm';
 import { useNavigate } from "react-router-dom";
 
@@ -52,6 +52,19 @@ export const usePayPal = () => {
       const orderId = order.id;
 
       dispatch({ type: 'CLEAR_CART', payload: { reason: 'purchase' } });
+
+      trackPurchase(
+        orderId,
+        state.items.map(item => ({
+          item_id: item.slug,
+          item_name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          item_category: item.categories?.[0]?.name,
+          item_category2: item.categories?.[1]?.name,
+        })),
+        cartTotal
+      );
 
       navigate('/success', {
         state: {

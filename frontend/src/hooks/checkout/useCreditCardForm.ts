@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import { useTranslation } from "react-i18next";
 import { cardStyle } from "../../types/stripeStyles";
-import { trackAddPaymentInfo, trackGAEvent } from "../../utils/analytics";
+import { trackAddPaymentInfo, trackGAEvent, trackPurchase } from "../../utils/analytics";
 import { useState } from "react";
 
 export enum PaymentProvider {
@@ -127,6 +127,19 @@ export const useCreditCardForm = () => {
         });
 
         dispatch({ type: 'CLEAR_CART', payload: { reason: 'purchase' } });
+
+        trackPurchase(
+          order.orderNumber,
+          state.items.map(item => ({
+            item_id: item.slug,
+            item_name: item.name,
+            price: item.price,
+            quantity: item.quantity,
+            item_category: item.categories?.[0]?.name,
+            item_category2: item.categories?.[1]?.name,
+          })),
+          order.total
+        );
 
         navigate('/success', {
           state: {
