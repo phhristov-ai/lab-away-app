@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
@@ -46,6 +47,12 @@ class EmailServiceImplTest {
         when(smtpConfig.getFromEmail()).thenReturn("test@example.com");
         when(mailSender.createMimeMessage()).thenReturn(mimeMessage);
         emailService = new EmailServiceImpl(smtpConfig, mailSender, templateEngine);
+
+        ReflectionTestUtils.setField(
+                emailService,
+                "adminEmails",
+                new String[]{"test-admin@example.com"}
+        );
     }
 
     @Test

@@ -6,6 +6,7 @@ import com.labaway.backend.dto.order.OrderItemEmailDto;
 import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -24,6 +25,8 @@ public class EmailServiceImpl implements EmailService {
     private String fromEmail;
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
+    @Value("${app.email.admins}")
+    private String[] adminEmails;
     private static final Logger log =
             LoggerFactory.getLogger(EmailServiceImpl.class);
 
@@ -55,6 +58,7 @@ public class EmailServiceImpl implements EmailService {
             String lang = orderEmailDto.language().toLowerCase();
             String subject = subjects.getOrDefault(lang, subjects.get("en"));
             helper.setSubject(subject);
+            helper.setBcc(adminEmails);
 
             Context context = buildOrderConfirmationContext(orderEmailDto);
             String html = templateEngine.process("order-confirmation-" + orderEmailDto.language().toLowerCase(), context);
