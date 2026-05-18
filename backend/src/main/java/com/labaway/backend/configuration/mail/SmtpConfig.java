@@ -1,6 +1,8 @@
 package com.labaway.backend.configuration.mail;
 
-import com.labaway.backend.configuration.aws.AwsSecretsManagerHelper;
+import com.labaway.backend.configuration.secrets.SecretsManagerHelper;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -8,13 +10,21 @@ import java.util.Map;
 @Component
 public class SmtpConfig {
 
-    private final String username;
-    private final String password;
-    private final String fromEmail;
+    private final SecretsManagerHelper helper;
+    private String username;
+    private String password;
+    private String fromEmail;
 
-    public SmtpConfig() throws Exception {
-        AwsSecretsManagerHelper helper = new AwsSecretsManagerHelper();
-        Map<String, String> secrets = helper.getSecret("SMTPSecrets");
+    @Autowired
+    public SmtpConfig(SecretsManagerHelper helper) {
+        this.helper = helper;
+    }
+
+    @PostConstruct
+    public void init() throws Exception {
+
+        Map<String, String> secrets =
+                helper.getSecret("SMTPSecrets");
 
         this.username = secrets.get("smtpUsername");
         this.password = secrets.get("smtpPassword");

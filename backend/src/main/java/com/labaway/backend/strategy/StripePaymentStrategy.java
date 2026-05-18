@@ -24,6 +24,11 @@ public class StripePaymentStrategy implements PaymentStrategy {
 
     @PostConstruct
     public void init() {
+        System.out.println("=== STRIPE DEBUG ===");
+        System.out.println("PROFILE: " + System.getProperty("spring.profiles.active"));
+        System.out.println("KEY: " + stripeConfig.getSecretKey());
+
+        Stripe.apiKey = stripeConfig.getSecretKey();
         Stripe.apiKey = stripeConfig.getSecretKey();
     }
     @Override

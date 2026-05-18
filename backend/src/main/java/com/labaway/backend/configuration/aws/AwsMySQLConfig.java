@@ -1,6 +1,8 @@
 package com.labaway.backend.configuration.aws;
 
+import com.labaway.backend.configuration.secrets.SecretsManagerHelper;
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,10 +12,11 @@ import java.util.Map;
 @Configuration
 public class AwsMySQLConfig {
 
-    private final AwsSecretsManagerHelper secretsHelper;
+    private final SecretsManagerHelper secretsHelper;
 
-    public AwsMySQLConfig() {
-        this.secretsHelper = new AwsSecretsManagerHelper();
+    @Autowired
+    public AwsMySQLConfig(SecretsManagerHelper secretsHelper) {
+        this.secretsHelper = secretsHelper;
     }
 
     @Bean
