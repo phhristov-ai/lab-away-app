@@ -15,14 +15,26 @@ const STORAGE_KEYS = {
 };
 
 export const CheckoutProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const defaultCheckoutData = {
+    countryCode: 'DE',
+    countryName: 'Deutschland'
+  };
   const [billingData, setBillingData] = useState<Record<string, string>>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.billing);
-    return saved ? JSON.parse(saved) : {};
+
+    return {
+      ...defaultCheckoutData,
+      ...(saved ? JSON.parse(saved) : {}),
+    };
   });
 
   const [shippingData, setShippingData] = useState<Record<string, string>>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.shipping);
-    return saved ? JSON.parse(saved) : {};
+
+    return {
+      ...defaultCheckoutData,
+      ...(saved ? JSON.parse(saved) : {}),
+    };
   });
 
   React.useEffect(() => {

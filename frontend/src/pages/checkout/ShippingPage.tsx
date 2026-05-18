@@ -30,6 +30,7 @@ const ShippingPage = () => {
   const pageTitle = t('checkout.shipping.title') || "Shipping Information";
   const pageDescription = t('checkout.shipping.description') || "Please provide your shipping and billing information to complete your purchase.";
 
+  console.log(shippingData);
   return (
     <>
       <Helmet>
