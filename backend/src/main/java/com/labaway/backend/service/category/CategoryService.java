@@ -41,13 +41,13 @@ public class CategoryService {
 
     @Transactional
     public CategoryDto createCategory(CreateCategoryDto dto) {
-        if (categoryRepository.existsBySlug(dto.getSlug())) {
+        if (categoryRepository.existsBySlug(dto.slug())) {
             throw new CategoryNotFoundException("Category with slug already exists");
         }
         Category category = categoryTransformer.fromCreateDto(dto);
         Category savedCategory = categoryRepository.saveAndFlush(category);
 
-        CategoryTranslation translation = categoryTransformer.fromCreateTranslationDto(dto.getTranslation(), savedCategory);
+        CategoryTranslation translation = categoryTransformer.fromCreateTranslationDto(dto.translation(), savedCategory);
         categoryTranslationRepository.save(translation);
 
         return categoryTransformer.toDto(savedCategory, translation.getLanguage());
@@ -70,7 +70,7 @@ public class CategoryService {
         Category category = categoryRepository.findBySlug(slug)
                 .orElseThrow(() -> new CategoryNotFoundException("Category not found"));
 
-        Language language = dto.getLanguage();
+        Language language = dto.language();
 
         CategoryTranslation translation = categoryTranslationRepository
                 .findByCategoryIdAndLanguage(category.getId(), language)
@@ -81,7 +81,7 @@ public class CategoryService {
                     return newTranslation;
                 });
 
-        translation.setName(dto.getName());
+        translation.setName(dto.name());
         categoryTranslationRepository.save(translation);
     }
 

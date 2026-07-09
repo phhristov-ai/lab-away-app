@@ -1,9 +1,11 @@
-package com.labaway.backend.transformer.order;
+package com.labaway.backend.unit.transformer.order;
+
 import com.labaway.backend.dto.order.AddressDto;
 import com.labaway.backend.dto.order.OrderDto;
 import com.labaway.backend.entity.order.Address;
 import com.labaway.backend.entity.order.Order;
 import com.labaway.backend.entity.order.OrderItem;
+import com.labaway.backend.entity.product.Product;
 import com.labaway.backend.enums.OrderStatus;
 
 import com.labaway.backend.strategy.PaymentProvider;
@@ -50,15 +52,15 @@ class OrderTransformerTest {
         OrderDto dto = orderTransformer.toDto(order);
 
         assertThat(dto).isNotNull();
-        assertThat(dto.getOrderNumber()).isEqualTo(orderNumber);
-        assertThat(dto.getStatus()).isEqualTo("PENDING");
-        assertThat(dto.getTotalPrice()).isEqualByComparingTo("99.99");
-        assertThat(dto.getCustomerEmail()).isEqualTo("user@example.com");
-        assertThat(dto.getBillingAddress()).isEqualTo(billingDto);
-        assertThat(dto.getShippingAddress()).isEqualTo(shippingDto);
-        assertThat(dto.getOrderItems()).hasSize(2);
-        assertThat(dto.getOrderItems().get(0).getPrice()).isEqualByComparingTo("49.99");
-        assertThat(dto.getOrderItems().get(1).getQuantity()).isEqualTo(2);
+        assertThat(dto.orderNumber()).isEqualTo(orderNumber);
+        assertThat(dto.status()).isEqualTo("PENDING");
+        assertThat(dto.totalPrice()).isEqualByComparingTo("99.99");
+        assertThat(dto.customerEmail()).isEqualTo("user@example.com");
+        assertThat(dto.billingAddress()).isEqualTo(billingDto);
+        assertThat(dto.shippingAddress()).isEqualTo(shippingDto);
+        assertThat(dto.orderItems()).hasSize(2);
+        assertThat(dto.orderItems().get(0).price()).isEqualByComparingTo("49.99");
+        assertThat(dto.orderItems().get(1).quantity()).isEqualTo(2);
 
         verify(addressTransformer).toDto(billingAddress);
         verify(addressTransformer).toDto(shippingAddress);
@@ -86,7 +88,7 @@ class OrderTransformerTest {
 
         AddressDto result = orderTransformer.toDto(entity);
 
-        assertThat(result.getCity()).isEqualTo("CityY");
+        assertThat(result.city()).isEqualTo("CityY");
         verify(addressTransformer).toDto(entity);
     }
 
@@ -95,11 +97,27 @@ class OrderTransformerTest {
     }
 
     private AddressDto sampleAddressDto(String city) {
-        return AddressDto.builder().city(city).build();
+        return new AddressDto(
+                "John",
+                "Doe",
+                "Country",
+                "Address",
+                city,
+                "12345",
+                "+359892153902"
+        );
     }
 
     private OrderItem sampleOrderItem(String price, int quantity) {
+        Product product = Product.builder()
+                .slug("test-product")
+                .price(new BigDecimal(price))
+                .stock(10)
+                .active(true)
+                .build();
+
         return OrderItem.builder()
+                .product(product)
                 .price(new BigDecimal(price))
                 .quantity(quantity)
                 .build();

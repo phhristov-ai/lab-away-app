@@ -1,6 +1,5 @@
 package com.labaway.backend.configuration.aws;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.labaway.backend.configuration.secrets.SecretsManagerHelper;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -8,11 +7,12 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.Map;
 
 @Component
-@Profile("!local")
+@Profile("prod")
 public class AwsSecretsManagerHelper implements SecretsManagerHelper {
 
     private final SecretsManagerClient client;

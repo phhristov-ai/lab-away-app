@@ -4,33 +4,28 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Builder;
-import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Data
-@Builder
-public class AdminUserDto {
+public record AdminUserDto(
+        @NotNull
+        UUID id,
 
-    @NotNull
-    private UUID id;
+        @NotBlank(message = "Username is required")
+        @Size(min = 5, max = 255, message = "Username must be between 5 and 255 characters")
+        String username,
 
-    @NotBlank(message = "Username is required")
-    @Size(min = 5, max = 255, message = "Username must be between 5 and 255 characters")
-    private String username;
+        @Email(message = "Email should be valid")
+        @NotBlank(message = "Email is required")
+        String email,
 
-    @Email(message = "Email should be valid")
-    @NotBlank(message = "Email is required")
-    private String email;
+        @NotBlank(message = "Role is required")
+        String role,
 
-    @NotBlank(message = "Role is required")
-    private String role;
+        @NotNull
+        LocalDateTime createdAt,
 
-    @NotNull
-    private LocalDateTime createdAt;
-
-    @NotNull
-    private LocalDateTime updatedAt;
-}
+        @NotNull
+        LocalDateTime updatedAt
+) {}

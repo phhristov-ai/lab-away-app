@@ -1,6 +1,5 @@
 package com.labaway.backend.controller.product;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.labaway.backend.dto.product.main.*;
 import com.labaway.backend.enums.Language;
 import com.labaway.backend.service.product.ProductService;
@@ -11,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
 

@@ -1,6 +1,8 @@
-package com.labaway.backend.controller.order;
+package com.labaway.backend.unit.controller.order;
 
+import com.labaway.backend.controller.order.OrderController;
 import com.labaway.backend.dto.order.*;
+import com.labaway.backend.enums.Language;
 import com.labaway.backend.enums.OrderStatus;
 import com.labaway.backend.service.order.OrderService;
 import com.labaway.backend.strategy.PaymentProvider;
@@ -14,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,7 +37,7 @@ class OrderControllerTest {
 
     @Test
     void testCreateOrder() {
-        CreateOrderRequestDto dto = new CreateOrderRequestDto();
+        CreateOrderRequestDto dto = createOrderRequestDto();
         CreateOrderResponseDto responseDto = new CreateOrderResponseDto(generator.generate(), PaymentProvider.STRIPE,  "stripeSessionId", "paymentIntentId", BigDecimal.TEN);
 
         when(orderService.createOrder(dto)).thenReturn(responseDto);
@@ -46,10 +49,49 @@ class OrderControllerTest {
         verify(orderService).createOrder(dto);
     }
 
+    private CreateOrderRequestDto createOrderRequestDto() {
+        return new CreateOrderRequestDto(
+                "john.doe@example.com",
+                "+359888123456",
+                createAddressDto(),
+                createAddressDto(),
+                PaymentProvider.STRIPE,
+                List.of(
+                        new OrderItemDto(
+                                "test-product",
+                                1,
+                                BigDecimal.TEN
+                        )
+                ),
+                Language.EN
+        );
+    }
+
+    private AddressDto createAddressDto() {
+        return new AddressDto(
+                "John",
+                "Doe",
+                "Bulgaria",
+                "Main Street 1",
+                "Sofia",
+                "1000",
+                "+359888123456"
+        );
+    }
+
     @Test
     void testCreateExpressOrder() {
-        CreateExpressOrderRequestDto dto = new CreateExpressOrderRequestDto();
-
+        CreateExpressOrderRequestDto dto = new CreateExpressOrderRequestDto(
+                PaymentProvider.PAYPAL,
+                List.of(
+                        new OrderItemDto(
+                                "test-product",
+                                1,
+                                BigDecimal.TEN
+                        )
+                ),
+                Language.EN
+        );
         CreateOrderResponseDto responseDto =
                 new CreateOrderResponseDto(
                         generator.generate(),
@@ -74,9 +116,7 @@ class OrderControllerTest {
     void testConfirmOrder() {
         String orderNumber = generator.generate();
         String clientId = "clientId";
-        ConfirmOrderRequestDto confirmOrderRequestDto = new ConfirmOrderRequestDto();
-        confirmOrderRequestDto.setOrderNumber(orderNumber);
-        confirmOrderRequestDto.setGaClientId(clientId);
+        ConfirmOrderRequestDto confirmOrderRequestDto = new ConfirmOrderRequestDto(orderNumber, clientId);
 
         doNothing().when(orderService).confirmOrder(orderNumber, clientId);
 
@@ -88,8 +128,7 @@ class OrderControllerTest {
 
     @Test
     void testConfirmExpressOrder() {
-        ConfirmExpressOrderRequestDto dto =
-                ConfirmExpressOrderRequestDto.builder().build();
+        ConfirmExpressOrderRequestDto dto = createConfirmExpressOrderRequestDto();
 
         doNothing().when(orderService)
                 .confirmExpressOrder(dto);
@@ -102,10 +141,21 @@ class OrderControllerTest {
         verify(orderService).confirmExpressOrder(dto);
     }
 
+    private ConfirmExpressOrderRequestDto createConfirmExpressOrderRequestDto() {
+        return new ConfirmExpressOrderRequestDto(
+                "ORDER-123",
+                "ga-client-id",
+                "john.doe@example.com",
+                createAddressDto(),
+                createAddressDto(),
+                "paypal-capture-id"
+        );
+    }
+
     @Test
     void testGetOrder() {
         String orderNumber = generator.generate();
-        OrderDto orderDto = new OrderDto();
+        OrderDto orderDto = createOrderDto(orderNumber);
 
         when(orderService.getOrderByOrderNumber(orderNumber)).thenReturn(orderDto);
 
@@ -115,9 +165,33 @@ class OrderControllerTest {
         assertEquals(orderDto, response.getBody());
     }
 
+    private OrderDto createOrderDto(String orderNumber) {
+        return new OrderDto(
+                orderNumber,
+                "john.doe@example.com",
+                createAddressDto(),
+                createAddressDto(),
+                BigDecimal.TEN,
+                "PENDING",
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                PaymentProvider.STRIPE,
+                List.of(
+                        new OrderItemDto(
+                                "test-product",
+                                1,
+                                BigDecimal.TEN
+                        )
+                )
+        );
+    }
+
     @Test
     void testGetAllOrders() {
-        List<OrderDto> orderList = List.of(new OrderDto(), new OrderDto());
+        List<OrderDto> orderList = List.of(
+                createOrderDto("ORDER-001"),
+                createOrderDto("ORDER-002")
+        );
 
         when(orderService.getAllOrders()).thenReturn(orderList);
 

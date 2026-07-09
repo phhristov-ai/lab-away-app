@@ -45,18 +45,35 @@ public class OrderService {
     private String frontendUrl;
 
     public CreateOrderResponseDto createOrder(CreateOrderRequestDto dto) {
-        BigDecimal total = calculateTotal(dto.getItems());
+        BigDecimal total = calculateTotal(dto.items());
 
         Order order = createInitialOrder(dto, total);
 
-        List<OrderItem> orderItems = createOrderItems(dto.getItems(), order);
-        orderItemRepository.saveAll(orderItems);
-        order.getOrderItems().clear();
-        order.getOrderItems().addAll(orderItems);
-        orderRepository.save(order);
+        createOrderItems(order, dto.items());
 
-        CreatePaymentResponseDto paymentResponse = initiatePayment(dto, total, order);
-        attachPaymentSessionId(dto.getPaymentProvider(), order, paymentResponse);
+        return initiatePaymentAndBuildResponse(order);
+    }
+
+    public CreateOrderResponseDto createExpressOrder(CreateExpressOrderRequestDto dto) {
+        BigDecimal total = calculateTotal(dto.items());
+
+        Order order = createInitialExpressOrder(dto, total);
+
+        createOrderItems(order, dto.items());
+
+        return initiatePaymentAndBuildResponse(order);
+    }
+
+    private CreateOrderResponseDto initiatePaymentAndBuildResponse(
+            Order order) {
+
+        CreatePaymentResponseDto paymentResponse = initiatePayment(order);
+
+        attachPaymentSessionId(
+                order.getPaymentProvider(),
+                order,
+                paymentResponse);
+
         orderRepository.save(order);
 
         return buildCreateOrderResponse(order, paymentResponse);
@@ -64,50 +81,83 @@ public class OrderService {
 
     private Order createInitialOrder(CreateOrderRequestDto dto, BigDecimal total) {
         Order order = Order.builder()
-                .customerEmail(dto.getCustomerEmail())
-                .billingAddress(orderTransformer.toEntity(dto.getBillingAddress()))
-                .shippingAddress(orderTransformer.toEntity(dto.getShippingAddress()))
+                .customerEmail(dto.customerEmail())
+                .billingAddress(orderTransformer.toEntity(dto.billingAddress()))
+                .shippingAddress(orderTransformer.toEntity(dto.shippingAddress()))
                 .totalPrice(total)
                 .status(OrderStatus.PENDING)
-                .paymentProvider(dto.getPaymentProvider())
+                .paymentProvider(dto.paymentProvider())
                 .orderNumber(orderNumberGenerator.generate())
-                .language(dto.getLanguage().name())
+                .language(dto.language().name())
                 .build();
+
         return orderRepository.save(order);
     }
 
-    private List<OrderItem> createOrderItems(List<OrderItemDto> itemDtos, Order order) {
-        return itemDtos.stream().map(itemDto -> {
-            Product product = productRepository.findBySlug(itemDto.getSlug())
-                    .orElseThrow(() -> new EntityNotFoundException("Product not found with slug: " + itemDto.getSlug()));
-            return OrderItem.builder()
-                    .quantity(itemDto.getQuantity())
-                    .price(itemDto.getPrice())
-                    .product(product)
-                    .order(order)
-                    .build();
-        }).toList();
+    private Order createInitialExpressOrder(CreateExpressOrderRequestDto dto,
+                                            BigDecimal total) {
+        Order order = Order.builder()
+                .paymentProvider(dto.paymentProvider())
+                .orderNumber(orderNumberGenerator.generate())
+                .totalPrice(total)
+                .status(OrderStatus.PENDING)
+                .language(dto.language().name())
+                .build();
+
+        return orderRepository.save(order);
     }
 
-    private CreatePaymentResponseDto initiatePayment(CreateOrderRequestDto dto, BigDecimal total, Order order) {
-        PaymentStrategy strategy = paymentStrategyFactory.getStrategy(dto.getPaymentProvider());
+    private void createOrderItems(Order order, List<OrderItemDto> itemDtos) {
+
+        List<OrderItem> orderItems = itemDtos.stream()
+                .map(itemDto -> {
+                    Product product = productRepository.findBySlug(itemDto.slug())
+                            .orElseThrow(() -> new EntityNotFoundException(
+                                    "Product not found with slug: " + itemDto.slug()));
+
+                    return OrderItem.builder()
+                            .order(order)
+                            .product(product)
+                            .quantity(itemDto.quantity())
+                            .price(itemDto.price())
+                            .build();
+                })
+                .toList();
+
+        orderItemRepository.saveAll(orderItems);
+
+        order.getOrderItems().clear();
+        order.getOrderItems().addAll(orderItems);
+
+        orderRepository.save(order);
+    }
+
+    private CreatePaymentResponseDto initiatePayment(Order order) {
+
+        PaymentStrategy strategy =
+                paymentStrategyFactory.getStrategy(order.getPaymentProvider());
+
         Currency currency = Currency.getInstance("EUR");
         int fractionDigits = currency.getDefaultFractionDigits();
-        long amount = total.movePointRight(fractionDigits).longValue();
 
-        CreatePaymentRequestDto paymentRequest = CreatePaymentRequestDto.builder()
-                .amount(amount)
-                .currency("eur")
-                .customerEmail(order.getCustomerEmail())
-                .successUrl(frontendUrl + "/success?orderId=" + order.getId())
-                .cancelUrl(frontendUrl + "/cancel")
-                .build();
+        long amount = order.getTotalPrice()
+                .movePointRight(fractionDigits)
+                .longValue();
+
+        CreatePaymentRequestDto paymentRequest = new CreatePaymentRequestDto(
+                amount,
+                "eur",
+                order.getCustomerEmail(),
+                frontendUrl + "/success?orderId=" + order.getId(),
+                frontendUrl + "/cancel",
+                null
+        );
 
         return strategy.initiatePayment(paymentRequest);
     }
 
     private void attachPaymentSessionId(PaymentProvider provider, Order order, CreatePaymentResponseDto response) {
-        String paymentIntentId = response.getPaymentIntentId();
+        String paymentIntentId = response.paymentIntentId();
         if (provider == PaymentProvider.STRIPE) {
             order.setStripeSessionId(paymentIntentId);
         } else if (provider == PaymentProvider.PAYPAL) {
@@ -116,40 +166,65 @@ public class OrderService {
     }
 
     private CreateOrderResponseDto buildCreateOrderResponse(Order order, CreatePaymentResponseDto paymentResponse) {
-        return CreateOrderResponseDto.builder()
-                .orderNumber(order.getOrderNumber())
-                .provider(order.getPaymentProvider())
-                .sessionId(paymentResponse.getPaymentIntentId())
-                .clientSecret(paymentResponse.getClientSecret())
-                .total(order.getTotalPrice())
-                .build();
+        return new CreateOrderResponseDto(
+                order.getOrderNumber(),
+                order.getPaymentProvider(),
+                paymentResponse.paymentIntentId(),
+                paymentResponse.clientSecret(),
+                order.getTotalPrice()
+        );
     }
 
     private BigDecimal calculateTotal(List<OrderItemDto> items) {
         return items.stream()
-                .map(i -> i.getPrice().multiply(BigDecimal.valueOf(i.getQuantity())))
+                .map(i -> i.price().multiply(BigDecimal.valueOf(i.quantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     @Transactional
-    public void confirmOrder(String orderNumber, String clientId) {
-        Order order = orderRepository.findByOrderNumber(orderNumber)
-                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
+    public void confirmOrder(String orderNumber, String gaClientId) {
+        Order order = findOrder(orderNumber);
+        completeOrder(order, gaClientId);
+    }
+
+    @Transactional
+    public void confirmExpressOrder(ConfirmExpressOrderRequestDto dto) {
+
+        Order order = findOrder(dto.orderNumber());
+
+        order.setCustomerEmail(dto.customerEmail());
+        order.setBillingAddress(
+                orderTransformer.toEntity(dto.billingAddress()));
+        order.setShippingAddress(
+                orderTransformer.toEntity(dto.shippingAddress()));
+        order.setPaypalCaptureId(dto.paypalCaptureId());
+
+        completeOrder(order, dto.gaClientId());
+    }
+
+    private Order findOrder(String orderNumber) {
+        return orderRepository.findByOrderNumber(orderNumber) .orElseThrow(() ->
+                new EntityNotFoundException("Order not found"));
+    }
+
+    private void completeOrder(Order order, String gaClientId) {
 
         PaymentStrategy strategy =
                 paymentStrategyFactory.getStrategy(order.getPaymentProvider());
-        String sessionId = getPaymentSessionId(order);
 
-        if (!strategy.isPaymentCompleted(sessionId)) {
-            throw new IllegalStateException("Payment has not been completed yet.");
+        String paymentId = getPaymentSessionId(order);
+
+        if (!strategy.isPaymentCompleted(paymentId)) {
+            throw new IllegalStateException("Payment has not been completed.");
         }
 
         order.setStatus(OrderStatus.PAID);
         orderRepository.save(order);
 
-        OrderEmailDto emailDto = orderTransformer.mapToEmailDto(order);
-        emailService.sendOrderConfirmationEmail(emailDto);
-    //    analyticsService.sendPurchaseEvent(clientId, order);
+        emailService.sendOrderConfirmationEmail(
+                orderTransformer.mapToEmailDto(order));
+
+        //    analyticsService.sendPurchaseEvent(clientId, order);
     }
 
 

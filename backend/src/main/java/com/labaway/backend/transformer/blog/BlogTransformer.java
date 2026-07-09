@@ -26,17 +26,17 @@ public class BlogTransformer {
         List<CategoryDto> categoryDtos = mapCategories(blog, language);
         BlogTranslation translation = extractTranslation(blog, language);
 
-        return BlogResponseDto.builder()
-                .slug(blog.getSlug())
-                .author(blog.getAuthor())
-                .imageUrls(mapImageUrls(blog))
-                .categories(categoryDtos)
-                .title(translation != null ? translation.getTitle() : null)
-                .content(translation != null ? translation.getContent() : null)
-                .readingTime(translation != null ? translation.getReadingTime() : 0)
-                .createdAt(blog.getCreatedAt())
-                .updatedAt(blog.getUpdatedAt())
-                .build();
+        return new BlogResponseDto(
+                blog.getSlug(),
+                blog.getAuthor(),
+                mapImageUrls(blog),
+                translation != null ? translation.getTitle() : null,
+                translation != null ? translation.getContent() : null,
+                categoryDtos,
+                blog.getCreatedAt(),
+                blog.getUpdatedAt(),
+                translation != null ? translation.getReadingTime() : 0
+        );
     }
 
     private ImageUrls mapImageUrls(Blog blog) {
@@ -44,11 +44,11 @@ public class BlogTransformer {
             return null;
         }
 
-        return ImageUrls.builder()
-                .small(blog.getImageUrlSmall())
-                .medium(blog.getImageUrlMedium())
-                .large(blog.getImageUrlLarge())
-                .build();
+        return new ImageUrls(
+                blog.getImageUrlSmall(),
+                blog.getImageUrlMedium(),
+                blog.getImageUrlLarge()
+        );
     }
 
     private List<CategoryDto> mapCategories(Blog blog, Language language) {
@@ -66,26 +66,26 @@ public class BlogTransformer {
 
     public Blog fromCreateDto(BlogDto dto) {
         Blog blog = Blog.builder()
-                .author(dto.getAuthor())
+                .author(dto.author())
                 .build();
-        blog.getTranslations().add(createTranslation(dto.getTranslation(), blog));
+        blog.getTranslations().add(createTranslation(dto.translation(), blog));
         return blog;
     }
     private BlogTranslation createTranslation(TranslationDto dto, Blog blog) {
         return BlogTranslation.builder()
-                .language(dto.getLanguage())
-                .title(dto.getTitle().trim())
-                .content(dto.getContent().trim())
-                .readingTime(estimateReadingTime(dto.getContent()))
+                .language(dto.language())
+                .title(dto.title().trim())
+                .content(dto.content().trim())
+                .readingTime(estimateReadingTime(dto.content()))
                 .blog(blog)
                 .build();
     }
 
     public void updateEntity(Blog blog, BlogDto dto) {
-        blog.setAuthor(dto.getAuthor());
+        blog.setAuthor(dto.author());
 
-        TranslationDto translationDto = dto.getTranslation();
-        Language language = translationDto.getLanguage();
+        TranslationDto translationDto = dto.translation();
+        Language language = translationDto.language();
 
         Optional<BlogTranslation> existingTranslationOpt = blog.getTranslations().stream()
                 .filter(t -> t.getLanguage() == language)
@@ -93,9 +93,9 @@ public class BlogTransformer {
 
         if (existingTranslationOpt.isPresent()) {
             BlogTranslation existing = existingTranslationOpt.get();
-            existing.setTitle(translationDto.getTitle());
-            existing.setContent(translationDto.getContent());
-            existing.setReadingTime(estimateReadingTime(translationDto.getContent()));
+            existing.setTitle(translationDto.title());
+            existing.setContent(translationDto.content());
+            existing.setReadingTime(estimateReadingTime(translationDto.content()));
         } else {
             BlogTranslation newTranslation = createTranslation(translationDto, blog);
             blog.getTranslations().add(newTranslation);
@@ -115,24 +115,24 @@ public class BlogTransformer {
     }
 
     public BlogPreviewDto mapToBlogPreviewDto(BlogPreviewProjection projection) {
-        return BlogPreviewDto.builder()
-                .slug(projection.getSlug())
-                .author(projection.getAuthor())
-                .imageUrls(mapImageUrls(projection))
-                .title(projection.getTitle())
-                .excerpt(projection.getExcerpt())
-                .readingTime(projection.getReadingTime())
-                .createdAt(projection.getCreatedAt())
-                .updatedAt(projection.getUpdatedAt())
-                .categories(jsonParsingUtils.parseCategoryList(projection.getCategories()))
-                .build();
+        return new BlogPreviewDto(
+                projection.getSlug(),
+                projection.getAuthor(),
+                mapImageUrls(projection),
+                projection.getTitle(),
+                projection.getExcerpt(),
+                projection.getReadingTime(),
+                projection.getCreatedAt(),
+                projection.getUpdatedAt(),
+                jsonParsingUtils.parseCategoryList(projection.getCategories())
+        );
     }
 
     private ImageUrls mapImageUrls(BlogPreviewProjection projection) {
-        return ImageUrls.builder()
-                .small(projection.getImageUrlSmall())
-                .medium(projection.getImageUrlMedium())
-                .large(projection.getImageUrlLarge())
-                .build();
+        return new ImageUrls(
+                projection.getImageUrlSmall(),
+                projection.getImageUrlMedium(),
+                projection.getImageUrlLarge()
+        );
     }
 }

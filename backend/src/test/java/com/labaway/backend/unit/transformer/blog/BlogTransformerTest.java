@@ -1,4 +1,4 @@
-package com.labaway.backend.transformer.blog;
+package com.labaway.backend.unit.transformer.blog;
 
 import com.labaway.backend.dto.blog.*;
 import com.labaway.backend.dto.category.CategoryDto;
@@ -88,18 +88,18 @@ class BlogTransformerTest {
     }
 
     private CategoryDto createCategoryDto(String name, String slug) {
-        return CategoryDto.builder().name(name).slug(slug).build();
+        return new CategoryDto(name, slug);
     }
 
     private void assertBlogPreviewDto(BlogPreviewDto dto, String expectedSlug, String expectedAuthor, String expectedTitle, String expectedExcerpt, int expectedReadingTime, String expectedCategoryName, String expectedCategorySlug) {
         assertThat(dto).isNotNull();
-        assertThat(dto.getSlug()).isEqualTo(expectedSlug);
-        assertThat(dto.getAuthor()).isEqualTo(expectedAuthor);
-        assertThat(dto.getTitle()).isEqualTo(expectedTitle);
-        assertThat(dto.getExcerpt()).isEqualTo(expectedExcerpt);
-        assertThat(dto.getReadingTime()).isEqualTo(expectedReadingTime);
-        assertThat(dto.getCategories()).extracting("slug").containsExactly(expectedCategorySlug);
-        assertThat(dto.getCategories()).extracting("name").containsExactly(expectedCategoryName);
+        assertThat(dto.slug()).isEqualTo(expectedSlug);
+        assertThat(dto.author()).isEqualTo(expectedAuthor);
+        assertThat(dto.title()).isEqualTo(expectedTitle);
+        assertThat(dto.excerpt()).isEqualTo(expectedExcerpt);
+        assertThat(dto.readingTime()).isEqualTo(expectedReadingTime);
+        assertThat(dto.categories()).extracting("slug").containsExactly(expectedCategorySlug);
+        assertThat(dto.categories()).extracting("name").containsExactly(expectedCategoryName);
     }
 
     @Test
@@ -114,12 +114,13 @@ class BlogTransformerTest {
                 "new author",
                 "Updated Title",
                 "Updated content",
-                List.of("cat1", "cat2"));
+                List.of("cat1", "cat2"),
+                Language.EN
+        );
 
         blogTransformer.updateEntity(blog, dto);
 
         assertEquals("new author", blog.getAuthor());
-
         assertEquals(1, blog.getTranslations().size());
 
         BlogTranslation translation = blog.getTranslations().iterator().next();
@@ -131,7 +132,6 @@ class BlogTransformerTest {
 
     @Test
     void updateEntity_shouldAddNewTranslationWhenNoneExists() {
-        // Arrange
         Blog blog = createBlogWithTranslationsAndCategories(
                 "slug1", "author1", "imageUrl1",
                 Set.of(), Language.DE, "Titre", "Contenu");
@@ -140,9 +140,9 @@ class BlogTransformerTest {
                 "new author",
                 "English Title",
                 "English content",
-                List.of("cat1", "cat2"));
-
-        dto.getTranslation().setLanguage(Language.EN);
+                List.of("cat1", "cat2"),
+                Language.EN
+        );
 
         blogTransformer.updateEntity(blog, dto);
 
@@ -161,12 +161,31 @@ class BlogTransformerTest {
         assertTrue(enTranslation.getReadingTime() > 0);
     }
 
+    private BlogDto createSampleCreateBlogDto(
+            String author,
+            String title,
+            String content,
+            List<String> categorySlugs,
+            Language language
+    ) {
+        return new BlogDto(
+                author,
+                categorySlugs,
+                new TranslationDto(
+                        language,
+                        title,
+                        content
+                )
+        );
+    }
+
     @Test
     void shouldMapBlogToBlogDto() {
         Category category = getCategory();
+
         Blog blog = getBlog(category);
         when(categoryTransformer.toDto(category, Language.EN))
-                .thenReturn(CategoryDto.builder().slug("tech").name("Tech").build());
+                .thenReturn(new CategoryDto("Tech", "tech"));
         BlogResponseDto dto = blogTransformer.toDto(blog, Language.EN);
 
         assertBlogDto(dto, "Spring Boot Guide", 1, "Tech");
@@ -178,11 +197,11 @@ class BlogTransformerTest {
                 "Jane",
                 "Healthy Living",
                 "Tips for a healthy lifestyle.",
-                List.of("tech")
+                List.of("tech"),
+                Language.EN
         );
 
         Blog blog = blogTransformer.fromCreateDto(dto);
-
         assertBlogEntity(blog, "Healthy Living", "Tips for a healthy lifestyle.", "Jane");
     }
 
@@ -253,9 +272,9 @@ class BlogTransformerTest {
 
     private static void assertBlogDto(BlogResponseDto dto, String expectedTitle, int expectedCategoryCount, String expectedCategoryName) {
         assertThat(dto).isNotNull();
-        assertThat(dto.getTitle()).isEqualTo(expectedTitle);
-        assertThat(dto.getCategories()).hasSize(expectedCategoryCount);
-        assertThat(dto.getCategories().get(0).getName()).isEqualTo(expectedCategoryName);
+        assertThat(dto.title()).isEqualTo(expectedTitle);
+        assertThat(dto.categories()).hasSize(expectedCategoryCount);
+        assertThat(dto.categories().get(0).name()).isEqualTo(expectedCategoryName);
     }
 
     private static void assertBlogEntity(Blog blog, String expectedTitle, String expectedContent, String expectedAuthor) {
@@ -266,23 +285,4 @@ class BlogTransformerTest {
                 .containsExactly(tuple(expectedTitle, expectedContent, Language.EN.toString()));
 
     }
-
-    private static BlogDto createSampleCreateBlogDto(
-            String author,
-            String translationTitle,
-            String translationContent,
-            List<String> categorySlugs) {
-
-        BlogDto dto = BlogDto.builder().build();
-        TranslationDto blogTranslationDto = TranslationDto.builder()
-                .language(Language.EN)
-                .title(translationTitle)
-                .content(translationContent)
-                .build();
-        dto.setTranslation(blogTranslationDto);
-        dto.setAuthor(author);
-        dto.setCategorySlugs(categorySlugs);
-        return dto;
-    }
-
 }

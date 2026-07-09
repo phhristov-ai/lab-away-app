@@ -46,16 +46,16 @@ public class BlogService {
 
     @Transactional
     public BlogResponseDto createBlog(BlogDto blogDto, MultipartFile file) throws IOException {
-        TranslationDto translation = blogDto.getTranslation();
-        Language lang = translation.getLanguage();
-        String title = translation.getTitle().trim();
+        TranslationDto translation = blogDto.translation();
+        Language lang = translation.language();
+        String title = translation.title().trim();
         String slug = generateSlug(title);
         if (blogRepository.findBySlug(slug).isPresent()) {
             throw new IllegalArgumentException("A blog with this slug already exists: " + slug);
         }
         Blog blog = blogTransformer.fromCreateDto(blogDto);
 
-        updateBlogCategories(blog, blogDto.getCategorySlugs());
+        updateBlogCategories(blog, blogDto.categorySlugs());
         blog.setSlug(slug);
         uploadImageIfPresent(blog, file);
 
@@ -68,7 +68,7 @@ public class BlogService {
         Blog blog = getBlogOrThrow(currentSlug);
         blogTransformer.updateEntity(blog, blogDto);
 
-        updateBlogCategories(blog, blogDto.getCategorySlugs());
+        updateBlogCategories(blog, blogDto.categorySlugs());
 
         replaceImageIfPresent(blog, file);
         Blog savedBlog = blogRepository.save(blog);
@@ -80,9 +80,9 @@ public class BlogService {
         if (file != null && !file.isEmpty()) {
             ImageUrls imageUrls = mediaService.processAndUploadImage(file);
 
-            blog.setImageUrlSmall(imageUrls.getSmall());
-            blog.setImageUrlMedium(imageUrls.getMedium());
-            blog.setImageUrlLarge(imageUrls.getLarge());
+            blog.setImageUrlSmall(imageUrls.small());
+            blog.setImageUrlMedium(imageUrls.medium());
+            blog.setImageUrlLarge(imageUrls.large());
         }
     }
 
@@ -103,9 +103,9 @@ public class BlogService {
 
             ImageUrls newImageUrls = mediaService.processAndUploadImage(file);
 
-            blog.setImageUrlSmall(newImageUrls.getSmall());
-            blog.setImageUrlMedium(newImageUrls.getMedium());
-            blog.setImageUrlLarge(newImageUrls.getLarge());
+            blog.setImageUrlSmall(newImageUrls.small());
+            blog.setImageUrlMedium(newImageUrls.medium());
+            blog.setImageUrlLarge(newImageUrls.large());
         }
     }
 

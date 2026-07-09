@@ -13,15 +13,15 @@ public class AddressTransformer {
             return null;
         }
 
-        return AddressDto.builder()
-                .firstName(address.getFirstName())
-                .lastName(address.getLastName())
-                .country(address.getCountry())
-                .address(address.getStreetAddress())
-                .city(address.getCity())
-                .postCode(address.getPostCode())
-                .phone(address.getPhone())
-                .build();
+        return new AddressDto(
+                address.getFirstName(),
+                address.getLastName(),
+                address.getCountry(),
+                address.getStreetAddress(),
+                address.getCity(),
+                address.getPostCode(),
+                address.getPhone()
+        );
     }
 
     public Address toEntity(AddressDto dto) {
@@ -30,13 +30,13 @@ public class AddressTransformer {
         }
 
         return Address.builder()
-                .firstName(dto.getFirstName())
-                .lastName(dto.getLastName())
-                .country(dto.getCountry())
-                .streetAddress(dto.getAddress())
-                .city(dto.getCity())
-                .postCode(dto.getPostCode())
-                .phone(dto.getPhone())
+                .firstName(dto.firstName())
+                .lastName(dto.lastName())
+                .country(dto.country())
+                .streetAddress(dto.address())
+                .city(dto.city())
+                .postCode(dto.postCode())
+                .phone(dto.phone())
                 .build();
     }
 }

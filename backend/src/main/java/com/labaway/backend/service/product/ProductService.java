@@ -47,7 +47,7 @@ public class ProductService {
         List<ProductImage> productImages = processImageFiles(files);
         BannerData bannerData = processBanner(banner);
         Product savedProduct = prepareAndSaveProduct(productPayloadDto, productImages, bannerData);
-        return productTransformer.toDto(savedProduct, productPayloadDto.getTranslation().getLanguage());
+        return productTransformer.toDto(savedProduct, productPayloadDto.translation().language());
     }
 
     @Transactional
@@ -78,7 +78,7 @@ public class ProductService {
             eventPublisher.publishEvent(new BannerReplacedEvent(oldBannerUrl));
         }
 
-        return productTransformer.toDto(savedProduct, dto.getTranslation().getLanguage());
+        return productTransformer.toDto(savedProduct, dto.translation().language());
     }
 
     private Product findProductBySlug(String slug) {
@@ -94,12 +94,12 @@ public class ProductService {
     }
 
     private Set<String> extractRetainedImageKeys(ProductPayloadDto dto) {
-        if (dto.getImages() == null) {
+        if (dto.images() == null) {
             return Collections.emptySet();
         }
 
-        return dto.getImages().stream()
-                .map(ProductImageDto::getImageUrlLarge)
+        return dto.images().stream()
+                .map(ProductImageDto::imageUrlLarge)
                 .collect(Collectors.toSet());
     }
 
@@ -144,10 +144,10 @@ public class ProductService {
 
     private List<Category> resolveCategories(ProductPayloadDto dto) {
         List<Category> categories = categoryRepository.findBySlugInAndLanguage(
-                dto.getCategories(), dto.getTranslation().getLanguage());
+                dto.categories(), dto.translation().language());
 
-        if (categories.size() != dto.getCategories().size()) {
-            throw new CategoryNotFoundException("One or more categories not found for language: " + dto.getTranslation().getLanguage());
+        if (categories.size() != dto.categories().size()) {
+            throw new CategoryNotFoundException("One or more categories not found for language: " + dto.translation().language());
         }
 
         return categories;
@@ -175,10 +175,10 @@ public class ProductService {
     private Product prepareAndSaveProduct(ProductPayloadDto productPayloadDto,
                                           List<ProductImage> productImages,
                                           BannerData bannerData) {
-        Language language = productPayloadDto.getTranslation().getLanguage();
-        List<Category> categories = categoryRepository.findBySlugInAndLanguage(productPayloadDto.getCategories(), language);
+        Language language = productPayloadDto.translation().language();
+        List<Category> categories = categoryRepository.findBySlugInAndLanguage(productPayloadDto.categories(), language);
 
-        if (categories.size() != productPayloadDto.getCategories().size()) {
+        if (categories.size() != productPayloadDto.categories().size()) {
             throw new CategoryNotFoundException("One or more categories not found for language: " + language);
         }
 
@@ -226,9 +226,9 @@ public class ProductService {
                 ImageUrls imageUrls = mediaService.processAndUploadImage(file);
 
                 ProductImage productImage = ProductImage.builder()
-                        .imageUrlSmall(imageUrls.getSmall())
-                        .imageUrlMedium(imageUrls.getMedium())
-                        .imageUrlLarge(imageUrls.getLarge())
+                        .imageUrlSmall(imageUrls.small())
+                        .imageUrlMedium(imageUrls.medium())
+                        .imageUrlLarge(imageUrls.large())
                         .build();
 
                 productImages.add(productImage);

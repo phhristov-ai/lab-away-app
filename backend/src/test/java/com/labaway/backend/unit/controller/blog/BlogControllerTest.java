@@ -1,10 +1,11 @@
-package com.labaway.backend.controller.blog;
+package com.labaway.backend.unit.controller.blog;
 
 import com.labaway.backend.controller.blog.BlogController;
 import com.labaway.backend.dto.blog.BlogDto;
 import com.labaway.backend.dto.blog.BlogPreviewDto;
 import com.labaway.backend.dto.blog.BlogResponseDto;
 import com.labaway.backend.dto.blog.TranslationDto;
+import com.labaway.backend.dto.category.CategoryDto;
 import com.labaway.backend.dto.image.ImageUrls;
 import com.labaway.backend.enums.Language;
 import com.labaway.backend.service.blog.BlogService;
@@ -57,32 +58,31 @@ class BlogControllerTest {
         List<BlogPreviewDto> result = blogController.getAllBlogsForPreiew(Language.EN);
 
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getTitle()).isEqualTo("Test Blog");
+        assertThat(result.get(0).title()).isEqualTo("Test Blog");
         verify(blogService).getAllBlogsForPreview(Language.EN);
     }
 
     public static ImageUrls createSampleImageUrls() {
-        return ImageUrls.builder()
-                .small("https://example.com/test-small.jpg")
-                .medium("https://example.com/test-medium.jpg")
-                .large("https://example.com/test-large.jpg")
-                .build();
+        return new ImageUrls(
+                "https://example.com/test-small.jpg",
+                "https://example.com/test-medium.jpg",
+                "https://example.com/test-large.jpg"
+        );
     }
 
     public static BlogPreviewDto createSampleBlogPreviewDto() {
-        return BlogPreviewDto.builder()
-                .slug("test-blog")
-                .title("Test Blog")
-                .author("John Doe")
-                .imageUrls(createSampleImageUrls())
-                .excerpt("Test excerpt")
-                .readingTime(2)
-                .createdAt(Instant.now())
-                .updatedAt(Instant.now())
-                .categories(Collections.emptyList())
-                .build();
+        return new BlogPreviewDto(
+                "test-blog",
+                "John Doe",
+                createSampleImageUrls(),
+                "Test Blog",
+                "Test excerpt",
+                2,
+                Instant.now(),
+                Instant.now(),
+                Collections.emptyList()
+        );
     }
-
 
     @Test
     void getById_returnsBlogDto() {
@@ -168,8 +168,8 @@ class BlogControllerTest {
         var result = blogController.getRandomBlogs(Language.EN);
 
         assertThat(result).hasSize(2);
-        assertThat(result.get(0).getSlug()).isEqualTo("test-blog");
-        assertThat(result.get(1).getSlug()).isEqualTo("test-blog");
+        assertThat(result.get(0).slug()).isEqualTo("test-blog");
+        assertThat(result.get(1).slug()).isEqualTo("test-blog");
 
         verify(blogService, times(1)).getRandomBlogPreviews(Language.EN);
     }
@@ -183,24 +183,38 @@ class BlogControllerTest {
     }
 
     private static BlogResponseDto createBlogResponseDto(String slug, String title, String content) {
-        return BlogResponseDto.builder()
-                .title(title)
-                .content(content)
-                .build();
+        return new BlogResponseDto(
+                slug,
+                "John Doe",
+                new ImageUrls(
+                        "https://example.com/images/blog-small.webp",
+                        "https://example.com/images/blog-medium.webp",
+                        "https://example.com/images/blog-large.webp"
+                ),
+                title,
+                content,
+                List.of(
+                        new CategoryDto("Technology", "technology"),
+                        new CategoryDto("Java", "java")
+                ),
+                Instant.now(),
+                Instant.now(),
+                7
+        );
     }
 
     private static BlogDto createCreateBlogDto(String title, String content) {
-        TranslationDto translation = TranslationDto.builder()
-                .language(Language.EN)
-                .title(title)
-                .content(content)
-                .build();
+        TranslationDto translation = new TranslationDto(
+                Language.EN,
+                title,
+                content
+        );
 
-        return BlogDto.builder()
-                .author("John Doe")
-                .categorySlugs(List.of("tech", "java"))
-                .translation(translation)
-                .build();
+        return new BlogDto(
+                "John Doe",
+                List.of("tech", "java"),
+                translation
+        );
     }
 
 }

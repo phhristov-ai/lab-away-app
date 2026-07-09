@@ -1,9 +1,11 @@
-package com.labaway.backend.strategy;
+package com.labaway.backend.unit.strategy;
 
 import com.labaway.backend.configuration.payment.PayPalConfig;
 import com.labaway.backend.dto.payment.CreatePaymentRequestDto;
 import com.labaway.backend.dto.payment.CreatePaymentResponseDto;
 import com.labaway.backend.exception.PayPalServiceException;
+import com.labaway.backend.strategy.PayPalPaymentStrategy;
+import com.labaway.backend.strategy.PaymentProvider;
 import com.paypal.core.AuthorizationProvider;
 import com.paypal.core.PayPalHttpClient;
 import com.paypal.http.HttpRequest;
@@ -67,7 +69,7 @@ class PayPalPaymentStrategyTest {
         CreatePaymentResponseDto response = payPalPaymentStrategy.initiatePayment(request);
 
         assertThat(response).isNotNull();
-        assertThat(response.getPaymentIntentId()).isEqualTo("order_test_123");
+        assertThat(response.paymentIntentId()).isEqualTo("order_test_123");
 
         verify(mockPayPalClient).execute(any(OrdersCreateRequest.class));
     }
@@ -94,8 +96,6 @@ class PayPalPaymentStrategyTest {
     @Test
     void isPaymentCompleted_shouldReturnTrue_whenStatusIsCompleted() throws IOException {
         String orderId = "test-order-id";
-
-        AuthorizationProvider mockAuthorizationProvider = mock(AuthorizationProvider.class);
 
         PayPalHttpClient mockPayPalHttpClient = mock(PayPalHttpClient.class);
 
@@ -148,17 +148,15 @@ class PayPalPaymentStrategyTest {
                 .hasMessageContaining("Failed to verify PayPal order");
     }
 
-
     private CreatePaymentRequestDto createPaymentRequestDto() {
-        return CreatePaymentRequestDto.builder()
-                .amount(1000L)
-                .currency("EUR")
-                .build();
+        return new CreatePaymentRequestDto(
+                1000L,
+                "EUR",
+                "test@example.com",
+                "https://example.com/success",
+                "https://example.com/cancel",
+                PaymentProvider.PAYPAL
+        );
     }
 
-    private void mockSuccessfulPayPalExecution() throws Exception {
-        when(mockPayPalClient.execute(ArgumentMatchers.<HttpRequest<Order>>any())).thenReturn(mockResponse);
-        when(mockResponse.result()).thenReturn(mockOrder);
-        when(mockOrder.id()).thenReturn("order_test_123");
-    }
 }

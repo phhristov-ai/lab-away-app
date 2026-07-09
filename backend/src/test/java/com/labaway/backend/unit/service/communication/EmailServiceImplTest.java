@@ -1,9 +1,10 @@
-package com.labaway.backend.service.communication;
+package com.labaway.backend.unit.service.communication;
 
 import com.labaway.backend.configuration.mail.SmtpConfig;
 import com.labaway.backend.dto.order.AddressEmailDto;
 import com.labaway.backend.dto.order.OrderEmailDto;
 import com.labaway.backend.dto.order.OrderItemEmailDto;
+import com.labaway.backend.service.communication.EmailServiceImpl;
 import com.labaway.backend.strategy.PaymentProvider;
 import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.BeforeEach;

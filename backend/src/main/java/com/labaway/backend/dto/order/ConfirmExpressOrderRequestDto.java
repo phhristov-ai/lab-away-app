@@ -1,2 +1,10 @@
-package com.labaway.backend.dto.order;public class ConfirmExpressOrderRequestDto {
-}
+package com.labaway.backend.dto.order;
+
+public record ConfirmExpressOrderRequestDto(
+        String orderNumber,
+        String gaClientId,
+        String customerEmail,
+        AddressDto billingAddress,
+        AddressDto shippingAddress,
+        String paypalCaptureId
+) {}

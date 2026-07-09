@@ -1,4 +1,4 @@
-package com.labaway.backend.service.product;
+package com.labaway.backend.unit.service.product;
 
 import com.labaway.backend.dto.category.CategoryDto;
 import com.labaway.backend.dto.image.ImageUrls;
@@ -15,6 +15,7 @@ import com.labaway.backend.entity.repository.category.CategoryRepository;
 import com.labaway.backend.entity.repository.product.ProductImageRepository;
 import com.labaway.backend.entity.repository.product.ProductRepository;
 import com.labaway.backend.service.media.MediaService;
+import com.labaway.backend.service.product.ProductService;
 import com.labaway.backend.service.storage.S3Service;
 import com.labaway.backend.transformer.product.ProductTransformer;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.List;
 
@@ -70,16 +72,17 @@ class ProductServiceTest {
         Product product = createSampleProduct();
         Product savedProduct = createSampleSavedProduct("test-product");
 
-        ProductImageDto imageDto = ProductImageDto.builder()
-                .imageUrlSmall("http://example.com/image-small.jpg")
-                .imageUrlMedium("http://example.com/image-medium.jpg")
-                .imageUrlLarge("http://example.com/image-large.jpg")
-                .build();
+        ProductImageDto imageDto = new ProductImageDto(
+                "http://example.com/image-small.jpg",
+                "http://example.com/image-medium.jpg",
+                "http://example.com/image-large.jpg",
+                null
+        );
 
         ImageUrls imageUrls = new ImageUrls(
-                imageDto.getImageUrlSmall(),
-                imageDto.getImageUrlMedium(),
-                imageDto.getImageUrlLarge()
+                imageDto.imageUrlSmall(),
+                imageDto.imageUrlMedium(),
+                imageDto.imageUrlLarge()
         );
 
         MultipartFile[] mockFiles = new MultipartFile[] {
@@ -93,7 +96,7 @@ class ProductServiceTest {
                 .thenReturn(imageUrls);
 
         when(categoryRepository.findBySlugInAndLanguage(
-                createDto.getCategories(),
+                createDto.categories(),
                 Language.EN
         )).thenReturn(categories);
 
@@ -116,14 +119,14 @@ class ProductServiceTest {
         );
 
         assertThat(result).isNotNull();
-        assertThat(result.getSlug()).isEqualTo("test-product");
-        assertThat(result.getImages()).hasSize(1);
-        assertThat(result.getImages().get(0).getImageUrlSmall())
+        assertThat(result.slug()).isEqualTo("test-product");
+        assertThat(result.images()).hasSize(1);
+        assertThat(result.images().get(0).imageUrlSmall())
                 .isEqualTo("http://example.com/image-small.jpg");
-        assertThat(result.isActive()).isTrue();
+        assertThat(result.active()).isTrue();
 
         verify(categoryRepository)
-                .findBySlugInAndLanguage(createDto.getCategories(), Language.EN);
+                .findBySlugInAndLanguage(createDto.categories(), Language.EN);
 
         verify(productRepository).save(product);
 
@@ -132,16 +135,19 @@ class ProductServiceTest {
     }
 
     private ProductDto createSampleProductDtoWithImages(String slug, List<ProductImageDto> images) {
-        return ProductDto.builder()
-                .slug(slug)
-                .name("Sample Product")
-                .description("Sample description")
-                .price(BigDecimal.valueOf(100))
-                .stock(10)
-                .images(images)
-                .active(true)
-                .categories(new ArrayList<>())
-                .build();
+        return new ProductDto(
+                "Sample Product",
+                slug,
+                BigDecimal.valueOf(100),
+                10,
+                "Sample description",
+                new ArrayList<>(),
+                null,
+                null,
+                images,
+                true,
+                null
+        );
     }
 
     @Test
@@ -149,11 +155,11 @@ class ProductServiceTest {
         ProductPayloadDto createDto = createSampleCreateDto();
         String slug = "test-product";
 
-        ImageUrls sampleImageUrls = ImageUrls.builder()
-                .small("http://example.com/image-small.jpg")
-                .medium("http://example.com/image-medium.jpg")
-                .large("http://example.com/image-large.jpg")
-                .build();
+        ImageUrls sampleImageUrls = new ImageUrls(
+                "http://example.com/image-small.jpg",
+                "http://example.com/image-medium.jpg",
+                "http://example.com/image-large.jpg"
+        );
 
         when(mediaService.processAndUploadImage(any(MultipartFile.class)))
                 .thenReturn(sampleImageUrls);
@@ -161,8 +167,7 @@ class ProductServiceTest {
         Product product = createSampleSavedProduct(slug);
         List<Category> categories = createSampleCategories();
 
-        ProductDto expectedDto = createSampleProductDto(slug);
-        expectedDto.setName(createDto.getTranslation().getName());
+        ProductDto expectedDto = createSampleProductDto(slug, createDto.translation().name());
 
         MultipartFile[] mockFiles = new MultipartFile[] {
                 createMockMultipartFile("image.jpg", "image content")
@@ -170,7 +175,7 @@ class ProductServiceTest {
 
         MultipartFile mockBanner = createMockMultipartFile("banner.mp4", "banner content");
 
-        mockFindProductAndCategories(slug, createDto.getCategories(), product, categories);
+        mockFindProductAndCategories(slug, createDto.categories(), product, categories);
 
         mockSaveAndTransform(product, expectedDto);
 
@@ -179,9 +184,9 @@ class ProductServiceTest {
         ProductDto result = productService.updateProduct(slug, createDto, mockFiles, mockBanner);
 
         assertThat(result).isNotNull();
-        assertThat(result.getName()).isEqualTo(createDto.getTranslation().getName());
+        assertThat(result.name()).isEqualTo(createDto.translation().name());
 
-        verifyInteractions(slug, createDto.getCategories(), product);
+        verifyInteractions(slug, createDto.categories(), product);
 
         verify(productRepository).save(product);
 
@@ -221,7 +226,7 @@ class ProductServiceTest {
     void shouldReturnProductBySlugWithSharedContentAndFaqs() {
         String slug = "test-product";
         Product product = createSampleSavedProduct(slug);
-        ProductDto expectedDto = createSampleProductDto(slug);
+        ProductDto expectedDto = createSampleProductDto(slug, "Test Product");
 
         when(productRepository.findBySlug(slug)).thenReturn(Optional.of(product));
         when(productTransformer.toDto(product, Language.EN)).thenReturn(expectedDto);
@@ -229,7 +234,7 @@ class ProductServiceTest {
         ProductDto result = productService.getProductBySlug(slug, Language.EN);
 
         assertThat(result).isNotNull();
-        assertThat(result.getSlug()).isEqualTo(slug);
+        assertThat(result.slug()).isEqualTo(slug);
     }
 
     @Test
@@ -246,10 +251,10 @@ class ProductServiceTest {
         List<ProductPreviewDto> result = productService.getAllProductPreviews(Language.EN);
 
         assertThat(result).hasSize(2);
-        assertThat(result.get(0).getSlug()).isEqualTo("slug-1");
-        assertThat(result.get(0).isActive()).isTrue();
-        assertThat(result.get(1).getSlug()).isEqualTo("slug-2");
-        assertThat(result.get(1).isActive()).isTrue();
+        assertThat(result.get(0).slug()).isEqualTo("slug-1");
+        assertThat(result.get(0).active()).isTrue();
+        assertThat(result.get(1).slug()).isEqualTo("slug-2");
+        assertThat(result.get(1).active()).isTrue();
 
         verify(productRepository).findAllProductPreviewsByLanguage("EN");
     }
@@ -268,10 +273,10 @@ class ProductServiceTest {
         List<ProductPreviewDto> result = productService.getRandomProductPreviews(Language.EN);
 
         assertThat(result).hasSize(2);
-        assertThat(result.get(0).getSlug()).isEqualTo("slug-1");
-        assertThat(result.get(0).isActive()).isTrue();
-        assertThat(result.get(1).getSlug()).isEqualTo("slug-2");
-        assertThat(result.get(1).isActive()).isTrue();
+        assertThat(result.get(0).slug()).isEqualTo("slug-1");
+        assertThat(result.get(0).active()).isTrue();
+        assertThat(result.get(1).slug()).isEqualTo("slug-2");
+        assertThat(result.get(1).active()).isTrue();
 
         verify(productRepository).findRandomProductPreviewsByLanguage(LANGUAGE_EN_CODE);
     }
@@ -292,10 +297,10 @@ class ProductServiceTest {
         List<ProductPreviewDto> result = productService.getRandomProductPreviewsByCategorySlug(slug, Language.EN);
 
         assertThat(result).hasSize(2);
-        assertThat(result.get(0).getSlug()).isEqualTo("slug-1");
-        assertThat(result.get(0).isActive()).isTrue();
-        assertThat(result.get(1).getSlug()).isEqualTo("slug-2");
-        assertThat(result.get(1).isActive()).isTrue();
+        assertThat(result.get(0).slug()).isEqualTo("slug-1");
+        assertThat(result.get(0).active()).isTrue();
+        assertThat(result.get(1).slug()).isEqualTo("slug-2");
+        assertThat(result.get(1).active()).isTrue();
 
         verify(categoryRepository).existsBySlug(slug);
         verify(productRepository).findRandomByLanguageAndCategory(LANGUAGE_EN_CODE, slug);
@@ -315,10 +320,10 @@ class ProductServiceTest {
         List<ProductPreviewDto> result = productService.getRandomProductPreviewsByCategorySlug(null, Language.EN);
 
         assertThat(result).hasSize(2);
-        assertThat(result.get(0).getSlug()).isEqualTo("random-1");
-        assertThat(result.get(0).isActive()).isTrue();
-        assertThat(result.get(1).getSlug()).isEqualTo("random-2");
-        assertThat(result.get(1).isActive()).isTrue();
+        assertThat(result.get(0).slug()).isEqualTo("random-1");
+        assertThat(result.get(0).active()).isTrue();
+        assertThat(result.get(1).slug()).isEqualTo("random-2");
+        assertThat(result.get(1).active()).isTrue();
 
         verify(productRepository).findRandomProductPreviewsByLanguage(LANGUAGE_EN_CODE);
         verifyNoInteractions(categoryRepository);
@@ -339,29 +344,24 @@ class ProductServiceTest {
     }
 
     private ProductPreviewDto buildProductPreviewDtoFromProjection(ProductPreviewProjection proj) {
-        return ProductPreviewDto.builder()
-                .name(proj.getName())
-                .slug(proj.getSlug())
-                .price(proj.getPrice())
-                .active(proj.getActive())
-                .imageUrls(mapImageUrls(proj.getImageUrlSmall(), proj.getImageUrlMedium(), proj.getImageUrlLarge()))
-                .categories(createCategoryDtos())
-                .build();
+        return new ProductPreviewDto(
+                proj.getName(),
+                proj.getSlug(),
+                proj.getPrice(),
+                new ImageUrls(
+                        proj.getImageUrlSmall(),
+                        proj.getImageUrlMedium(),
+                        proj.getImageUrlLarge()
+                ),
+                createCategoryDtos(),
+                proj.getActive()
+        );
     }
-
-    private ImageUrls mapImageUrls(String small, String medium, String large) {
-        return ImageUrls.builder()
-                .small(small)
-                .medium(medium)
-                .large(large)
-                .build();
-    }
-
 
     private List<CategoryDto> createCategoryDtos() {
         return List.of(
-                CategoryDto.builder().name("Category 1").slug("test-cat-1").build(),
-                CategoryDto.builder().name("Category 2").slug("test-cat-2").build()
+                new CategoryDto("Category 1", "test-cat-1"),
+                new CategoryDto("Category 2", "test-cat-2")
         );
     }
 
@@ -382,8 +382,8 @@ class ProductServiceTest {
         List<ProductPreviewDto> result = productService.getAllProductPreviews(Language.EN);
 
         assertThat(result).hasSize(2);
-        assertThat(result.get(0).getSlug()).isEqualTo("slug-1");
-        assertThat(result.get(1).getSlug()).isEqualTo("slug-2");
+        assertThat(result.get(0).slug()).isEqualTo("slug-1");
+        assertThat(result.get(1).slug()).isEqualTo("slug-2");
 
         verify(productRepository).findAllProductPreviewsByLanguage(LANGUAGE_EN_CODE);
     }
@@ -426,18 +426,20 @@ class ProductServiceTest {
     }
 
     private ProductPayloadDto createSampleCreateDto() {
-        ProductTranslationDto productTranslationDto = ProductTranslationDto.builder()
-                .language(Language.EN)
-                .description("Description")
-                .name("Product Name")
-                .build();
-        return ProductPayloadDto.builder()
-                .price(BigDecimal.valueOf(100))
-                .stock(10)
-                .active(true)
-                .categories(List.of(categorySlug1, categorySlug2))
-                .translation(productTranslationDto)
-                .build();
+        ProductTranslationDto productTranslationDto = new ProductTranslationDto(
+                Language.EN,
+                "Product Name",
+                "Description"
+        );
+        return new ProductPayloadDto(
+                BigDecimal.valueOf(100),
+                10,
+                true,
+                List.of(categorySlug1, categorySlug2),
+                0,
+                productTranslationDto,
+                null
+        );
     }
 
     private List<Category> createSampleCategories() {
@@ -491,8 +493,29 @@ class ProductServiceTest {
                 .build();
     }
 
-    private ProductDto createSampleProductDto(String slug) {
-        return ProductDto.builder().name("Test Product").slug(slug).build();
+    private ProductDto createSampleProductDto(String slug, String name) {
+        return new ProductDto(
+                name,
+                slug,
+                BigDecimal.valueOf(99.99),
+                10,
+                "Test product description",
+                List.of(
+                        new CategoryDto("Electronics", "electronics")
+                ),
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                List.of(
+                        new ProductImageDto(
+                                "https://example.com/image-small.webp",
+                                "https://example.com/image-medium.webp",
+                                "https://example.com/image-large.webp",
+                                0
+                        )
+                ),
+                true,
+                null
+        );
     }
 
 }

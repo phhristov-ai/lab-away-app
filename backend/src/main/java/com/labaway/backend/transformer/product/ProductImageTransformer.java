@@ -8,10 +8,11 @@ import org.springframework.stereotype.Component;
 public class ProductImageTransformer {
 
     public ProductImageDto toDto(ProductImage image) {
-        return ProductImageDto.builder()
-                .imageUrlSmall(image.getImageUrlSmall())
-                .imageUrlMedium(image.getImageUrlMedium())
-                .imageUrlLarge(image.getImageUrlLarge())
-                .build();
+        return new ProductImageDto(
+                image.getImageUrlSmall(),
+                image.getImageUrlMedium(),
+                image.getImageUrlLarge(),
+                image.getPosition()
+        );
     }
 }

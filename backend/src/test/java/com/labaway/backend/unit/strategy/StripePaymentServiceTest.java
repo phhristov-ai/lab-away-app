@@ -1,8 +1,9 @@
-package com.labaway.backend.strategy;
+package com.labaway.backend.unit.strategy;
 
 import com.labaway.backend.configuration.payment.StripeConfig;
 import com.labaway.backend.dto.payment.CreatePaymentRequestDto;
 import com.labaway.backend.dto.payment.CreatePaymentResponseDto;
+import com.labaway.backend.strategy.StripePaymentStrategy;
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,18 +46,19 @@ class StripePaymentServiceTest {
             CreatePaymentResponseDto response = stripePaymentStrategy.initiatePayment(request);
 
             assertThat(response).isNotNull();
-            assertThat(response.getPaymentIntentId()).isEqualTo("pi_test_123");
-            assertThat(response.getClientSecret()).isEqualTo("secret_test_456");
+            assertThat(response.paymentIntentId()).isEqualTo("pi_test_123");
+            assertThat(response.clientSecret()).isEqualTo("secret_test_456");
         }
     }
     private static CreatePaymentRequestDto createPaymentRequestDto() {
-        return CreatePaymentRequestDto.builder()
-                .amount(500L)
-                .currency("eur")
-                .customerEmail("test@example.com")
-                .successUrl("https://success.com")
-                .cancelUrl("https://cancel.com")
-                .build();
+        return new CreatePaymentRequestDto(
+                500L,
+                "eur",
+                "test@example.com",
+                "https://success.com",
+                "https://cancel.com",
+                null
+        );
     }
 
     private static PaymentIntent createMockPaymentIntent() {

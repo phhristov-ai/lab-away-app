@@ -1,4 +1,4 @@
-package com.labaway.backend.service.blog;
+package com.labaway.backend.unit.service.blog;
 
 import com.labaway.backend.dto.blog.*;
 import com.labaway.backend.dto.category.CategoryDto;
@@ -6,11 +6,13 @@ import com.labaway.backend.dto.image.ImageUrls;
 import com.labaway.backend.entity.blog.Blog;
 import com.labaway.backend.entity.blog.BlogTranslation;
 import com.labaway.backend.entity.category.Category;
+import com.labaway.backend.entity.category.CategoryTranslation;
 import com.labaway.backend.entity.repository.blog.BlogRepository;
 import com.labaway.backend.entity.repository.blog.BlogTranslationRepository;
 import com.labaway.backend.entity.repository.category.CategoryRepository;
 import com.labaway.backend.enums.Language;
 import com.labaway.backend.exception.ResourceNotFoundException;
+import com.labaway.backend.service.blog.BlogService;
 import com.labaway.backend.service.media.MediaService;
 import com.labaway.backend.service.storage.S3Service;
 import com.labaway.backend.transformer.blog.BlogTransformer;
@@ -24,6 +26,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -31,7 +34,6 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -53,24 +55,10 @@ class BlogServiceTest {
     private S3Service s3Service;
     @Mock
     private MediaService mediaService;
-    private String slug;
-    private String categorySlug;
-    private Blog blog;
-    private BlogResponseDto blogResponseDto;
-    private Category category;
-    private CategoryDto categoryDto;
-    private BlogDto blogDto;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        slug = "test-blog";
-        categorySlug = "test-category";
-
-        setupCategory();
-        setupDtos();
-        blog = createTestBlog();
-        blogDto = createSampleCreateBlogDto();
     }
 
     @Test
@@ -78,8 +66,8 @@ class BlogServiceTest {
         Language lang = Language.EN;
         List<BlogPreviewProjection> projections = List.of(mock(BlogPreviewProjection.class), mock(BlogPreviewProjection.class));
         List<BlogPreviewDto> dtos = List.of(
-                BlogPreviewDto.builder().slug("slug1").title("Title 1").build(),
-                BlogPreviewDto.builder().slug("slug2").title("Title 2").build()
+                createBlogPreviewDto("slug1", "Title 1"),
+                createBlogPreviewDto("slug2", "Title 2")
         );
 
         when(blogRepository.findAllBlogsForPreview(lang.name())).thenReturn(projections);
@@ -89,34 +77,69 @@ class BlogServiceTest {
 
         assertThat(result).isNotNull();
         assertThat(result).hasSize(2);
-        assertThat(result.get(0).getSlug()).isEqualTo("slug1");
-        assertThat(result.get(1).getSlug()).isEqualTo("slug2");
+        assertThat(result.get(0).slug()).isEqualTo("slug1");
+        assertThat(result.get(1).slug()).isEqualTo("slug2");
 
         verify(blogRepository).findAllBlogsForPreview(lang.name());
         verify(blogTransformer).mapToBlogPreviewDtos(projections);
     }
 
+    private BlogPreviewDto createBlogPreviewDto(String slug, String title) {
+        return new BlogPreviewDto(
+                slug,
+                "John Doe",
+                createImageUrls(),
+                title,
+                "Sample excerpt",
+                5,
+                Instant.now(),
+                Instant.now(),
+                List.of()
+        );
+    }
+
+    private ImageUrls createImageUrls() {
+        return new ImageUrls(
+                "https://example.com/images/small.jpg",
+                "https://example.com/images/medium.jpg",
+                "https://example.com/images/large.jpg"
+        );
+    }
 
     @Test
-    void getBlogById_returnsMappedDto() {
-        when(blogRepository.findBySlug(slug)).thenReturn(Optional.of(blog));
+    void getBlogBySlug_returnsMappedDto() {
+        String title = "STDs";
+        String categorySlug = "std-tests";
+        String blogSlug = "std-post";
+        String content = "STDs are getting more common...";
 
+        CategoryDto categoryDto = new CategoryDto(title, categorySlug);
+
+        Blog blog = createTestBlog(blogSlug, createCategory());
+        BlogResponseDto blogResponseDto =
+                createBlogResponseDto(blogSlug, categoryDto, title, content);
+
+        when(blogRepository.findBySlug(blogSlug)).thenReturn(Optional.of(blog));
         when(blogTransformer.toDto(blog, Language.EN)).thenReturn(blogResponseDto);
 
-        BlogResponseDto result = blogService.getBlogBySlug(slug, Language.EN);
+        BlogResponseDto result = blogService.getBlogBySlug(blogSlug, Language.EN);
 
-        assertBlogDto(result);
-        verify(blogRepository).findBySlug(slug);
+        assertThat(result).isNotNull();
+        assertThat(result.slug()).isEqualTo(blogSlug);
+        assertThat(result.title()).isEqualTo(title);
+        assertThat(result.content()).isEqualTo(content);
+        assertThat(result.author()).isEqualTo("Author");
+        assertThat(result.categories()).containsExactly(categoryDto);
+
+        verify(blogRepository).findBySlug(blogSlug);
         verify(blogTransformer).toDto(blog, Language.EN);
-        assertThat(blogResponseDto).isNotNull();
-        assertThat(blogResponseDto.getTitle()).isEqualTo("Test Blog");
     }
 
     @Test
     void getBlogById_throwsExceptionWhenNotFound() {
-        mockFindBlogBySlug(Optional.empty());
-
-        assertThatThrownBy(() -> blogService.getBlogBySlug(slug, Language.EN))
+        String blogSlug = "std-post";
+        mockFindBlogBySlug(Optional.empty(), blogSlug);
+        assertThatThrownBy(() -> blogService.getBlogBySlug(blogSlug, Language.EN))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessage("Blog not found");
     }
@@ -124,9 +147,14 @@ class BlogServiceTest {
     @Test
     void createBlog_savesAndReturnsMappedDto() throws IOException {
         MultipartFile file = createMockImageFile();
+        Category category = createCategory();
+        BlogDto blogDto = createBlogDto();
+        BlogResponseDto blogResponseDto = createBlogResponseDto();
+
+        Blog blog = createTestBlog("std-post", category);
 
         when(blogTransformer.fromCreateDto(blogDto)).thenReturn(blog);
-        when(mediaService.processAndUploadImage(file)).thenReturn(getImageUrls());
+        when(mediaService.processAndUploadImage(file)).thenReturn(createImageUrls());
 
         mockSaveBlog(blog);
         mockFindCategories(List.of(category));
@@ -134,61 +162,117 @@ class BlogServiceTest {
 
         BlogResponseDto result = blogService.createBlog(blogDto, file);
 
-        assertBlogDto(result);
+        assertThat(result).isNotNull();
+        assertThat(result.slug()).isEqualTo("std-post");
+        assertThat(result.author()).isEqualTo("Author");
+        assertThat(result.title()).isEqualTo("STDs");
+        assertThat(result.content()).isEqualTo("STDs are getting more common...");
+        assertThat(result.categories())
+                .containsExactly(new CategoryDto("STDs", "std-tests"));
 
-        assertEquals("small.webp", blog.getImageUrlSmall());
-        assertEquals("medium.webp", blog.getImageUrlMedium());
-        assertEquals("large.webp", blog.getImageUrlLarge());
+        assertThat(blog.getImageUrlSmall())
+                .isEqualTo("https://example.com/images/small.jpg");
+        assertThat(blog.getImageUrlMedium())
+                .isEqualTo("https://example.com/images/medium.jpg");
+        assertThat(blog.getImageUrlLarge())
+                .isEqualTo("https://example.com/images/large.jpg");
+
+        verify(blogTransformer).fromCreateDto(blogDto);
+        verify(mediaService).processAndUploadImage(file);
     }
 
-    private static ImageUrls getImageUrls() {
-        return ImageUrls.builder()
-                .small("small.webp")
-                .medium("medium.webp")
-                .large("large.webp")
-                .build();
+    private BlogDto createBlogDto() {
+        return new BlogDto(
+                "Author",
+                List.of("std-tests"),
+                new TranslationDto(
+                        Language.EN,
+                        "STDs",
+                        "STDs are getting more common..."
+                )
+        );
     }
 
+    private BlogResponseDto createBlogResponseDto() {
+        return new BlogResponseDto(
+                "std-post",
+                "Author",
+                createImageUrls(),
+                "STDs",
+                "STDs are getting more common...",
+                List.of(new CategoryDto("STDs", "std-tests")),
+                Instant.now(),
+                Instant.now(),
+                10
+        );
+    }
 
     @Test
     void createBlog_withoutImage_setsNoImageUrls() throws IOException {
+        BlogDto blogDto = createBlogDto();
+        Category category = createCategory();
+        BlogResponseDto blogResponseDto = createBlogResponseDto();
+
+        Blog blog = createTestBlog("std-post", category);
+
         when(blogTransformer.fromCreateDto(blogDto)).thenReturn(blog);
+
         mockSaveBlog(blog);
-        mockTransformToDto(blog, blogResponseDto);
         mockFindCategories(List.of(category));
+        mockTransformToDto(blog, blogResponseDto);
 
         BlogResponseDto result = blogService.createBlog(blogDto, null);
 
+        verify(blogTransformer).fromCreateDto(blogDto);
         verify(blogTransformer).toDto(eq(blog), any(Language.class));
         verify(mediaService, never()).processAndUploadImage(any());
 
-        assertBlogDto(result);
+        assertThat(result).isNotNull();
+        assertThat(result.slug()).isEqualTo("std-post");
+        assertThat(result.author()).isEqualTo("Author");
+        assertThat(result.title()).isEqualTo("STDs");
+        assertThat(result.content()).isEqualTo("STDs are getting more common...");
+        assertThat(result.categories())
+                .containsExactly(new CategoryDto("STDs", "std-tests"));
 
-        assertNull(blog.getImageUrlSmall());
-        assertNull(blog.getImageUrlMedium());
-        assertNull(blog.getImageUrlLarge());
+        assertThat(blog.getImageUrlSmall()).isNull();
+        assertThat(blog.getImageUrlMedium()).isNull();
+        assertThat(blog.getImageUrlLarge()).isNull();
     }
-
 
     @Test
     void createBlog_withEmptyFile_doesNotUpload() throws IOException {
+        BlogDto blogDto = createBlogDto();
+        Category category = createCategory();
+        BlogResponseDto blogResponseDto = createBlogResponseDto();
+
+        Blog blog = createTestBlog("std-post", category);
+
         when(blogTransformer.fromCreateDto(blogDto)).thenReturn(blog);
+
         mockSaveBlog(blog);
-        mockTransformToDto(blog, blogResponseDto);
         mockFindCategories(List.of(category));
+        mockTransformToDto(blog, blogResponseDto);
 
         MultipartFile emptyFile = mock(MultipartFile.class);
         when(emptyFile.isEmpty()).thenReturn(true);
 
         BlogResponseDto result = blogService.createBlog(blogDto, emptyFile);
 
-        assertBlogDto(result);
+        assertThat(result).isNotNull();
+        assertThat(result.slug()).isEqualTo("std-post");
+        assertThat(result.author()).isEqualTo("Author");
+        assertThat(result.title()).isEqualTo("STDs");
+        assertThat(result.content()).isEqualTo("STDs are getting more common...");
+        assertThat(result.categories())
+                .containsExactly(new CategoryDto("STDs", "std-tests"));
 
+        verify(blogTransformer).fromCreateDto(blogDto);
         verify(mediaService, never()).processAndUploadImage(any());
 
-        assertNull(blog.getImageUrlSmall());
-        assertNull(blog.getImageUrlMedium());
-        assertNull(blog.getImageUrlLarge());
+        assertThat(blog.getImageUrlSmall()).isNull();
+        assertThat(blog.getImageUrlMedium()).isNull();
+        assertThat(blog.getImageUrlLarge()).isNull();
     }
 
 
@@ -203,18 +287,19 @@ class BlogServiceTest {
 
     @Test
     void updateBlog_shouldUpdateAndReturnDto() throws IOException {
-        BlogDto updateDto = createUpdateBlogDto();
+        String blogSlug = "std-post";
+        Category category = createCategory();
+
+        Blog blog = createTestBlog(blogSlug, category);
+        BlogDto updateDto = createUpdateBlogDto(category.getSlug());
+        BlogResponseDto blogResponseDto = createBlogResponseDto();
         MultipartFile file = createMockImageFile();
 
-        ImageUrls imageUrls = ImageUrls.builder()
-                .small("small.webp")
-                .medium("medium.webp")
-                .large("large.webp")
-                .build();
+        ImageUrls imageUrls = createImageUrls();
 
-        mockFindBlogBySlug(Optional.of(blog));
+        mockFindBlogBySlug(Optional.of(blog), blogSlug);
 
-        when(categoryRepository.findBySlugIn(updateDto.getCategorySlugs()))
+        when(categoryRepository.findBySlugIn(updateDto.categorySlugs()))
                 .thenReturn(List.of(category));
         when(mediaService.processAndUploadImage(file))
                 .thenReturn(imageUrls);
@@ -222,28 +307,34 @@ class BlogServiceTest {
         mockSaveBlog(blog);
         mockTransformToDto(blog, blogResponseDto);
 
-        BlogResponseDto result = blogService.updateBlog(slug, updateDto, file);
+        BlogResponseDto result = blogService.updateBlog(blogSlug, updateDto, file);
 
-        assertBlogDto(result);
+        assertBlogDto(result, "STDs", "STDs");
 
-        assertEquals("small.webp", blog.getImageUrlSmall());
-        assertEquals("medium.webp", blog.getImageUrlMedium());
-        assertEquals("large.webp", blog.getImageUrlLarge());
+        assertThat(blog.getImageUrlSmall())
+                .isEqualTo("https://example.com/images/small.jpg");
+        assertThat(blog.getImageUrlMedium())
+                .isEqualTo("https://example.com/images/medium.jpg");
+        assertThat(blog.getImageUrlLarge())
+                .isEqualTo("https://example.com/images/large.jpg");
 
-        verify(blogRepository).findBySlug(slug);
+        verify(blogRepository).findBySlug(blogSlug);
         verify(blogRepository).save(blog);
+        verify(categoryRepository).findBySlugIn(updateDto.categorySlugs());
         verify(mediaService).processAndUploadImage(file);
         verify(blogTransformer).updateEntity(blog, updateDto);
+        verify(blogTransformer).toDto(eq(blog), any(Language.class));
     }
 
 
     @Test
     void deleteBlog_deletesBySlug() {
+        String blogSlug = "std-post";
+        Blog blog = createTestBlog(blogSlug, createCategory());
         blog.setId(UUID.randomUUID());
-        blog.setSlug(slug);
 
-        when(blogRepository.findBySlug(slug)).thenReturn(Optional.of(blog));
-        blogService.deleteBlog(slug);
+        when(blogRepository.findBySlug(blogSlug)).thenReturn(Optional.of(blog));
+        blogService.deleteBlog(blogSlug);
 
         verify(blogRepository).delete(blog);
     }
@@ -255,8 +346,8 @@ class BlogServiceTest {
         BlogPreviewProjection projection1 = mock(BlogPreviewProjection.class);
         BlogPreviewProjection projection2 = mock(BlogPreviewProjection.class);
 
-        BlogPreviewDto dto1 = BlogPreviewDto.builder().slug("slug-1").title("Title 1").build();
-        BlogPreviewDto dto2 = BlogPreviewDto.builder().slug("slug-2").title("Title 2").build();
+        BlogPreviewDto dto1 =createBlogPreviewDto("slug1", "Title 1");
+        BlogPreviewDto dto2 = createBlogPreviewDto("slug2", "Title 2");
 
         when(blogRepository.findRandomBlogsByLanguage(lang.name()))
                 .thenReturn(List.of(projection1, projection2));
@@ -267,48 +358,34 @@ class BlogServiceTest {
         List<BlogPreviewDto> result = blogService.getRandomBlogPreviews(lang);
 
         assertThat(result).hasSize(2);
-        assertThat(result.get(0).getSlug()).isEqualTo("slug-1");
-        assertThat(result.get(1).getSlug()).isEqualTo("slug-2");
+        assertThat(result.get(0).slug()).isEqualTo("slug1");
+        assertThat(result.get(1).slug()).isEqualTo("slug2");
 
         verify(blogRepository).findRandomBlogsByLanguage(lang.name());
         verify(blogTransformer).mapToBlogPreviewDto(projection1);
         verify(blogTransformer).mapToBlogPreviewDto(projection2);
     }
 
-    private void setupCategory() {
-        category = Category.builder()
-                .id(UUID.randomUUID())
-                .slug(categorySlug)
-                .build();
-
-        categoryDto = CategoryDto.builder()
-                .name("Tech")
-                .slug(categorySlug)
-                .build();
+    private BlogResponseDto createBlogResponseDto(
+            String slug,
+            CategoryDto categoryDto,
+            String title,
+            String content
+    ) {
+        return new BlogResponseDto(
+                slug,
+                "Author",
+                createImageUrls(),
+                title,
+                content,
+                List.of(categoryDto),
+                Instant.now(),
+                Instant.now(),
+                10
+        );
     }
 
-    private void setupDtos() {
-        categoryDto = createCategoryDto();
-        blogResponseDto = createBlogWithTranslationDto(categoryDto, "Test Blog", "Content goes here");
-    }
-    private CategoryDto createCategoryDto() {
-        return CategoryDto.builder()
-                .name("Tech")
-                .slug(categorySlug)
-                .build();
-    }
-
-    private BlogResponseDto createBlogWithTranslationDto(CategoryDto categoryDto, String title, String content) {
-        return BlogResponseDto.builder()
-                .title(title)
-                .author("Author")
-                .content(content)
-                .readingTime(10)
-                .categories(List.of(categoryDto))
-                .build();
-    }
-
-    private Blog createTestBlog() {
+    private Blog createTestBlog(String slug, Category category) {
         Blog blog = Blog.builder()
                 .slug(slug)
                 .categories(Set.of(category))
@@ -327,43 +404,46 @@ class BlogServiceTest {
         return blog;
     }
 
-    private BlogDto createSampleCreateBlogDto() {
-        BlogDto dto = BlogDto.builder()
-                .author("Jane")
-                .categorySlugs(List.of(categorySlug)).build();
-
-        TranslationDto translationDto = createSampleCreateBlogTranslationDto();
-        dto.setTranslation(translationDto);
-
-        return dto;
+    private BlogDto createUpdateBlogDto(String categorySlug) {
+        return new BlogDto(
+                "Updated Author",
+                List.of(categorySlug),
+                new TranslationDto(
+                        Language.EN,
+                        "Updated Title",
+                        "Updated blog content..."
+                )
+        );
     }
 
-    private TranslationDto createSampleCreateBlogTranslationDto() {
-        return TranslationDto.builder()
-                .language(Language.EN)
-                .title("Healthy Living")
-                .content("Tips for a healthy lifestyle.")
-                .build();
+    private Category createCategory() {
+        Category category = new Category();
+        category.setSlug("std-tests");
+
+        CategoryTranslation translation = new CategoryTranslation();
+        translation.setCategory(category);
+        translation.setLanguage(Language.EN);
+        translation.setName("STDs");
+
+        category.getTranslations().add(translation);
+
+        return category;
     }
 
-
-
-    private BlogDto createUpdateBlogDto() {
-        return BlogDto.builder()
-                .author("Updated Author")
-                .categorySlugs(List.of(categorySlug))
-                .build();
-    }
-
-    private void assertBlogDto(BlogResponseDto dto) {
+    private void assertBlogDto(
+            BlogResponseDto dto,
+            String expectedTitle,
+            String expectedCategoryName
+    ) {
         assertThat(dto).isNotNull();
-        assertThat(dto.getTitle()).isEqualTo("Test Blog");
-        assertThat(dto.getCategories()).hasSize(1);
-        assertThat(dto.getCategories().get(0).getName()).isEqualTo("Tech");
+        assertThat(dto.title()).isEqualTo(expectedTitle);
+        assertThat(dto.categories()).hasSize(1);
+        assertThat(dto.categories().get(0).name())
+                .isEqualTo(expectedCategoryName);
     }
 
-    private void mockFindBlogBySlug(Optional<Blog> blogOpt) {
-        when(blogRepository.findBySlug(slug)).thenReturn(blogOpt);
+    private void mockFindBlogBySlug(Optional<Blog> blogOpt, String blogSlug) {
+        when(blogRepository.findBySlug(blogSlug)).thenReturn(blogOpt);
     }
 
     private void mockFindCategories(List<Category> categories) {

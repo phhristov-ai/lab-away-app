@@ -1,4 +1,4 @@
-package com.labaway.backend.service.order;
+package com.labaway.backend.unit.service.order;
 
 import com.labaway.backend.dto.order.*;
 import com.labaway.backend.dto.payment.CreatePaymentResponseDto;
@@ -13,10 +13,10 @@ import com.labaway.backend.enums.Language;
 import com.labaway.backend.enums.OrderStatus;
 import com.labaway.backend.service.analytics.GoogleAnalyticsService;
 import com.labaway.backend.service.communication.EmailService;
+import com.labaway.backend.service.order.OrderService;
 import com.labaway.backend.strategy.PaymentProvider;
 import com.labaway.backend.strategy.PaymentStrategy;
 import com.labaway.backend.strategy.PaymentStrategyFactory;
-import com.labaway.backend.transformer.order.AddressTransformer;
 import com.labaway.backend.transformer.order.OrderTransformer;
 import com.labaway.backend.util.OrderNumberGenerator;
 import org.junit.jupiter.api.BeforeEach;
@@ -68,11 +68,12 @@ class OrderServiceTest {
     void setUp() {
         TestUtils.setField(orderService, "frontendUrl", "http://localhost:3000");
         orderNumber = generator.generate();
-        sampleOrder = buildSampleOrder();
+
     }
 
     @Test
     void createOrder_shouldReturnResponseWithSessionIdAndOrderId() {
+        sampleOrder = buildSampleOrder(PaymentProvider.STRIPE);
         CreateOrderRequestDto dto = buildCreateOrderRequestDto();
 
         when(productRepository.findBySlug("test-product")).thenReturn(Optional.of(new Product()));
@@ -83,7 +84,7 @@ class OrderServiceTest {
         CreateOrderResponseDto response = orderService.createOrder(dto);
 
         assertNotNull(response);
-        assertEquals("test-session-id", response.getSessionId());
+        assertEquals("test-session-id", response.sessionId());
 
         verify(paymentStrategyFactory).getStrategy(PaymentProvider.STRIPE);
         verify(paymentStrategy).initiatePayment(any());
@@ -92,6 +93,7 @@ class OrderServiceTest {
 
     @Test
     void createExpressOrder_shouldReturnResponseWithSessionIdAndOrderId() {
+        sampleOrder = buildSampleOrder(PaymentProvider.STRIPE);
         CreateExpressOrderRequestDto dto = buildCreateExpressOrderRequestDto();
 
         when(productRepository.findBySlug("test-product"))
@@ -108,7 +110,7 @@ class OrderServiceTest {
                 orderService.createExpressOrder(dto);
 
         assertNotNull(response);
-        assertEquals("paypal-order-id", response.getSessionId());
+        assertEquals("paypal-order-id", response.sessionId());
 
         verify(paymentStrategyFactory)
                 .getStrategy(PaymentProvider.PAYPAL);
@@ -117,21 +119,22 @@ class OrderServiceTest {
     }
 
     private CreateExpressOrderRequestDto buildCreateExpressOrderRequestDto() {
-        return CreateExpressOrderRequestDto.builder()
-                .paymentProvider(PaymentProvider.PAYPAL)
-                .language(Language.EN)
-                .items(List.of(
-                        OrderItemDto.builder()
-                                .slug("test-product")
-                                .quantity(1)
-                                .price(BigDecimal.TEN)
-                                .build()
-                ))
-                .build();
+        return new CreateExpressOrderRequestDto(
+                PaymentProvider.PAYPAL,
+                List.of(
+                        new OrderItemDto(
+                                "test-product",
+                                1,
+                                BigDecimal.TEN
+                        )
+                ),
+                Language.EN
+        );
     }
 
     @Test
     void confirmOrder_shouldSetStatusToPaid() {
+        sampleOrder = buildSampleOrder(PaymentProvider.STRIPE);
         when(orderRepository.findByOrderNumber(orderNumber)).thenReturn(Optional.of(sampleOrder));
         when(paymentStrategyFactory.getStrategy(PaymentProvider.STRIPE)).thenReturn(paymentStrategy);
         when(paymentStrategy.isPaymentCompleted(anyString())).thenReturn(true);
@@ -144,6 +147,7 @@ class OrderServiceTest {
 
     @Test
     void confirmExpressOrder_shouldPopulateOrderAndSetStatusToPaid() {
+        sampleOrder = buildSampleOrder(PaymentProvider.PAYPAL);
         ConfirmExpressOrderRequestDto dto = buildConfirmExpressOrderRequestDto();
 
         when(orderRepository.findByOrderNumber(orderNumber))
@@ -158,49 +162,50 @@ class OrderServiceTest {
         Address billing = new Address();
         Address shipping = new Address();
 
-        when(orderTransformer.toEntity(dto.getBillingAddress()))
+        when(orderTransformer.toEntity(dto.billingAddress()))
                 .thenReturn(billing);
 
-        when(orderTransformer.toEntity(dto.getShippingAddress()))
+        when(orderTransformer.toEntity(dto.shippingAddress()))
                 .thenReturn(shipping);
 
         orderService.confirmExpressOrder(dto);
 
         assertEquals(OrderStatus.PAID, sampleOrder.getStatus());
-        assertEquals(dto.getCustomerEmail(), sampleOrder.getCustomerEmail());
+        assertEquals(dto.customerEmail(), sampleOrder.getCustomerEmail());
         assertEquals(billing, sampleOrder.getBillingAddress());
         assertEquals(shipping, sampleOrder.getShippingAddress());
-        assertEquals(dto.getPaypalCaptureId(), sampleOrder.getPaypalCaptureId());
+        assertEquals(dto.paypalCaptureId(), sampleOrder.getPaypalCaptureId());
 
         verify(orderRepository).save(sampleOrder);
         verify(emailService).sendOrderConfirmationEmail(any());
     }
 
     private ConfirmExpressOrderRequestDto buildConfirmExpressOrderRequestDto() {
-        return ConfirmExpressOrderRequestDto.builder()
-                .orderNumber(orderNumber)
-                .gaClientId("clientId")
-                .customerEmail("john.doe@example.com")
-                .paypalCaptureId("capture-id")
-                .billingAddress(buildAddressDto())
-                .shippingAddress(buildAddressDto())
-                .build();
+        return new ConfirmExpressOrderRequestDto(
+                orderNumber,
+                "clientId",
+                "john.doe@example.com",
+                buildAddressDto(),
+                buildAddressDto(),
+                "capture-id"
+        );
     }
 
     private AddressDto buildAddressDto() {
-        return AddressDto.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .country("DE")
-                .address("Main Street 1")
-                .city("Berlin")
-                .postCode("10115")
-                .phone("+49123456789")
-                .build();
+        return new AddressDto(
+                "John",
+                "Doe",
+                "DE",
+                "Main Street 1",
+                "Berlin",
+                "10115",
+                "+49123456789"
+        );
     }
 
     @Test
     void getOrderById_shouldReturnOrderDto() {
+        sampleOrder = buildSampleOrder(PaymentProvider.STRIPE);
         when(orderRepository.findByOrderNumber(orderNumber)).thenReturn(Optional.of(sampleOrder));
         OrderDto expectedDto = buildSampleOrderDto();
         when(orderTransformer.toDto(sampleOrder)).thenReturn(expectedDto);
@@ -208,29 +213,32 @@ class OrderServiceTest {
         OrderDto actualDto = orderService.getOrderByOrderNumber(orderNumber);
 
         assertNotNull(actualDto);
-        assertEquals(orderNumber, actualDto.getOrderNumber());
-        assertEquals("PENDING", actualDto.getStatus());
+        assertEquals(orderNumber, actualDto.orderNumber());
+        assertEquals("PENDING", actualDto.status());
     }
 
     @Test
     void getOrderById_shouldThrowWhenNotFound() {
+        sampleOrder = buildSampleOrder(PaymentProvider.STRIPE);
         when(orderRepository.findByOrderNumber(orderNumber)).thenReturn(Optional.empty());
         assertThrows(IllegalArgumentException.class, () -> orderService.getOrderByOrderNumber(orderNumber));
     }
 
     @Test
     void getAllOrders_shouldMapOrdersToDtos() {
+        sampleOrder = buildSampleOrder(PaymentProvider.STRIPE);
         when(orderRepository.findAll()).thenReturn(List.of(sampleOrder));
         when(orderTransformer.toDto(sampleOrder)).thenReturn(buildSampleOrderDto());
 
         List<OrderDto> result = orderService.getAllOrders();
 
         assertEquals(1, result.size());
-        assertEquals(orderNumber, result.get(0).getOrderNumber());
+        assertEquals(orderNumber, result.get(0).orderNumber());
     }
 
     @Test
     void deleteOrder_shouldDeleteIfExists() {
+        sampleOrder = buildSampleOrder(PaymentProvider.STRIPE);
         when(orderRepository.existsByOrderNumber(orderNumber)).thenReturn(true);
 
         orderService.deleteOrder(orderNumber);
@@ -240,6 +248,7 @@ class OrderServiceTest {
 
     @Test
     void deleteOrder_shouldThrowIfNotExists() {
+        sampleOrder = buildSampleOrder(PaymentProvider.STRIPE);
         when(orderRepository.existsByOrderNumber(orderNumber)).thenReturn(false);
 
         assertThrows(IllegalArgumentException.class, () -> orderService.deleteOrder(orderNumber));
@@ -247,6 +256,7 @@ class OrderServiceTest {
 
     @Test
     void updateOrderStatus_shouldUpdateStatus() {
+        sampleOrder = buildSampleOrder(PaymentProvider.STRIPE);
         when(orderRepository.findByOrderNumber(orderNumber)).thenReturn(Optional.of(sampleOrder));
 
         orderService.updateOrderStatus(orderNumber, OrderStatus.PAID);
@@ -257,6 +267,7 @@ class OrderServiceTest {
 
     @Test
     void updateOrderStatus_shouldThrowIfOrderNotFound() {
+        sampleOrder = buildSampleOrder(PaymentProvider.STRIPE);
         when(orderRepository.findByOrderNumber(orderNumber)).thenReturn(Optional.empty());
 
         assertThrows(RuntimeException.class, () -> orderService.updateOrderStatus(orderNumber, OrderStatus.PAID));
@@ -265,33 +276,39 @@ class OrderServiceTest {
     private CreateOrderRequestDto buildCreateOrderRequestDto() {
         AddressDto addressDto = new AddressDto("John", "Doe", "Country", "Address", "City", "12345", "+359892153902");
         OrderItemDto itemDto = new OrderItemDto("test-product", 1, BigDecimal.TEN);
-        return CreateOrderRequestDto.builder()
-                .customerEmail("test@example.com")
-                .billingPhone("123456")
-                .billingAddress(addressDto)
-                .shippingAddress(addressDto)
-                .items(List.of(itemDto))
-                .paymentProvider(PaymentProvider.STRIPE)
-                .language(Language.EN)
-                .build();
+        return new CreateOrderRequestDto(
+                "test@example.com",
+                "123456",
+                addressDto,
+                addressDto,
+                PaymentProvider.STRIPE,
+                List.of(itemDto),
+                Language.EN
+        );
     }
 
-    private Order buildSampleOrder() {
+    private Order buildSampleOrder(PaymentProvider paymentProvider) {
         Address billing = Address.builder().build();
         Address shipping = Address.builder().build();
 
-        Order order = Order.builder()
+        Order.OrderBuilder builder = Order.builder()
                 .orderNumber(orderNumber)
                 .customerEmail("test@example.com")
                 .billingAddress(billing)
                 .shippingAddress(shipping)
-                .stripeSessionId("test-session-id")
-                .paymentProvider(PaymentProvider.STRIPE)
+                .paymentProvider(paymentProvider)
                 .status(OrderStatus.PENDING)
                 .totalPrice(BigDecimal.TEN)
                 .createdAt(Instant.now())
-                .updatedAt(Instant.now())
-                .build();
+                .updatedAt(Instant.now());
+
+        if (paymentProvider == PaymentProvider.STRIPE) {
+            builder.stripeSessionId("test-session-id");
+        } else {
+            builder.paypalOrderId("test-paypal-order-id");
+        }
+
+        Order order = builder.build();
 
         OrderItem item = OrderItem.builder()
                 .id(UUID.randomUUID())
@@ -301,21 +318,44 @@ class OrderServiceTest {
                 .build();
 
         order.setOrderItems(List.of(item));
+
         return order;
     }
 
     private OrderDto buildSampleOrderDto() {
-        return OrderDto.builder()
-                .orderNumber(orderNumber)
-                .status("PENDING")
-                .customerEmail("test@example.com")
-                .totalPrice(BigDecimal.TEN)
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .billingAddress(new AddressDto("John", "Doe", "Country", "Address", "City", "12345", "+359892153902"))
-                .shippingAddress(new AddressDto("John", "Doe", "Country", "Address", "City", "12345", "+359892153902"))
-                .orderItems(List.of(OrderItemDto.builder().quantity(1).price(BigDecimal.TEN).build()))
-                .paymentProvider(PaymentProvider.STRIPE)
-                .build();
+        return new OrderDto(
+                orderNumber,
+                "test@example.com",
+                new AddressDto(
+                        "John",
+                        "Doe",
+                        "Country",
+                        "Address",
+                        "City",
+                        "12345",
+                        "+359892153902"
+                ),
+                new AddressDto(
+                        "John",
+                        "Doe",
+                        "Country",
+                        "Address",
+                        "City",
+                        "12345",
+                        "+359892153902"
+                ),
+                BigDecimal.TEN,
+                "PENDING",
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                PaymentProvider.STRIPE,
+                List.of(
+                        new OrderItemDto(
+                                "test-product",
+                                1,
+                                BigDecimal.TEN
+                        )
+                )
+        );
     }
 }

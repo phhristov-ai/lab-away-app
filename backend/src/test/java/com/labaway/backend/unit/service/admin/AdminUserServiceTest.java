@@ -1,4 +1,4 @@
-package com.labaway.backend.service.admin;
+package com.labaway.backend.unit.service.admin;
 
 import com.labaway.backend.dto.admin.AdminUserCreateDto;
 import com.labaway.backend.dto.admin.AdminUserDto;
@@ -14,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -58,7 +59,7 @@ class AdminUserServiceTest {
         List<AdminUserDto> result = adminUserService.getAllAdminUsers();
 
         assertEquals(1, result.size());
-        assertEquals("admin", result.get(0).getUsername());
+        assertEquals("admin", result.get(0).username());
     }
 
     @Test
@@ -66,8 +67,8 @@ class AdminUserServiceTest {
         mockFindByUsername(Optional.of(adminUser));
         AdminUserDto result = adminUserService.getAdminUserByUsername(username);
 
-        assertEquals(userId, result.getId());
-        assertEquals("admin@example.com", result.getEmail());
+        assertEquals(userId, result.id());
+        assertEquals("admin@example.com", result.email());
     }
 
     @Test
@@ -90,8 +91,8 @@ class AdminUserServiceTest {
 
         AdminUserDto result = adminUserService.createAdminUser(createDto);
 
-        assertEquals("admin", result.getUsername());
-        assertEquals("admin@example.com", result.getEmail());
+        assertEquals("admin", result.username());
+        assertEquals("admin@example.com", result.email());
         verify(passwordEncoder).encode("password123");
     }
 
@@ -111,8 +112,8 @@ class AdminUserServiceTest {
         Optional<AdminUserDto> result = adminUserService.validateCredentials(username, rawPassword);
 
         assertTrue(result.isPresent());
-        assertEquals(email, result.get().getEmail());
-        assertEquals("admin", result.get().getUsername());
+        assertEquals(email, result.get().email());
+        assertEquals("admin", result.get().username());
     }
 
     @Test
@@ -146,32 +147,34 @@ class AdminUserServiceTest {
     }
 
     private AdminUserCreateDto buildCreateDto() {
-        return AdminUserCreateDto.builder()
-                .username(username)
-                .email(email)
-                .password(rawPassword)
-                .role("ADMIN")
-                .build();
+        return new AdminUserCreateDto(
+                username,
+                email,
+                rawPassword,
+                "ADMIN"
+        );
     }
 
     private void mockTransformerBehavior() {
         when(adminUserTransformer.fromCreateDto(any())).thenAnswer(invocation -> {
             AdminUserCreateDto dto = invocation.getArgument(0);
             return AdminUser.builder()
-                    .username(dto.getUsername())
-                    .email(dto.getEmail())
-                    .role(dto.getRole())
+                    .username(dto.username())
+                    .email(dto.email())
+                    .role(dto.role())
                     .build();
         });
 
         when(adminUserTransformer.toDto(any())).thenAnswer(invocation -> {
             AdminUser user = invocation.getArgument(0);
-            return AdminUserDto.builder()
-                    .id(user.getId())
-                    .username(user.getUsername())
-                    .email(user.getEmail())
-                    .role(user.getRole())
-                    .build();
+            return new AdminUserDto(
+                    user.getId(),
+                    user.getUsername(),
+                    user.getEmail(),
+                    user.getRole(),
+                    LocalDateTime.now(),
+                    LocalDateTime.now()
+            );
         });
     }
 

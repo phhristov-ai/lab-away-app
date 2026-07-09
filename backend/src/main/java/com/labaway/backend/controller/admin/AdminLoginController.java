@@ -30,7 +30,7 @@ public class AdminLoginController {
 
         if (adminOpt.isPresent()) {
             AdminUserDto admin = adminOpt.get();
-            String token = jwtUtil.generateToken(admin.getUsername(), admin.getRole());
+            String token = jwtUtil.generateToken(admin.username(), admin.role());
             return ResponseEntity.ok(new JwtResponse(token));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)

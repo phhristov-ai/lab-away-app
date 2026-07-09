@@ -1,7 +1,6 @@
-package com.labaway.backend.controller.product;
+package com.labaway.backend.unit.controller.product;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.labaway.backend.controller.product.ProductController;
 import com.labaway.backend.dto.category.CategoryDto;
 import com.labaway.backend.dto.image.ImageUrls;
 import com.labaway.backend.dto.product.main.*;
@@ -9,16 +8,17 @@ import com.labaway.backend.dto.product.media.ProductImageDto;
 import com.labaway.backend.enums.Language;
 import com.labaway.backend.service.product.ProductService;
 import com.labaway.backend.service.storage.S3Service;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -30,56 +30,47 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.AdditionalMatchers.aryEq;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class ProductControllerTest {
 
     @InjectMocks
     private ProductController productController;
+
     @Mock
     private ProductService productService;
+
     @Mock
     private S3Service s3Service;
-    private ProductDto productDto;
-    private String productPayloadDtoJson;
-    private ProductImageDto productImageDto;
-
-    private List<CategoryDto> categoryDtos;
-    @BeforeEach
-    void setUp() throws JsonProcessingException {
-        MockitoAnnotations.openMocks(this);
-        categoryDtos = buildCategoryDtos();
-        productImageDto = createProductImageDto(
-                "http://example.com/image-small.jpg",
-                "http://example.com/image-medium.jpg",
-                "http://example.com/image-large.jpg"
-        );
-
-        productDto = createProductDto("Test Product", "test-product", BigDecimal.TEN, 5,
-                "Test description", categoryDtos, List.of(productImageDto));
-
-        productPayloadDtoJson = createCreateProductJson("Test Product", BigDecimal.TEN, 5,
-                "Test description", true, List.of("test-category", "bundle-category"));
-    }
 
     @Test
     void getAll_shouldReturnListOfProductPreviews() {
-        ProductPreviewDto previewDto = createProductPreviewDto("Test Product", "test-product", BigDecimal.TEN, true);
+        ProductPreviewDto previewDto = createProductPreviewDto(
+                "Test Product",
+                "test-product",
+                BigDecimal.TEN,
+                true
+        );
 
-        when(productService.getAllProductPreviews(Language.EN)).thenReturn(List.of(previewDto));
+        when(productService.getAllProductPreviews(Language.EN))
+                .thenReturn(List.of(previewDto));
 
         var result = productController.getAll(Language.EN);
 
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
-        assertThat(result.get(0).getImageUrls().getMedium()).isEqualTo("http://example.com/image-medium.jpg");
-        assertThat(result.get(0).getImageUrls().getLarge()).isEqualTo("http://example.com/image-large.jpg");
-        assertThat(result.get(0).isActive()).isTrue();
+        assertThat(result.get(0).imageUrls().small())
+                .isEqualTo("http://example.com/image-small.jpg");
+        assertThat(result.get(0).imageUrls().medium())
+                .isEqualTo("http://example.com/image-medium.jpg");
+        assertThat(result.get(0).imageUrls().large())
+                .isEqualTo("http://example.com/image-large.jpg");
+        assertThat(result.get(0).active()).isTrue();
 
-        verify(productService, times(1)).getAllProductPreviews(Language.EN);
+        verify(productService).getAllProductPreviews(Language.EN);
     }
 
     @Test
     void getById_shouldReturnProductWithImages() {
-        String slug = productDto.getSlug();
+        String slug = "test-product";
 
         ProductImageDto imageDto = createProductImageDto(
                 "http://example.com/image-small.jpg",
@@ -87,26 +78,66 @@ class ProductControllerTest {
                 "http://example.com/image-large.jpg"
         );
 
-        productDto.setImages(List.of(imageDto));
+        ProductDto productDto = createProductDto(
+                "Test Product",
+                slug,
+                BigDecimal.TEN,
+                5,
+                "Test description",
+                List.of(createCategoryDto("Test Category", "test-category")),
+                List.of(imageDto),
+                true
+        );
 
-        when(productService.getProductBySlug(slug, Language.EN)).thenReturn(productDto);
+        when(productService.getProductBySlug(slug, Language.EN))
+                .thenReturn(productDto);
 
         var response = productController.getBySlug(slug, Language.EN);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().getImages()).hasSize(1);
-        assertThat(response.getBody().isActive()).isTrue();
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().images()).hasSize(1);
+        assertThat(response.getBody().active()).isTrue();
 
-        ProductImageDto dtoImage = response.getBody().getImages().get(0);
-        assertThat(dtoImage.getImageUrlSmall()).isEqualTo("http://example.com/image-small.jpg");
-        assertThat(dtoImage.getImageUrlMedium()).isEqualTo("http://example.com/image-medium.jpg");
-        assertThat(dtoImage.getImageUrlLarge()).isEqualTo("http://example.com/image-large.jpg");
+        ProductImageDto dtoImage = response.getBody().images().get(0);
 
-        verify(productService, times(1)).getProductBySlug(slug, Language.EN);
+        assertThat(dtoImage.imageUrlSmall())
+                .isEqualTo("http://example.com/image-small.jpg");
+        assertThat(dtoImage.imageUrlMedium())
+                .isEqualTo("http://example.com/image-medium.jpg");
+        assertThat(dtoImage.imageUrlLarge())
+                .isEqualTo("http://example.com/image-large.jpg");
+
+        verify(productService).getProductBySlug(slug, Language.EN);
     }
 
     @Test
-    void create_shouldReturnCreatedProductWithImages() throws IOException {
+    void create_shouldReturnCreatedProductWithImages() {
+        ProductImageDto imageDto = createProductImageDto(
+                "http://example.com/image-small.jpg",
+                "http://example.com/image-medium.jpg",
+                "http://example.com/image-large.jpg"
+        );
+
+        ProductDto productDto = createProductDto(
+                "Test Product",
+                "test-product",
+                BigDecimal.TEN,
+                5,
+                "Test description",
+                List.of(createCategoryDto("Test Category", "test-category")),
+                List.of(imageDto),
+                true
+        );
+
+        String productPayloadDtoJson = createCreateProductJson(
+                "Test Product",
+                BigDecimal.TEN,
+                5,
+                "Test description",
+                true,
+                List.of("test-category")
+        );
 
         when(productService.createProduct(
                 any(ProductPayloadDto.class),
@@ -114,7 +145,7 @@ class ProductControllerTest {
                 any(MultipartFile.class)
         )).thenReturn(productDto);
 
-        MultipartFile[] mockGalleryFiles = new MultipartFile[] {
+        MultipartFile[] mockGalleryFiles = new MultipartFile[]{
                 createMockMultipartFile("image.jpg", "image content")
         };
 
@@ -128,29 +159,56 @@ class ProductControllerTest {
                         mockBannerFile
                 );
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(response.getBody()).isEqualTo(productDto);
+        assertThat(response.getStatusCode())
+                .isEqualTo(HttpStatus.CREATED);
+        assertThat(response.getBody())
+                .isEqualTo(productDto);
 
-        verify(productService, times(1))
-                .createProduct(
-                        any(ProductPayloadDto.class),
-                        argThat(arr -> arr.length == 1),
-                        eq(mockBannerFile)
-                );
+        verify(productService).createProduct(
+                any(ProductPayloadDto.class),
+                argThat(arr -> arr.length == 1),
+                eq(mockBannerFile)
+        );
 
         verifyNoMoreInteractions(productService);
     }
 
     @Test
-    void create_shouldHandleMultipleImages() throws IOException {
+    void create_shouldHandleMultipleImages() {
+        ProductImageDto imageDto = createProductImageDto(
+                "http://example.com/image-small.jpg",
+                "http://example.com/image-medium.jpg",
+                "http://example.com/image-large.jpg"
+        );
 
-        MultipartFile[] mockFiles = new MultipartFile[] {
+        ProductDto productDto = createProductDto(
+                "Test Product",
+                "test-product",
+                BigDecimal.TEN,
+                5,
+                "Test description",
+                List.of(createCategoryDto("Test Category", "test-category")),
+                List.of(imageDto),
+                true
+        );
+
+        String productPayloadDtoJson = createCreateProductJson(
+                "Test Product",
+                BigDecimal.TEN,
+                5,
+                "Test description",
+                true,
+                List.of("test-category")
+        );
+
+        MultipartFile[] mockFiles = new MultipartFile[]{
                 createMockMultipartFile("image1.jpg", "content1"),
                 createMockMultipartFile("image2.jpg", "content2")
         };
 
         MultipartFile mockBanner =
                 createMockMultipartFile("banner.mp4", "banner content");
+
         when(productService.createProduct(
                 any(ProductPayloadDto.class),
                 any(MultipartFile[].class),
@@ -164,8 +222,10 @@ class ProductControllerTest {
                         mockBanner
                 );
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(response.getBody()).isEqualTo(productDto);
+        assertThat(response.getStatusCode())
+                .isEqualTo(HttpStatus.CREATED);
+        assertThat(response.getBody())
+                .isEqualTo(productDto);
 
         verify(productService).createProduct(
                 any(ProductPayloadDto.class),
@@ -177,9 +237,17 @@ class ProductControllerTest {
     }
 
     @Test
-    void create_whenServiceThrowsIOException_returnsInternalServerError() throws IOException {
+    void create_whenServiceThrowsIOException_returnsInternalServerError() {
+        String productPayloadDtoJson = createCreateProductJson(
+                "Test Product",
+                BigDecimal.TEN,
+                5,
+                "Test description",
+                true,
+                List.of("test-category")
+        );
 
-        MultipartFile[] mockFiles = new MultipartFile[] {
+        MultipartFile[] mockFiles = new MultipartFile[]{
                 createMockMultipartFile("image.jpg", "content")
         };
 
@@ -203,11 +271,16 @@ class ProductControllerTest {
                 .isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
 
         assertThat(response.getBody()).isNull();
-    }
 
+        verify(productService).createProduct(
+                any(ProductPayloadDto.class),
+                aryEq(mockFiles),
+                eq(mockBanner)
+        );
+    }
     @Test
     void delete_shouldReturnNoContent() {
-        String slug = productDto.getSlug();
+        String slug = "test-product";
 
         var response = productController.delete(slug);
 
@@ -225,47 +298,70 @@ class ProductControllerTest {
         var result = productController.getRandomProducts(Language.EN);
 
         assertThat(result).hasSize(2);
-        assertThat(result.get(0).getSlug()).isEqualTo("random-product-1");
-        assertThat(result.get(0).getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
-        assertThat(result.get(0).isActive()).isTrue();
-        assertThat(result.get(1).getSlug()).isEqualTo("random-product-2");
-        assertThat(result.get(1).getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
-        assertThat(result.get(1).isActive()).isFalse();
+        assertThat(result.get(0).slug()).isEqualTo("random-product-1");
+        assertThat(result.get(0).imageUrls().small()).isEqualTo("http://example.com/image-small.jpg");
+        assertThat(result.get(0).active()).isTrue();
+        assertThat(result.get(1).slug()).isEqualTo("random-product-2");
+        assertThat(result.get(1).imageUrls().small()).isEqualTo("http://example.com/image-small.jpg");
+        assertThat(result.get(1).active()).isFalse();
 
         verify(productService, times(1)).getRandomProductPreviews(Language.EN);
     }
 
-    private static ProductPreviewDto createProductPreviewDto(String name, String slug, BigDecimal price, boolean active) {
-        return ProductPreviewDto.builder()
-                .name(name)
-                .slug(slug)
-                .price(price)
-                .active(active)
-                .imageUrls(ImageUrls.builder()
-                        .small("http://example.com/image-small.jpg")
-                        .medium("http://example.com/image-medium.jpg")
-                        .large("http://example.com/image-large.jpg")
-                        .build())
-                .build();
+    private static ProductPreviewDto createProductPreviewDto(
+            String name,
+            String slug,
+            BigDecimal price,
+            boolean active) {
+
+        return new ProductPreviewDto(
+                name,
+                slug,
+                price,
+                new ImageUrls(
+                        "http://example.com/image-small.jpg",
+                        "http://example.com/image-medium.jpg",
+                        "http://example.com/image-large.jpg"
+                ),
+                List.of(),
+                active
+        );
     }
 
     @Test
     void updateProduct_shouldReturnUpdatedProduct_whenProductExists() throws IOException {
-
         String slug = "test-slug";
 
-        MultipartFile[] mockFiles = new MultipartFile[] {
+        String productPayloadDtoJson = createCreateProductJson(
+                "Updated Product",
+                BigDecimal.TEN,
+                5,
+                "Updated description",
+                true,
+                List.of("test-category")
+        );
+
+        MultipartFile[] mockFiles = new MultipartFile[]{
                 createMockMultipartFile("image.jpg", "image content")
         };
 
         MultipartFile mockBanner =
                 createMockMultipartFile("banner.mp4", "banner content");
 
-        ProductDto updatedProductDto = ProductDto.builder()
-                .slug(slug)
-                .name("Updated Product")
-                .active(true)
-                .build();
+        ProductDto updatedProductDto = createProductDto(
+                "Updated Product",
+                slug,
+                BigDecimal.TEN,
+                5,
+                "Updated description",
+                List.of(createCategoryDto("Test Category", "test-category")),
+                List.of(createProductImageDto(
+                        "http://example.com/image-small.jpg",
+                        "http://example.com/image-medium.jpg",
+                        "http://example.com/image-large.jpg"
+                )),
+                true
+        );
 
         when(productService.updateProduct(
                 anyString(),
@@ -290,7 +386,7 @@ class ProductControllerTest {
 
         verify(productService).updateProduct(
                 eq(slug),
-                any(),
+                any(ProductPayloadDto.class),
                 argThat(arr -> arr.length == 1),
                 eq(mockBanner)
         );
@@ -298,10 +394,18 @@ class ProductControllerTest {
 
     @Test
     void updateProduct_shouldReturnNotFound_whenProductDoesNotExist() throws IOException {
-
         String slug = "nonexistent-slug";
 
-        MultipartFile[] mockFiles = new MultipartFile[] {
+        String productPayloadDtoJson = createCreateProductJson(
+                "Test Product",
+                BigDecimal.TEN,
+                5,
+                "Test description",
+                true,
+                List.of("test-category")
+        );
+
+        MultipartFile[] mockFiles = new MultipartFile[]{
                 createMockMultipartFile("image.jpg", "image content")
         };
 
@@ -349,12 +453,12 @@ class ProductControllerTest {
         List<ProductPreviewDto> result = productController.getRandomProductsByCategory(categorySlug, Language.EN);
 
         assertThat(result).hasSize(2);
-        assertThat(result.get(0).getSlug()).isEqualTo("health-product-1");
-        assertThat(result.get(0).getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
-        assertThat(result.get(0).isActive()).isFalse();
-        assertThat(result.get(1).getSlug()).isEqualTo("health-product-2");
-        assertThat(result.get(1).getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
-        assertThat(result.get(1).isActive()).isTrue();
+        assertThat(result.get(0).slug()).isEqualTo("health-product-1");
+        assertThat(result.get(0).imageUrls().small()).isEqualTo("http://example.com/image-small.jpg");
+        assertThat(result.get(0).active()).isFalse();
+        assertThat(result.get(1).slug()).isEqualTo("health-product-2");
+        assertThat(result.get(1).imageUrls().small()).isEqualTo("http://example.com/image-small.jpg");
+        assertThat(result.get(1).active()).isTrue();
 
         verify(productService, times(1)).getRandomProductPreviewsByCategorySlug(categorySlug, Language.EN);
     }
@@ -370,12 +474,12 @@ class ProductControllerTest {
         List<ProductPreviewDto> result = productController.getRandomProductsByCategory(null, Language.EN);
 
         assertThat(result).hasSize(2);
-        assertThat(result.get(0).getSlug()).isEqualTo("random-product-1");
-        assertThat(result.get(0).getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
-        assertThat(result.get(0).isActive()).isTrue();
-        assertThat(result.get(1).getSlug()).isEqualTo("random-product-2");
-        assertThat(result.get(1).getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
-        assertThat(result.get(1).isActive()).isFalse();
+        assertThat(result.get(0).slug()).isEqualTo("random-product-1");
+        assertThat(result.get(0).imageUrls().small()).isEqualTo("http://example.com/image-small.jpg");
+        assertThat(result.get(0).active()).isTrue();
+        assertThat(result.get(1).slug()).isEqualTo("random-product-2");
+        assertThat(result.get(1).imageUrls().small()).isEqualTo("http://example.com/image-small.jpg");
+        assertThat(result.get(1).active()).isFalse();
 
         verify(productService, times(1)).getRandomProductPreviewsByCategorySlug(null, Language.EN);
     }
@@ -389,52 +493,54 @@ class ProductControllerTest {
         );
     }
 
-    private List<CategoryDto> buildCategoryDtos() {
-        return List.of(
-                CategoryDto.builder().name("Test Category").slug("test-category").build(),
-                CategoryDto.builder().name("Bundle Category").slug("bundle-category").build()
-        );
+    private CategoryDto createCategoryDto(String name, String slug) {
+        return new CategoryDto(name, slug);
     }
 
     private static ProductImageDto createProductImageDto(String smallUrl, String mediumUrl, String largeUrl) {
-        return ProductImageDto.builder()
-                .imageUrlSmall(smallUrl)
-                .imageUrlMedium(mediumUrl)
-                .imageUrlLarge(largeUrl)
-                .build();
+        return new ProductImageDto(
+                smallUrl,
+                mediumUrl,
+                largeUrl,
+                null
+        );
     }
 
     private static ProductDto createProductDto(String name, String slug, BigDecimal price, int stock,
-                                               String description, List<CategoryDto> categoryDtos, List<ProductImageDto> images) {
-        return ProductDto.builder()
-                .name(name)
-                .slug(slug)
-                .price(price)
-                .stock(stock)
-                .description(description)
-                .categories(categoryDtos)
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .active(true)
-                .images(images)
-                .build();
+                                               String description, List<CategoryDto> categoryDtos,
+                                               List<ProductImageDto> images, boolean active) {
+        return new ProductDto(
+                name,
+                slug,
+                price,
+                stock,
+                description,
+                categoryDtos,
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                images,
+                active,
+                null
+        );
     }
 
     private static String createCreateProductJson(String name, BigDecimal price, int stock,
-                                                  String description, boolean active, List<String> categories) throws JsonProcessingException {
+                                                  String description, boolean active, List<String> categories) {
         ObjectMapper mapper = new ObjectMapper();
 
-        ProductPayloadDto dto = ProductPayloadDto.builder()
-                .price(price)
-                .stock(stock)
-                .active(active)
-                .categories(categories)
-                .translation(ProductTranslationDto.builder()
-                        .language(Language.EN)
-                        .name(name)
-                        .description(description)
-                        .build())
-                .build();
+        ProductPayloadDto dto = new ProductPayloadDto(
+                price,
+                stock,
+                active,
+                categories,
+                1,
+                new ProductTranslationDto(
+                        Language.EN,
+                        name,
+                        description
+                ),
+                null
+        );
 
         return mapper.writeValueAsString(dto);
 

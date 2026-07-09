@@ -1,4 +1,4 @@
-package com.labaway.backend.transformer.category;
+package com.labaway.backend.unit.transformer.category;
 
 import com.labaway.backend.dto.category.CategoryDto;
 import com.labaway.backend.dto.category.CreateCategoryDto;
@@ -39,7 +39,7 @@ class CategoryTransformerTest {
         CreateCategoryDto createDto = createCategoryDto("STD", "std");
         Category category = categoryTransformer.fromCreateDto(createDto);
         CategoryTranslation translation = categoryTransformer.fromCreateTranslationDto(
-                createDto.getTranslation(), category);
+                createDto.translation(), category);
         category.setTranslations(Set.of(translation));
 
         assertCategoryEntity(category, "STD", "std");
@@ -63,9 +63,7 @@ class CategoryTransformerTest {
 
     @Test
     void shouldCreateTranslationFromDto() {
-        CreateCategoryTranslationDto dto = new CreateCategoryTranslationDto();
-        dto.setLanguage(Language.EN);
-        dto.setName("STD");
+        CreateCategoryTranslationDto dto = new CreateCategoryTranslationDto(Language.EN, "STD");
 
         Category category = new Category();
 
@@ -103,7 +101,7 @@ class CategoryTransformerTest {
 
         CategoryDto dto = categoryTransformer.toDto(category, Language.DE);
 
-        assertThat(dto.getName()).isNull();
+        assertThat(dto.name()).isNull();
     }
 
     private Category getCategory() {
@@ -126,28 +124,21 @@ class CategoryTransformerTest {
 
 
     private static CreateCategoryDto createCategoryDto(String name, String slug) {
-        CreateCategoryDto dto = new CreateCategoryDto();
-        dto.setSlug(slug);
-        CreateCategoryTranslationDto translationDto = new CreateCategoryTranslationDto();
-        translationDto.setLanguage(Language.EN);
-        translationDto.setName(name);
-
-        dto.setTranslation(translationDto);
+        CreateCategoryTranslationDto translationDto = new CreateCategoryTranslationDto(Language.EN, name);
+        CreateCategoryDto dto = new CreateCategoryDto(slug, translationDto);
         return dto;
     }
 
 
     private static UpdateCategoryDto updateCategoryDto(String name, String slug) {
-        UpdateCategoryDto dto = new UpdateCategoryDto();
-        dto.setName(name);
-        dto.setSlug(slug);
+        UpdateCategoryDto dto = new UpdateCategoryDto(name, slug);
         return dto;
     }
 
     private static void assertCategoryDto(CategoryDto dto, String expectedName, String expectedSlug) {
         assertThat(dto).isNotNull();
-        assertThat(dto.getName()).isEqualTo(expectedName);
-        assertThat(dto.getSlug()).isEqualTo(expectedSlug);
+        assertThat(dto.name()).isEqualTo(expectedName);
+        assertThat(dto.slug()).isEqualTo(expectedSlug);
     }
 
     private static void assertCategoryEntity(Category entity, String expectedName, String expectedSlug) {

@@ -7,12 +7,11 @@ import lombok.*;
 import java.util.Objects;
 import java.util.UUID;
 
+@AllArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Entity
+@Builder
 @Table(name = "blog_translations",
         uniqueConstraints = @UniqueConstraint(columnNames = {"blog_id", "language"}))
 public class BlogTranslation {

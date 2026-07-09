@@ -11,6 +11,7 @@ import com.paypal.orders.*;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Component
@@ -27,10 +28,6 @@ public class PayPalPaymentStrategy implements PaymentStrategy {
         this.payPalClient = new PayPalHttpClient(environment);
     }
 
-    public PayPalHttpClient getPayPalClient() {
-        return payPalClient;
-    }
-
     @Override
     public PaymentProvider getProvider() {
         return PaymentProvider.PAYPAL;
@@ -41,9 +38,12 @@ public class PayPalPaymentStrategy implements PaymentStrategy {
         OrderRequest orderRequest = new OrderRequest();
         orderRequest.checkoutPaymentIntent("CAPTURE");
 
+        BigDecimal value  = BigDecimal.valueOf(request.amount())
+                .movePointLeft(2);
+
         AmountWithBreakdown amount = new AmountWithBreakdown()
-                .currencyCode(request.getCurrency())
-                .value(String.valueOf(request.getAmount() / 100.0));
+                .currencyCode(request.currency())
+                .value(value.toPlainString());
 
         PurchaseUnitRequest purchaseUnit = new PurchaseUnitRequest().amountWithBreakdown(amount);
         orderRequest.purchaseUnits(List.of(purchaseUnit));
@@ -52,9 +52,10 @@ public class PayPalPaymentStrategy implements PaymentStrategy {
 
         try {
             HttpResponse<Order> response = payPalClient.execute(paypalRequest);
-            return CreatePaymentResponseDto.builder()
-                    .paymentIntentId(response.result().id())
-                    .build();
+            return new CreatePaymentResponseDto(
+                    response.result().id(),
+                    null
+            );
         } catch (IOException e) {
             throw new PayPalServiceException("Failed to create PayPal order", e);        }
     }
@@ -64,8 +65,9 @@ public class PayPalPaymentStrategy implements PaymentStrategy {
         OrdersGetRequest request = new OrdersGetRequest(orderId);
         try {
             HttpResponse<Order> response = payPalClient.execute(request);
-            String status = response.result().status();
-            return "COMPLETED".equalsIgnoreCase(status);
+            Order order = response.result();
+            return order != null
+                    && "COMPLETED".equals(order.status());
         } catch (IOException e) {
             throw new PayPalServiceException("Failed to verify PayPal order", e);        }
     }

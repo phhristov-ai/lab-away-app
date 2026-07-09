@@ -1,5 +1,8 @@
-package com.labaway.backend.strategy;
+package com.labaway.backend.unit.strategy;
 
+import com.labaway.backend.strategy.PaymentProvider;
+import com.labaway.backend.strategy.PaymentStrategy;
+import com.labaway.backend.strategy.PaymentStrategyFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

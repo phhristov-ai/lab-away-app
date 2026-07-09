@@ -1,9 +1,10 @@
-package com.labaway.backend.util;
+package com.labaway.backend.unit.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.labaway.backend.dto.category.CategoryDto;
+import com.labaway.backend.util.JsonParsingUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
@@ -43,11 +44,11 @@ class JsonParsingUtilsTest {
 
         assertThat(result).hasSize(2);
 
-        assertThat(result.get(0).getName()).isEqualTo("Technology");
-        assertThat(result.get(0).getSlug()).isEqualTo("technology");
+        assertThat(result.get(0).name()).isEqualTo("Technology");
+        assertThat(result.get(0).slug()).isEqualTo("technology");
 
-        assertThat(result.get(1).getName()).isEqualTo("Science");
-        assertThat(result.get(1).getSlug()).isEqualTo("science");
+        assertThat(result.get(1).name()).isEqualTo("Science");
+        assertThat(result.get(1).slug()).isEqualTo("science");
     }
 
     @Test

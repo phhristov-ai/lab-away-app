@@ -1,5 +1,6 @@
-package com.labaway.backend.util;
+package com.labaway.backend.unit.util;
 
+import com.labaway.backend.util.OrderNumberGenerator;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 

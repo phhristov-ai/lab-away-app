@@ -1,4 +1,4 @@
-package com.labaway.backend.controller.admin;
+package com.labaway.backend.unit.controller.admin;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -87,23 +87,24 @@ class AdminUserControllerTest {
         verify(adminUserService).deleteAdminUserByUsername(username);
     }
 
-    // Helper Methods
-
     private AdminUserDto buildSampleUserDto(String username) {
-        return AdminUserDto.builder()
-                .username(username)
-                .email("admin@example.com")
-                .role("ADMIN")
-                .build();
+        return new AdminUserDto(
+                null,
+                username,
+                "admin@example.com",
+                "ADMIN",
+                null,
+                null
+        );
     }
 
     private AdminUserCreateDto buildSampleCreateDto(String username) {
-        return AdminUserCreateDto.builder()
-                .username(username)
-                .email("admin@example.com")
-                .password("password")
-                .role("ADMIN")
-                .build();
+        return new AdminUserCreateDto(
+                username,
+                "admin@example.com",
+                "password",
+                "ADMIN"
+        );
     }
 
     private void verifyUserDtoResponse(ResponseEntity<AdminUserDto> response, AdminUserDto expectedDto, HttpStatus expectedStatus) {

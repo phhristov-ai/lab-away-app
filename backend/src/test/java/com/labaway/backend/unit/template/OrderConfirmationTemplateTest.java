@@ -1,4 +1,4 @@
-package com.labaway.backend.template;
+package com.labaway.backend.unit.template;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;

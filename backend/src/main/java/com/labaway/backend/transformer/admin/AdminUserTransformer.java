@@ -11,22 +11,22 @@ import java.time.ZoneId;
 public class AdminUserTransformer {
 
     public AdminUserDto toDto(AdminUser user) {
-        return AdminUserDto.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .role(user.getRole())
-                .createdAt(user.getCreatedAt().atZone(ZoneId.systemDefault()).toLocalDateTime())
-                .updatedAt(user.getUpdatedAt().atZone(ZoneId.systemDefault()).toLocalDateTime())
-                .build();
+        return new AdminUserDto(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getRole(),
+                user.getCreatedAt().atZone(ZoneId.systemDefault()).toLocalDateTime(),
+                user.getUpdatedAt().atZone(ZoneId.systemDefault()).toLocalDateTime()
+        );
     }
 
     public AdminUser fromCreateDto(AdminUserCreateDto dto) {
         AdminUser user = new AdminUser();
-        user.setUsername(dto.getUsername());
-        user.setEmail(dto.getEmail());
-        user.setPassword(dto.getPassword());
-        user.setRole(dto.getRole());
+        user.setUsername(dto.username());
+        user.setEmail(dto.email());
+        user.setPassword(dto.password());
+        user.setRole(dto.role());
         return user;
     }
 }

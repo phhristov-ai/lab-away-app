@@ -1,11 +1,9 @@
 package com.labaway.backend.controller.order;
 
-import com.labaway.backend.dto.order.ConfirmOrderRequestDto;
-import com.labaway.backend.dto.order.CreateOrderRequestDto;
-import com.labaway.backend.dto.order.CreateOrderResponseDto;
-import com.labaway.backend.dto.order.OrderDto;
+import com.labaway.backend.dto.order.*;
 import com.labaway.backend.enums.OrderStatus;
 import com.labaway.backend.service.order.OrderService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,13 +23,28 @@ public class OrderController {
         return new ResponseEntity<>(orderService.createOrder(dto), HttpStatus.CREATED);
     }
 
+    @PostMapping("/express")
+    public ResponseEntity<CreateOrderResponseDto> createExpressOrder(
+            @RequestBody @Valid CreateExpressOrderRequestDto dto) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(orderService.createExpressOrder(dto));
+    }
+
     @PostMapping("/confirm")
     public ResponseEntity<Void> confirmOrder(
             @RequestBody ConfirmOrderRequestDto dto) {
-        orderService.confirmOrder(dto.getOrderNumber(), dto.getGaClientId());
+        orderService.confirmOrder(dto.orderNumber(), dto.gaClientId());
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/express/confirm")
+    public ResponseEntity<Void> confirmExpressOrder(
+            @RequestBody @Valid ConfirmExpressOrderRequestDto dto) {
+
+        orderService.confirmExpressOrder(dto);
+
+        return ResponseEntity.ok().build();
+    }
 
     @GetMapping("/{orderNumber}")
     public ResponseEntity<OrderDto> getOrder(@PathVariable String orderNumber) {

@@ -1,4 +1,4 @@
-package com.labaway.backend.controller.admin;
+package com.labaway.backend.unit.controller.admin;
 
 import com.labaway.backend.controller.admin.AdminLoginController;
 import com.labaway.backend.dto.error.ErrorResponse;
@@ -58,7 +58,7 @@ class AdminLoginControllerTest {
         verifySuccessfulLoginResponse(response);
 
         verify(adminUserService).validateCredentials(username, password);
-        verify(jwtUtil).generateToken(mockAdminDto.getUsername(), mockAdminDto.getRole());
+        verify(jwtUtil).generateToken(mockAdminDto.username(), mockAdminDto.role());
     }
 
     @Test
@@ -81,14 +81,14 @@ class AdminLoginControllerTest {
     }
 
     private AdminUserDto buildMockAdminUserDto() {
-        return AdminUserDto.builder()
-                .id(UUID.randomUUID())
-                .username("admin")
-                .email(email)
-                .role("ADMIN")
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .build();
+        return new AdminUserDto(
+                UUID.randomUUID(),
+                "admin",
+                email,
+                "ADMIN",
+                LocalDateTime.now(),
+                LocalDateTime.now()
+        );
     }
 
     private void verifySuccessfulLoginResponse(ResponseEntity<?> response) {
@@ -104,6 +104,6 @@ class AdminLoginControllerTest {
 
         assertThat(response.getBody()).isInstanceOf(ErrorResponse.class);
         ErrorResponse errorResponse = (ErrorResponse) response.getBody();
-        assertEquals("Invalid credentials", errorResponse.getMessage());
+        assertEquals("Invalid credentials", errorResponse.message());
     }
 }

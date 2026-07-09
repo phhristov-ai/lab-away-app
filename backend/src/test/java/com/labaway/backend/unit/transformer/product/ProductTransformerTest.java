@@ -1,4 +1,4 @@
-package com.labaway.backend.transformer.product;
+package com.labaway.backend.unit.transformer.product;
 
 import com.labaway.backend.dto.category.CategoryDto;
 import com.labaway.backend.dto.product.media.ProductImageDto;
@@ -11,6 +11,8 @@ import com.labaway.backend.entity.product.ProductTranslation;
 import com.labaway.backend.entity.repository.product.ProductPreviewProjection;
 import com.labaway.backend.enums.Language;
 import com.labaway.backend.transformer.category.CategoryTransformer;
+import com.labaway.backend.transformer.product.ProductImageTransformer;
+import com.labaway.backend.transformer.product.ProductTransformer;
 import com.labaway.backend.util.JsonParsingUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -66,25 +68,25 @@ class ProductTransformerTest {
 
         ProductPreviewDto dto = productTransformer.fromProjection(projection);
 
-        assertThat(dto.getName()).isEqualTo("Product 1");
-        assertThat(dto.getSlug()).isEqualTo("slug-1");
-        assertThat(dto.getPrice()).isEqualTo(BigDecimal.valueOf(99.99));
-        assertThat(dto.isActive()).isTrue();
+        assertThat(dto.name()).isEqualTo("Product 1");
+        assertThat(dto.slug()).isEqualTo("slug-1");
+        assertThat(dto.price()).isEqualTo(BigDecimal.valueOf(99.99));
+        assertThat(dto.active()).isTrue();
 
-        assertThat(dto.getImageUrls()).isNotNull();
-        assertThat(dto.getImageUrls().getSmall()).isEqualTo("http://example.com/image-small.jpg");
-        assertThat(dto.getImageUrls().getMedium()).isEqualTo("http://example.com/image-medium.jpg");
-        assertThat(dto.getImageUrls().getLarge()).isEqualTo("http://example.com/image-large.jpg");
+        assertThat(dto.imageUrls()).isNotNull();
+        assertThat(dto.imageUrls().small()).isEqualTo("http://example.com/image-small.jpg");
+        assertThat(dto.imageUrls().medium()).isEqualTo("http://example.com/image-medium.jpg");
+        assertThat(dto.imageUrls().large()).isEqualTo("http://example.com/image-large.jpg");
 
-        assertThat(dto.getCategories()).hasSize(1);
-        assertThat(dto.getCategories().get(0).getName()).isEqualTo("Category1");
-        assertThat(dto.getCategories().get(0).getSlug()).isEqualTo("category1");
+        assertThat(dto.categories()).hasSize(1);
+        assertThat(dto.categories().get(0).name()).isEqualTo("Category1");
+        assertThat(dto.categories().get(0).slug()).isEqualTo("category1");
 
         verify(jsonParsingUtils).parseCategoryList(projection.getCategories());
     }
 
     private CategoryDto createCategoryDto(String name, String slug) {
-        return CategoryDto.builder().name(name).slug(slug).build();
+        return new CategoryDto(name, slug);
     }
 
     private Product buildProductWithTranslations() {
@@ -116,36 +118,34 @@ class ProductTransformerTest {
         ProductTranslation translation = getTranslation(product, Language.EN);
 
         assertThat(translation).isNotNull();
-        assertThat(dto.getName()).isEqualTo(translation.getName());
-        assertThat(dto.getDescription()).isEqualTo(translation.getDescription());
-        assertThat(dto.getSlug()).isEqualTo(product.getSlug());
-        assertThat(dto.getImages()).hasSize(1);
-        assertThat(dto.isActive()).isTrue();
+        assertThat(dto.name()).isEqualTo(translation.getName());
+        assertThat(dto.description()).isEqualTo(translation.getDescription());
+        assertThat(dto.slug()).isEqualTo(product.getSlug());
+        assertThat(dto.images()).hasSize(1);
+        assertThat(dto.active()).isTrue();
 
-        ProductImageDto dtoImage = dto.getImages().get(0);
-        assertThat(dtoImage.getImageUrlSmall()).isEqualTo(imageDto.getImageUrlSmall());
-        assertThat(dtoImage.getImageUrlMedium()).isEqualTo(imageDto.getImageUrlMedium());
-        assertThat(dtoImage.getImageUrlLarge()).isEqualTo(imageDto.getImageUrlLarge());
+        ProductImageDto dtoImage = dto.images().get(0);
+        assertThat(dtoImage.imageUrlSmall()).isEqualTo(imageDto.imageUrlSmall());
+        assertThat(dtoImage.imageUrlMedium()).isEqualTo(imageDto.imageUrlMedium());
+        assertThat(dtoImage.imageUrlLarge()).isEqualTo(imageDto.imageUrlLarge());
 
         List<String> expectedSlugs = product.getCategories().stream()
                 .map(Category::getSlug)
                 .toList();
 
-        List<String> actualSlugs = dto.getCategories().stream()
-                .map(CategoryDto::getSlug)
+        List<String> actualSlugs = dto.categories().stream()
+                .map(CategoryDto::slug)
                 .toList();
 
         assertThat(actualSlugs).containsExactlyInAnyOrderElementsOf(expectedSlugs);
     }
 
-
     private CategoryDto createSimpleCategoryDto(Category category) {
-        return CategoryDto.builder()
-                .slug(category.getSlug())
-                .name("Test Category")
-                .build();
+        return new CategoryDto(
+                "Test Category",
+                category.getSlug()
+        );
     }
-
 
     @Test
     void shouldMapFromCreateDto() {
@@ -232,38 +232,41 @@ class ProductTransformerTest {
     }
 
     private ProductImageDto buildProductImageDto() {
-        return ProductImageDto.builder()
-                .imageUrlSmall("http://example.com/image-small.jpg")
-                .imageUrlMedium("http://example.com/image-medium.jpg")
-                .imageUrlLarge("http://example.com/image-large.jpg")
-                .build();
+        return new ProductImageDto(
+                "http://example.com/image-small.jpg",
+                "http://example.com/image-medium.jpg",
+                "http://example.com/image-large.jpg",
+                null
+        );
     }
 
     private ProductPayloadDto buildCreateProductDto() {
-        return ProductPayloadDto.builder()
-                .price(BigDecimal.valueOf(50))
-                .stock(5)
-                .active(true)
-                .categories(List.of("electronics", "health"))
-                .translation(buildTranslationDto(Language.EN))
-                .build();
+        return new ProductPayloadDto(
+                BigDecimal.valueOf(50),
+                5,
+                true,
+                List.of("electronics", "health"),
+                0,
+                buildTranslationDto(Language.EN),
+                List.of()
+        );
     }
 
     private ProductTranslationDto buildTranslationDto(Language language) {
-        return ProductTranslationDto.builder()
-                .language(language)
-                .name("New Product")
-                .description("New product description")
-                .build();
+        return new ProductTranslationDto(
+                language,
+                "New Product",
+                "New product description"
+        );
     }
 
     private void assertBasicProductFieldsMatch(ProductPayloadDto dto, Product product) {
         assertThat(product).isNotNull();
-        assertThat(product.getPrice()).isEqualTo(dto.getPrice());
-        assertThat(product.getStock()).isEqualTo(dto.getStock());
-        assertThat(product.isActive()).isEqualTo(dto.isActive());
+        assertThat(product.getPrice()).isEqualTo(dto.price());
+        assertThat(product.getStock()).isEqualTo(dto.stock());
+        assertThat(product.isActive()).isEqualTo(dto.active());
 
-        ProductTranslation translation = getTranslation(product, dto.getTranslation().getLanguage());
+        ProductTranslation translation = getTranslation(product, dto.translation().language());
         assertThat(translation).isNotNull();
     }
 

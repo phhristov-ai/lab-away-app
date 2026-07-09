@@ -21,20 +21,20 @@ public class CategoryTransformer {
 
         String name = translationOpt.map(CategoryTranslation::getName).orElse(null);
 
-        return CategoryDto.builder()
-                .slug(category.getSlug())
-                .name(name)
-                .build();
+        return new CategoryDto(
+                name,
+                category.getSlug()
+        );
     }
 
     public Category fromCreateDto(CreateCategoryDto dto) {
         return Category.builder()
-                .slug(dto.getSlug())
+                .slug(dto.slug())
                 .build();
     }
 
     public void updateEntityFromDto(UpdateCategoryDto dto, Category category, Language language) {
-        category.setSlug(dto.getSlug());
+        category.setSlug(dto.slug());
 
         Optional<CategoryTranslation> translationOpt = category.getTranslations().stream()
                 .filter(t -> t.getLanguage() == language)
@@ -42,12 +42,12 @@ public class CategoryTransformer {
 
         if (translationOpt.isPresent()) {
             CategoryTranslation translation = translationOpt.get();
-            translation.setName(dto.getName());
+            translation.setName(dto.name());
         } else {
             CategoryTranslation newTranslation = new CategoryTranslation();
             newTranslation.setCategory(category);
             newTranslation.setLanguage(language);
-            newTranslation.setName(dto.getName());
+            newTranslation.setName(dto.name());
             category.getTranslations().add(newTranslation);
         }
     }
@@ -55,8 +55,8 @@ public class CategoryTransformer {
     public CategoryTranslation fromCreateTranslationDto(CreateCategoryTranslationDto dto, Category category) {
         return CategoryTranslation.builder()
                 .category(category)
-                .language(dto.getLanguage())
-                .name(dto.getName())
+                .language(dto.language())
+                .name(dto.name())
                 .build();
     }
 

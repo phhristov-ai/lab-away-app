@@ -1,6 +1,7 @@
-package com.labaway.backend.service.media;
+package com.labaway.backend.unit.service.media;
 
 import com.labaway.backend.dto.image.ImageUrls;
+import com.labaway.backend.service.media.MediaService;
 import com.labaway.backend.service.storage.S3Service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,9 +56,9 @@ class MediaServiceTest {
         ImageUrls result = mediaService.processAndUploadImage(file);
 
         assertNotNull(result);
-        assertEquals(expectedUrls.get("Gonorrhea-480.webp"), result.getSmall());
-        assertEquals(expectedUrls.get("Gonorrhea-768.webp"), result.getMedium());
-        assertEquals(expectedUrls.get("Gonorrhea-1200.webp"), result.getLarge());
+        assertEquals(expectedUrls.get("Gonorrhea-480.webp"), result.small());
+        assertEquals(expectedUrls.get("Gonorrhea-768.webp"), result.medium());
+        assertEquals(expectedUrls.get("Gonorrhea-1200.webp"), result.large());
 
         expectedUrls.keySet().forEach(fileName ->
                 verify(s3Service, times(1)).uploadFileWithName(any(byte[].class), eq(fileName))
@@ -83,9 +84,9 @@ class MediaServiceTest {
         ImageUrls result = mediaService.processAndUploadImage(file);
 
         assertNotNull(result);
-        assertEquals(expectedUrls.get(defaultFileName + "-480.webp"), result.getSmall());
-        assertEquals(expectedUrls.get(defaultFileName + "-768.webp"), result.getMedium());
-        assertEquals(expectedUrls.get(defaultFileName + "-1200.webp"), result.getLarge());
+        assertEquals(expectedUrls.get(defaultFileName + "-480.webp"), result.small());
+        assertEquals(expectedUrls.get(defaultFileName + "-768.webp"), result.medium());
+        assertEquals(expectedUrls.get(defaultFileName + "-1200.webp"), result.large());
 
         expectedUrls.keySet().forEach(fileName ->
                 verify(s3Service, times(1)).uploadFileWithName(any(byte[].class), eq(fileName))

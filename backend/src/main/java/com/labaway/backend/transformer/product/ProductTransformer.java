@@ -27,49 +27,53 @@ public class ProductTransformer {
     public ProductDto toDto(Product product, Language language) {
         ProductTranslation translation = getTranslation(product, language);
 
-        return ProductDto.builder()
-                .name(translation.getName())
-                .slug(product.getSlug())
-                .price(product.getPrice())
-                .stock(product.getStock())
-                .description(translation.getDescription())
-                .active(product.isActive())
-                .categories(product.getCategories().stream()
+        return new ProductDto(
+                translation.getName(),
+                product.getSlug(),
+                product.getPrice(),
+                product.getStock(),
+                translation.getDescription(),
+                product.getCategories().stream()
                         .map(category -> categoryTransformer.toDto(category, language))
-                        .toList())
-                .createdAt(product.getCreatedAt().atZone(ZoneId.systemDefault()).toLocalDateTime())
-                .updatedAt(product.getUpdatedAt().atZone(ZoneId.systemDefault()).toLocalDateTime())
-                .images(product.getImages().stream()
+                        .toList(),
+                product.getCreatedAt()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDateTime(),
+                product.getUpdatedAt()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDateTime(),
+                product.getImages().stream()
                         .map(productImageTransformer::toDto)
-                        .toList())
-                .banner(product.getBannerUrl() == null && product.getBannerType() == null
+                        .toList(),
+                product.isActive(),
+                product.getBannerUrl() == null && product.getBannerType() == null
                         ? null
-                        : new BannerDto(product.getBannerType(), product.getBannerUrl()))
-                .build();
+                        : new BannerDto(product.getBannerType(), product.getBannerUrl())
+        );
     }
 
     public Product fromCreateDto(ProductPayloadDto dto, List<Category> categories) {
         Product product = Product.builder()
-                .slug(generateSlug(dto.getTranslation().getName()))
-                .price(dto.getPrice())
-                .stock(dto.getStock())
-                .active(dto.isActive())
+                .slug(generateSlug(dto.translation().name()))
+                .price(dto.price())
+                .stock(dto.stock())
+                .active(dto.active())
                 .categories(new HashSet<>(categories))
                 .build();
 
-        product.getTranslations().add(buildProductTranslation(dto.getTranslation(), product));
+        product.getTranslations().add(buildProductTranslation(dto.translation(), product));
 
         return product;
     }
 
     public void updateEntity(Product product, ProductPayloadDto dto, List<Category> categories) {
-        product.setPrice(dto.getPrice());
-        product.setStock(dto.getStock());
-        product.setActive(dto.isActive());
+        product.setPrice(dto.price());
+        product.setStock(dto.stock());
+        product.setActive(dto.active());
         product.setCategories(new HashSet<>(categories));
 
-        ProductTranslationDto translationDto = dto.getTranslation();
-        Language language = translationDto.getLanguage();
+        ProductTranslationDto translationDto = dto.translation();
+        Language language = translationDto.language();
 
         Optional<ProductTranslation> existingTranslationOpt = product.getTranslations().stream()
                 .filter(t -> t.getLanguage() == language)
@@ -77,8 +81,8 @@ public class ProductTransformer {
 
         if (existingTranslationOpt.isPresent()) {
             ProductTranslation existing = existingTranslationOpt.get();
-            existing.setName(translationDto.getName());
-            existing.setDescription(translationDto.getDescription());
+            existing.setName(translationDto.name());
+            existing.setDescription(translationDto.description());
         } else {
             ProductTranslation newTranslation = buildProductTranslation(translationDto, product);
             product.getTranslations().add(newTranslation);
@@ -96,9 +100,9 @@ public class ProductTransformer {
 
     private ProductTranslation buildProductTranslation(ProductTranslationDto translationDto, Product product) {
         ProductTranslation translation = new ProductTranslation();
-        translation.setLanguage(translationDto.getLanguage());
-        translation.setName(translationDto.getName());
-        translation.setDescription(translationDto.getDescription());
+        translation.setLanguage(translationDto.language());
+        translation.setName(translationDto.name());
+        translation.setDescription(translationDto.description());
         translation.setProduct(product);
         return translation;
     }
@@ -112,21 +116,21 @@ public class ProductTransformer {
     }
 
     public ProductPreviewDto fromProjection(ProductPreviewProjection projection) {
-        return ProductPreviewDto.builder()
-                .name(projection.getName())
-                .slug(projection.getSlug())
-                .price(projection.getPrice())
-                .imageUrls(mapImageUrls(projection))
-                .active(projection.getActive())
-                .categories(jsonParsingUtils.parseCategoryList(projection.getCategories()))
-                .build();
+        return new ProductPreviewDto(
+                projection.getName(),
+                projection.getSlug(),
+                projection.getPrice(),
+                mapImageUrls(projection),
+                jsonParsingUtils.parseCategoryList(projection.getCategories()),
+                projection.getActive()
+        );
     }
 
     private ImageUrls mapImageUrls(ProductPreviewProjection projection) {
-        return ImageUrls.builder()
-                .small(projection.getImageUrlSmall())
-                .medium(projection.getImageUrlMedium())
-                .large(projection.getImageUrlLarge())
-                .build();
+        return new ImageUrls(
+                projection.getImageUrlSmall(),
+                projection.getImageUrlMedium(),
+                projection.getImageUrlLarge()
+        );
     }
 }

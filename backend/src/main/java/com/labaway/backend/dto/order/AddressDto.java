@@ -1,35 +1,26 @@
 package com.labaway.backend.dto.order;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class AddressDto {
+public record AddressDto(
+        @NotBlank(message = "First name is required")
+        String firstName,
 
-    @NotBlank(message = "First name is required")
-    private String firstName;
+        @NotBlank(message = "Last name is required")
+        String lastName,
 
-    @NotBlank(message = "Last name is required")
-    private String lastName;
+        @NotBlank(message = "Country is required")
+        String country,
 
-    @NotBlank(message = "Country is required")
-    private String country;
+        @NotBlank(message = "Address is required")
+        String address,
 
-    @NotBlank(message = "Address is required")
-    private String address;
+        @NotBlank(message = "City is required")
+        String city,
 
-    @NotBlank(message = "City is required")
-    private String city;
+        @NotBlank(message = "Post code is required")
+        String postCode,
 
-    @NotBlank(message = "Post code is required")
-    private String postCode;
-
-    @NotBlank(message = "Phone number is required")
-    private String phone;
-}
+        @NotBlank(message = "Phone number is required")
+        String phone
+) {}

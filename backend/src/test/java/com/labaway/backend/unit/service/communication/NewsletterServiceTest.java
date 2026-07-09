@@ -1,4 +1,4 @@
-package com.labaway.backend.service.communication;
+package com.labaway.backend.unit.service.communication;
 
 import com.labaway.backend.entity.communication.NewsletterSubscriber;
 import com.labaway.backend.entity.repository.communication.NewsletterSubscriberRepository;

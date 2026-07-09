@@ -40,8 +40,8 @@ public class StripePaymentStrategy implements PaymentStrategy {
     public CreatePaymentResponseDto initiatePayment(CreatePaymentRequestDto request) {
         try {
             PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
-                    .setAmount(request.getAmount())
-                    .setCurrency(request.getCurrency())
+                    .setAmount(request.amount())
+                    .setCurrency(request.currency())
                     .setAutomaticPaymentMethods(
                             PaymentIntentCreateParams.AutomaticPaymentMethods.builder().setEnabled(true).build()
                     )
@@ -49,11 +49,14 @@ public class StripePaymentStrategy implements PaymentStrategy {
 
             PaymentIntent intent = PaymentIntent.create(params);
 
-            return CreatePaymentResponseDto.builder()
-                    .paymentIntentId(intent.getId())
-                    .clientSecret(intent.getClientSecret())
-                    .build();        } catch (StripeException e) {
-            throw new PaymentException("Failed to create payment intent", e);        }
+            return new CreatePaymentResponseDto(
+                    intent.getId(),
+                    intent.getClientSecret()
+            );
+        }
+        catch (StripeException e) {
+            throw new PaymentException("Failed to create payment intent", e);
+        }
     }
 
     @Override

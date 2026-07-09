@@ -1,4 +1,4 @@
-package com.labaway.backend.service.analytics;
+package com.labaway.backend.unit.service.analytics;
 
 import com.labaway.backend.configuration.analytics.Ga4Config;
 import com.labaway.backend.entity.category.Category;
@@ -7,6 +7,7 @@ import com.labaway.backend.entity.order.Order;
 import com.labaway.backend.entity.order.OrderItem;
 import com.labaway.backend.entity.product.Product;
 import com.labaway.backend.enums.Language;
+import com.labaway.backend.service.analytics.GoogleAnalyticsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

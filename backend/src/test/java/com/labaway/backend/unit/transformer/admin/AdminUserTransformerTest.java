@@ -1,4 +1,4 @@
-package com.labaway.backend.transformer.admin;
+package com.labaway.backend.unit.transformer.admin;
 
 import com.labaway.backend.dto.admin.AdminUserCreateDto;
 import com.labaway.backend.dto.admin.AdminUserDto;
@@ -58,30 +58,30 @@ class AdminUserTransformerTest {
     }
 
     private AdminUserCreateDto createAdminUserCreateDto() {
-        return AdminUserCreateDto.builder()
-                .username(username)
-                .email(email)
-                .password(password)
-                .role(role)
-                .build();
+        return new AdminUserCreateDto(
+                username,
+                email,
+                password,
+                role
+        );
     }
 
     private void assertDtoMatchesEntity(AdminUserDto dto, UUID id, Instant timestamp) {
         LocalDateTime expected = timestamp.atZone(ZoneId.systemDefault()).toLocalDateTime();
         assertThat(dto).isNotNull();
-        assertThat(dto.getId()).isEqualTo(id);
-        assertThat(dto.getUsername()).isEqualTo(username);
-        assertThat(dto.getEmail()).isEqualTo(email);
-        assertThat(dto.getRole()).isEqualTo(role);
-        assertThat(dto.getCreatedAt()).isEqualTo(expected);
-        assertThat(dto.getUpdatedAt()).isEqualTo(expected);
+        assertThat(dto.id()).isEqualTo(id);
+        assertThat(dto.username()).isEqualTo(username);
+        assertThat(dto.email()).isEqualTo(email);
+        assertThat(dto.role()).isEqualTo(role);
+        assertThat(dto.createdAt()).isEqualTo(expected);
+        assertThat(dto.updatedAt()).isEqualTo(expected);
     }
 
     private void assertEntityMatchesDto(AdminUser entity, AdminUserCreateDto dto) {
         assertThat(entity).isNotNull();
-        assertThat(entity.getUsername()).isEqualTo(dto.getUsername());
-        assertThat(entity.getEmail()).isEqualTo(dto.getEmail());
-        assertThat(entity.getPassword()).isEqualTo(dto.getPassword());
-        assertThat(entity.getRole()).isEqualTo(dto.getRole());
+        assertThat(entity.getUsername()).isEqualTo(dto.username());
+        assertThat(entity.getEmail()).isEqualTo(dto.email());
+        assertThat(entity.getPassword()).isEqualTo(dto.password());
+        assertThat(entity.getRole()).isEqualTo(dto.role());
     }
 }

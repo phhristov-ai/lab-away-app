@@ -5,8 +5,9 @@ import com.labaway.backend.strategy.PaymentProvider;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -18,10 +19,11 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "orders")
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
+@Setter
 public class Order {
 
     @Id
@@ -31,27 +33,27 @@ public class Order {
     @Column(name = "order_number", nullable = false, unique = true, updatable = false)
     private String orderNumber;
 
-    @Column(name = "customer_email", nullable = false)
+    @Column(name = "customer_email")
     private String customerEmail;
 
     @Embedded
-    @AttributeOverride(name = "firstName", column = @Column(name = "shipping_first_name", nullable = false))
-    @AttributeOverride(name = "lastName", column = @Column(name = "shipping_last_name", nullable = false))
-    @AttributeOverride(name = "country", column = @Column(name = "shipping_country", nullable = false))
-    @AttributeOverride(name = "streetAddress", column = @Column(name = "shipping_address", nullable = false))
-    @AttributeOverride(name = "city", column = @Column(name = "shipping_city", nullable = false))
-    @AttributeOverride(name = "postCode", column = @Column(name = "shipping_post_code", nullable = false))
-    @AttributeOverride(name = "phone", column = @Column(name = "shipping_phone", nullable = false))
+    @AttributeOverride(name = "firstName", column = @Column(name = "shipping_first_name"))
+    @AttributeOverride(name = "lastName", column = @Column(name = "shipping_last_name"))
+    @AttributeOverride(name = "country", column = @Column(name = "shipping_country"))
+    @AttributeOverride(name = "streetAddress", column = @Column(name = "shipping_address"))
+    @AttributeOverride(name = "city", column = @Column(name = "shipping_city"))
+    @AttributeOverride(name = "postCode", column = @Column(name = "shipping_post_code"))
+    @AttributeOverride(name = "phone", column = @Column(name = "shipping_phone"))
     private Address shippingAddress;
 
     @Embedded
-    @AttributeOverride(name = "firstName", column = @Column(name = "billing_first_name", nullable = false))
-    @AttributeOverride(name = "lastName", column = @Column(name = "billing_last_name", nullable = false))
-    @AttributeOverride(name = "country", column = @Column(name = "billing_country", nullable = false))
-    @AttributeOverride(name = "streetAddress", column = @Column(name = "billing_address", nullable = false))
-    @AttributeOverride(name = "city", column = @Column(name = "billing_city", nullable = false))
-    @AttributeOverride(name = "postCode", column = @Column(name = "billing_post_code", nullable = false))
-    @AttributeOverride(name = "phone", column = @Column(name = "billing_phone", nullable = false))
+    @AttributeOverride(name = "firstName", column = @Column(name = "billing_first_name"))
+    @AttributeOverride(name = "lastName", column = @Column(name = "billing_last_name"))
+    @AttributeOverride(name = "country", column = @Column(name = "billing_country"))
+    @AttributeOverride(name = "streetAddress", column = @Column(name = "billing_address"))
+    @AttributeOverride(name = "city", column = @Column(name = "billing_city"))
+    @AttributeOverride(name = "postCode", column = @Column(name = "billing_post_code"))
+    @AttributeOverride(name = "phone", column = @Column(name = "billing_phone"))
     private Address billingAddress;
 
     @Column(name = "total_price", nullable = false)
@@ -66,6 +68,9 @@ public class Order {
 
     @Column(name = "paypal_order_id")
     private String paypalOrderId;
+
+    @Column(name = "paypal_capture_id")
+    private String paypalCaptureId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-@Profile("local")
+@Profile({"local", "test"})
 public class LocalSecretsManagerHelper implements SecretsManagerHelper {
 
     @Value("${db.username}")

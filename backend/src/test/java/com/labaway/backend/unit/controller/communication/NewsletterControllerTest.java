@@ -1,4 +1,4 @@
-package com.labaway.backend.controller.communication;
+package com.labaway.backend.unit.controller.communication;
 
 import com.labaway.backend.controller.communication.NewsletterController;
 import com.labaway.backend.dto.subscription.SubscriptionRequest;
@@ -19,7 +19,7 @@ class NewsletterControllerTest {
 
     @Test
     void subscribe_validEmail_shouldReturnSuccessMessage() {
-        SubscriptionRequest request = SubscriptionRequest.builder().email("test@example.com").build();
+        SubscriptionRequest request = new SubscriptionRequest("test@example.com");
 
         when(newsletterService.subscribe("test@example.com"))
                 .thenReturn("Subscribed successfully");
@@ -32,7 +32,7 @@ class NewsletterControllerTest {
 
     @Test
     void subscribe_invalidEmail_shouldReturnBadRequest() {
-        SubscriptionRequest request = SubscriptionRequest.builder().email("invalid-email").build();
+        SubscriptionRequest request = new SubscriptionRequest("invalid-email");
 
         when(newsletterService.subscribe("invalid-email"))
                 .thenThrow(new IllegalArgumentException("Invalid email format"));
@@ -45,7 +45,7 @@ class NewsletterControllerTest {
 
     @Test
     void unsubscribe_existingEmail_shouldReturnSuccessMessage() {
-        SubscriptionRequest request = SubscriptionRequest.builder().email("test@example.com").build();
+        SubscriptionRequest request = new SubscriptionRequest("test@example.com");
 
         when(newsletterService.unsubscribe("test@example.com")).thenReturn(true);
 
@@ -57,7 +57,7 @@ class NewsletterControllerTest {
 
     @Test
     void unsubscribe_nonExistentEmail_shouldReturnNotFound() {
-        SubscriptionRequest request = SubscriptionRequest.builder().email("missing@example.com").build();
+        SubscriptionRequest request = new SubscriptionRequest("missing@example.com");
 
         when(newsletterService.unsubscribe("missing@example.com")).thenReturn(false);
 

@@ -34,7 +34,7 @@ public class AdminUserService {
 
     public AdminUserDto createAdminUser(AdminUserCreateDto dto) {
         AdminUser adminUser = adminUserTransformer.fromCreateDto(dto);
-        adminUser.setPassword(passwordEncoder.encode(dto.getPassword()));
+        adminUser.setPassword(passwordEncoder.encode(dto.password()));
         adminUser = adminUserRepository.save(adminUser);
         return adminUserTransformer.toDto(adminUser);
     }
@@ -43,10 +43,10 @@ public class AdminUserService {
         AdminUser user = adminUserRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        user.setEmail(dto.getEmail());
-        user.setUsername(dto.getUsername());
-        user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        user.setRole(dto.getRole());
+        user.setEmail(dto.email());
+        user.setUsername(dto.username());
+        user.setPassword(passwordEncoder.encode(dto.password()));
+        user.setRole(dto.role());
 
         return adminUserTransformer.toDto(adminUserRepository.save(user));
     }

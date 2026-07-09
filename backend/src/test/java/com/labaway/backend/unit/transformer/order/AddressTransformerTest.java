@@ -1,4 +1,4 @@
-package com.labaway.backend.transformer.order;
+package com.labaway.backend.unit.transformer.order;
 import com.labaway.backend.dto.order.AddressDto;
 import com.labaway.backend.entity.order.Address;
 import com.labaway.backend.transformer.order.AddressTransformer;
@@ -56,29 +56,34 @@ class AddressTransformerTest {
                 .build();
     }
 
-    private static AddressDto createSampleAddressDto(String firstName, String lastName, String country,
-                                                     String address, String city, String postCode) {
-        return AddressDto.builder()
-                .firstName(firstName)
-                .lastName(lastName)
-                .country(country)
-                .address(address)
-                .city(city)
-                .postCode(postCode)
-                .build();
+    private static AddressDto createSampleAddressDto(
+            String firstName,
+            String lastName,
+            String country,
+            String address,
+            String city,
+            String postCode
+    ) {
+        return new AddressDto(
+                firstName,
+                lastName,
+                country,
+                address,
+                city,
+                postCode,
+                "+359888123456"
+        );
     }
-
-    // Helper methods for asserting
 
     private static void assertAddressDto(AddressDto dto, String firstName, String lastName, String country,
                                          String address, String city, String postCode) {
         assertThat(dto).isNotNull();
-        assertThat(dto.getFirstName()).isEqualTo(firstName);
-        assertThat(dto.getLastName()).isEqualTo(lastName);
-        assertThat(dto.getCountry()).isEqualTo(country);
-        assertThat(dto.getAddress()).isEqualTo(address);
-        assertThat(dto.getCity()).isEqualTo(city);
-        assertThat(dto.getPostCode()).isEqualTo(postCode);
+        assertThat(dto.firstName()).isEqualTo(firstName);
+        assertThat(dto.lastName()).isEqualTo(lastName);
+        assertThat(dto.country()).isEqualTo(country);
+        assertThat(dto.address()).isEqualTo(address);
+        assertThat(dto.city()).isEqualTo(city);
+        assertThat(dto.postCode()).isEqualTo(postCode);
     }
 
     private static void assertAddressEntity(Address entity, String firstName, String lastName, String country,

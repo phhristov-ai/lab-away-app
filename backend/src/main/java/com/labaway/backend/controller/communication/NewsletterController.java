@@ -16,7 +16,7 @@ public class NewsletterController {
     @PostMapping
     public ResponseEntity<String> subscribe(@RequestBody SubscriptionRequest request) {
         try {
-            String message = newsletterService.subscribe(request.getEmail());
+            String message = newsletterService.subscribe(request.email());
             return ResponseEntity.ok(message);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -25,7 +25,7 @@ public class NewsletterController {
 
     @DeleteMapping
     public ResponseEntity<String> unsubscribe(@RequestBody SubscriptionRequest request) {
-        boolean success = newsletterService.unsubscribe(request.getEmail());
+        boolean success = newsletterService.unsubscribe(request.email());
         if (success) {
             return ResponseEntity.ok("You have been unsubscribed.");
         } else {

@@ -23,25 +23,26 @@ public class OrderTransformer {
                 .map(this::toDto)
                 .toList();
 
-        return OrderDto.builder()
-                .orderNumber(order.getOrderNumber())
-                .status(order.getStatus().toString())
-                .createdAt(LocalDateTime.ofInstant(order.getCreatedAt(), ZoneId.systemDefault()))
-                .updatedAt(LocalDateTime.ofInstant(order.getUpdatedAt(), ZoneId.systemDefault()))
-                .totalPrice(order.getTotalPrice())
-                .customerEmail(order.getCustomerEmail())
-                .billingAddress(addressTransformer.toDto(order.getBillingAddress()))
-                .shippingAddress(addressTransformer.toDto(order.getShippingAddress()))
-                .paymentProvider(order.getPaymentProvider())
-                .orderItems(itemDtos)
-                .build();
+        return new OrderDto(
+                order.getOrderNumber(),
+                order.getCustomerEmail(),
+                addressTransformer.toDto(order.getBillingAddress()),
+                addressTransformer.toDto(order.getShippingAddress()),
+                order.getTotalPrice(),
+                order.getStatus().toString(),
+                LocalDateTime.ofInstant(order.getCreatedAt(), ZoneId.systemDefault()),
+                LocalDateTime.ofInstant(order.getUpdatedAt(), ZoneId.systemDefault()),
+                order.getPaymentProvider(),
+                itemDtos
+        );
     }
 
     private OrderItemDto toDto(OrderItem item) {
-        return OrderItemDto.builder()
-                .quantity(item.getQuantity())
-                .price(item.getPrice())
-                .build();
+        return new OrderItemDto(
+                item.getProduct().getSlug(),
+                item.getQuantity(),
+                item.getPrice()
+        );
     }
 
     public Address toEntity(AddressDto dto) {
