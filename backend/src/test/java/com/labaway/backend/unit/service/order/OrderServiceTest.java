@@ -56,8 +56,6 @@ class OrderServiceTest {
     private OrderItemRepository orderItemRepository;
     @Mock
     private OrderTransformer orderTransformer;
-    @Mock
-    private AddressTransformer addressTransformer;
     private String orderNumber;
     private Order sampleOrder;
     private final OrderNumberGenerator generator = new OrderNumberGenerator();
@@ -93,6 +91,46 @@ class OrderServiceTest {
     }
 
     @Test
+    void createExpressOrder_shouldReturnResponseWithSessionIdAndOrderId() {
+        CreateExpressOrderRequestDto dto = buildCreateExpressOrderRequestDto();
+
+        when(productRepository.findBySlug("test-product"))
+                .thenReturn(Optional.of(new Product()));
+        when(paymentStrategyFactory.getStrategy(PaymentProvider.PAYPAL))
+                .thenReturn(paymentStrategy);
+        when(paymentStrategy.initiatePayment(any()))
+                .thenReturn(new CreatePaymentResponseDto("paypal-order-id", null));
+        when(orderRepository.save(any()))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+        when(orderNumberGenerator.generate())
+                .thenReturn(orderNumber);
+        CreateOrderResponseDto response =
+                orderService.createExpressOrder(dto);
+
+        assertNotNull(response);
+        assertEquals("paypal-order-id", response.getSessionId());
+
+        verify(paymentStrategyFactory)
+                .getStrategy(PaymentProvider.PAYPAL);
+        verify(paymentStrategy)
+                .initiatePayment(any());
+    }
+
+    private CreateExpressOrderRequestDto buildCreateExpressOrderRequestDto() {
+        return CreateExpressOrderRequestDto.builder()
+                .paymentProvider(PaymentProvider.PAYPAL)
+                .language(Language.EN)
+                .items(List.of(
+                        OrderItemDto.builder()
+                                .slug("test-product")
+                                .quantity(1)
+                                .price(BigDecimal.TEN)
+                                .build()
+                ))
+                .build();
+    }
+
+    @Test
     void confirmOrder_shouldSetStatusToPaid() {
         when(orderRepository.findByOrderNumber(orderNumber)).thenReturn(Optional.of(sampleOrder));
         when(paymentStrategyFactory.getStrategy(PaymentProvider.STRIPE)).thenReturn(paymentStrategy);
@@ -102,6 +140,63 @@ class OrderServiceTest {
 
         assertEquals(OrderStatus.PAID, sampleOrder.getStatus());
         verify(orderRepository).save(sampleOrder);
+    }
+
+    @Test
+    void confirmExpressOrder_shouldPopulateOrderAndSetStatusToPaid() {
+        ConfirmExpressOrderRequestDto dto = buildConfirmExpressOrderRequestDto();
+
+        when(orderRepository.findByOrderNumber(orderNumber))
+                .thenReturn(Optional.of(sampleOrder));
+
+        when(paymentStrategyFactory.getStrategy(PaymentProvider.PAYPAL))
+                .thenReturn(paymentStrategy);
+
+        when(paymentStrategy.isPaymentCompleted(anyString()))
+                .thenReturn(true);
+
+        Address billing = new Address();
+        Address shipping = new Address();
+
+        when(orderTransformer.toEntity(dto.getBillingAddress()))
+                .thenReturn(billing);
+
+        when(orderTransformer.toEntity(dto.getShippingAddress()))
+                .thenReturn(shipping);
+
+        orderService.confirmExpressOrder(dto);
+
+        assertEquals(OrderStatus.PAID, sampleOrder.getStatus());
+        assertEquals(dto.getCustomerEmail(), sampleOrder.getCustomerEmail());
+        assertEquals(billing, sampleOrder.getBillingAddress());
+        assertEquals(shipping, sampleOrder.getShippingAddress());
+        assertEquals(dto.getPaypalCaptureId(), sampleOrder.getPaypalCaptureId());
+
+        verify(orderRepository).save(sampleOrder);
+        verify(emailService).sendOrderConfirmationEmail(any());
+    }
+
+    private ConfirmExpressOrderRequestDto buildConfirmExpressOrderRequestDto() {
+        return ConfirmExpressOrderRequestDto.builder()
+                .orderNumber(orderNumber)
+                .gaClientId("clientId")
+                .customerEmail("john.doe@example.com")
+                .paypalCaptureId("capture-id")
+                .billingAddress(buildAddressDto())
+                .shippingAddress(buildAddressDto())
+                .build();
+    }
+
+    private AddressDto buildAddressDto() {
+        return AddressDto.builder()
+                .firstName("John")
+                .lastName("Doe")
+                .country("DE")
+                .address("Main Street 1")
+                .city("Berlin")
+                .postCode("10115")
+                .phone("+49123456789")
+                .build();
     }
 
     @Test

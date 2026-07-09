@@ -1,9 +1,6 @@
 package com.labaway.backend.controller.order;
 
-import com.labaway.backend.dto.order.ConfirmOrderRequestDto;
-import com.labaway.backend.dto.order.CreateOrderRequestDto;
-import com.labaway.backend.dto.order.CreateOrderResponseDto;
-import com.labaway.backend.dto.order.OrderDto;
+import com.labaway.backend.dto.order.*;
 import com.labaway.backend.enums.OrderStatus;
 import com.labaway.backend.service.order.OrderService;
 import com.labaway.backend.strategy.PaymentProvider;
@@ -46,6 +43,31 @@ class OrderControllerTest {
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(responseDto, response.getBody());
+        verify(orderService).createOrder(dto);
+    }
+
+    @Test
+    void testCreateExpressOrder() {
+        CreateExpressOrderRequestDto dto = new CreateExpressOrderRequestDto();
+
+        CreateOrderResponseDto responseDto =
+                new CreateOrderResponseDto(
+                        generator.generate(),
+                        PaymentProvider.PAYPAL,
+                        "paypalOrderId",
+                        null,
+                        BigDecimal.TEN);
+
+        when(orderService.createExpressOrder(dto))
+                .thenReturn(responseDto);
+
+        ResponseEntity<CreateOrderResponseDto> response =
+                orderController.createExpressOrder(dto);
+
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(responseDto, response.getBody());
+
+        verify(orderService).createExpressOrder(dto);
     }
 
     @Test
@@ -62,6 +84,22 @@ class OrderControllerTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         verify(orderService, times(1)).confirmOrder(orderNumber, clientId);
+    }
+
+    @Test
+    void testConfirmExpressOrder() {
+        ConfirmExpressOrderRequestDto dto =
+                ConfirmExpressOrderRequestDto.builder().build();
+
+        doNothing().when(orderService)
+                .confirmExpressOrder(dto);
+
+        ResponseEntity<Void> response =
+                orderController.confirmExpressOrder(dto);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        verify(orderService).confirmExpressOrder(dto);
     }
 
     @Test
