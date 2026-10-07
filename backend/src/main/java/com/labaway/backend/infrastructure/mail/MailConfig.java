@@ -1,5 +1,6 @@
 package com.labaway.backend.configuration.mail;
 
+import com.labaway.backend.config.properties.SmtpProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +12,7 @@ import java.util.Properties;
 @Configuration
 public class MailConfig {
 
-    private final SmtpConfig smtpConfig;
+    private final SmtpProperties smtpProperties;
     @Value("${spring.mail.host}")
     private String mailHost;
     @Value("${spring.mail.port}")
@@ -25,8 +26,8 @@ public class MailConfig {
     @Value("${spring.mail.properties.mail.debug}")
     private boolean mailDebug;
 
-    public MailConfig(SmtpConfig smtpConfig) {
-        this.smtpConfig = smtpConfig;
+    public MailConfig(SmtpProperties smtpProperties) {
+        this.smtpProperties = smtpProperties;
     }
 
     @Bean
@@ -35,8 +36,8 @@ public class MailConfig {
 
         mailSender.setHost(mailHost);
         mailSender.setPort(mailPort);
-        mailSender.setUsername(smtpConfig.getUsername());
-        mailSender.setPassword(smtpConfig.getPassword());
+        mailSender.setUsername(smtpProperties.username());
+        mailSender.setPassword(smtpProperties.password());
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", mailProtocol);

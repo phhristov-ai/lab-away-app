@@ -1,34 +1,30 @@
-package com.labaway.backend.configuration.aws;
+package com.labaway.backend.infrastructure.database;
 
-import com.labaway.backend.configuration.secrets.SecretsManagerHelper;
+import com.labaway.backend.configuration.properties.DatabaseProperties;
 import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
-import java.util.Map;
 
 @Configuration
 public class AwsMySQLConfig {
 
-    private final SecretsManagerHelper secretsHelper;
+    private final DatabaseProperties databaseProperties;
 
-    @Autowired
-    public AwsMySQLConfig(SecretsManagerHelper secretsHelper) {
-        this.secretsHelper = secretsHelper;
+    public AwsMySQLConfig(DatabaseProperties databaseProperties) {
+        this.databaseProperties = databaseProperties;
     }
 
     @Bean
-    public DataSource dataSource() throws Exception {
-        Map<String, String> secrets = secretsHelper.getSecret("MySQL-Database");
+    public DataSource dataSource() {
 
-        String username = secrets.get("username");
-        String password = secrets.get("password");
-        String host = secrets.get("host");
-        String dbname = secrets.get("dbname");
+        String username = databaseProperties.username();
+        String password = databaseProperties.password();
+        String host = databaseProperties.host();
+        String dbname = databaseProperties.name();
 
-        String port = String.valueOf(secrets.get("port"));
+        String port = String.valueOf(databaseProperties.port());
         String url = String.format("jdbc:mysql://%s:%s/%s", host, port, dbname);
 
         HikariDataSource dataSource = new HikariDataSource();

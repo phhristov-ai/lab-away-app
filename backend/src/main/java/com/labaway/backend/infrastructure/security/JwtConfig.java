@@ -1,5 +1,6 @@
-package com.labaway.backend.configuration.jwt;
+package com.labaway.backend.infrastructure.jwt;
 
+import com.labaway.backend.configuration.properties.JwtProperties;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.context.annotation.Bean;
@@ -12,15 +13,15 @@ import javax.crypto.SecretKey;
 @Configuration
 public class JwtConfig {
 
-    private final JwtSecretConfig jwtSecretConfig;
+    private final JwtProperties jwtProperties;
 
-    public JwtConfig(JwtSecretConfig jwtSecretConfig) {
-        this.jwtSecretConfig = jwtSecretConfig;
+    public JwtConfig(JwtProperties jwtProperties) {
+        this.jwtProperties = jwtProperties;
     }
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        String secret = jwtSecretConfig.getJwtSecret();
+        String secret = jwtProperties.secret();
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         SecretKey key = Keys.hmacShaKeyFor(keyBytes);
         return NimbusJwtDecoder.withSecretKey(key).build();
