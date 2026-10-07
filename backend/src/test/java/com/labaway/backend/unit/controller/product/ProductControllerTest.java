@@ -20,13 +20,13 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import tools.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.AdditionalMatchers.aryEq;
 import static org.mockito.Mockito.*;
 
@@ -237,7 +237,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void create_whenServiceThrowsIOException_returnsInternalServerError() {
+    void createProductWithImages_whenServiceThrowsException_propagatesException() {
         String productPayloadDtoJson = createCreateProductJson(
                 "Test Product",
                 BigDecimal.TEN,
@@ -247,7 +247,7 @@ class ProductControllerTest {
                 List.of("test-category")
         );
 
-        MultipartFile[] mockFiles = new MultipartFile[]{
+        MultipartFile[] mockFiles = {
                 createMockMultipartFile("image.jpg", "content")
         };
 
@@ -260,17 +260,15 @@ class ProductControllerTest {
                 any(MultipartFile.class)
         )).thenThrow(new RuntimeException("S3 upload failed"));
 
-        ResponseEntity<ProductDto> response =
+        assertThatThrownBy(() ->
                 productController.createProductWithImages(
                         productPayloadDtoJson,
                         mockFiles,
                         mockBanner
-                );
-
-        assertThat(response.getStatusCode())
-                .isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        assertThat(response.getBody()).isNull();
+                )
+        )
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("S3 upload failed");
 
         verify(productService).createProduct(
                 any(ProductPayloadDto.class),
@@ -278,6 +276,7 @@ class ProductControllerTest {
                 eq(mockBanner)
         );
     }
+
     @Test
     void delete_shouldReturnNoContent() {
         String slug = "test-product";
@@ -329,7 +328,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void updateProduct_shouldReturnUpdatedProduct_whenProductExists() throws IOException {
+    void updateProduct_shouldReturnUpdatedProduct_whenProductExists() {
         String slug = "test-slug";
 
         String productPayloadDtoJson = createCreateProductJson(
@@ -393,7 +392,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void updateProduct_shouldReturnNotFound_whenProductDoesNotExist() throws IOException {
+    void updateProduct_shouldReturnNotFound_whenProductDoesNotExist() {
         String slug = "nonexistent-slug";
 
         String productPayloadDtoJson = createCreateProductJson(

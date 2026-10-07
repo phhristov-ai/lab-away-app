@@ -8,9 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class NewsletterControllerTest {
 
@@ -31,16 +31,17 @@ class NewsletterControllerTest {
     }
 
     @Test
-    void subscribe_invalidEmail_shouldReturnBadRequest() {
+    void subscribe_whenEmailIsInvalid_shouldThrowException() {
         SubscriptionRequest request = new SubscriptionRequest("invalid-email");
 
         when(newsletterService.subscribe("invalid-email"))
                 .thenThrow(new IllegalArgumentException("Invalid email format"));
 
-        ResponseEntity<String> response = controller.subscribe(request);
+        assertThatThrownBy(() -> controller.subscribe(request))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Invalid email format");
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertEquals("Invalid email format", response.getBody());
+        verify(newsletterService).subscribe("invalid-email");
     }
 
     @Test

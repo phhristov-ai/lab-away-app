@@ -74,10 +74,7 @@ class AdminLoginControllerTest {
     }
 
     private AdminLoginRequest buildLoginRequest(String username, String password) {
-        return AdminLoginRequest.builder()
-                .username(username)
-                .password(password)
-                .build();
+        return new AdminLoginRequest(username, password);
     }
 
     private AdminUserDto buildMockAdminUserDto() {

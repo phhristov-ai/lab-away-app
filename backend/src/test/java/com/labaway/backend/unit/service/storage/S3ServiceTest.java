@@ -1,100 +1,120 @@
 package com.labaway.backend.unit.service.storage;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.labaway.backend.properties.AwsProperties;
+import com.labaway.backend.configuration.properties.AwsProperties;
 import com.labaway.backend.service.storage.S3Service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.mock.web.MockMultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class S3ServiceTest {
 
-    private AmazonS3 amazonS3;
+    private S3Client s3Client;
     private AwsProperties awsProperties;
     private S3Service s3Service;
 
     @BeforeEach
     void setUp() {
-        amazonS3 = mock(AmazonS3.class);
-        awsProperties = mock(AwsProperties.class);
-        s3Service = new S3Service(amazonS3, awsProperties);
+        s3Client = mock(S3Client.class);
+
+        awsProperties = new AwsProperties(
+                "eu-north-1",
+                new AwsProperties.S3("test-bucket")
+        );
+
+        s3Service = new S3Service(s3Client, awsProperties);
     }
 
     @Test
     void uploadFile_shouldUploadToS3AndReturnUrl() throws IOException {
-        MockMultipartFile mockFile = createMockFile("file.txt", "Sample content");
-        String bucketName = "test-bucket";
 
-        when(awsProperties.getS3BucketName()).thenReturn(bucketName);
-        when(amazonS3.getUrl(eq(bucketName), anyString()))
-                .thenReturn(new URL("https://s3.amazonaws.com/test-bucket/fakeFileName"));
+        MockMultipartFile mockFile =
+                createMockFile("file.txt", "Sample content");
+
         String url = s3Service.uploadFile(mockFile);
 
-        assertEquals("https://s3.amazonaws.com/test-bucket/fakeFileName", url);
-        verifyPutObjectRequest(bucketName, mockFile.getOriginalFilename());
+        assertTrue(url.contains("test-bucket"));
+        assertTrue(url.contains(".txt"));
+
+        ArgumentCaptor<PutObjectRequest> captor =
+                ArgumentCaptor.forClass(PutObjectRequest.class);
+
+        verify(s3Client).putObject(
+                captor.capture(),
+                any(RequestBody.class)
+        );
+
+        PutObjectRequest request = captor.getValue();
+
+        assertEquals("test-bucket", request.bucket());
+        assertTrue(request.key().endsWith("_file.txt"));
+        assertEquals("text/plain", request.contentType());
     }
 
     @Test
-    void deleteFile_shouldCallAmazonS3DeleteObject() {
+    void deleteFile_shouldCallS3DeleteObject() {
+
         String bucketName = "test-bucket";
         String fileUrl = "https://s3.amazonaws.com/test-bucket/file-to-delete.txt";
 
-        when(awsProperties.getS3BucketName()).thenReturn(bucketName);
         s3Service.deleteFile(fileUrl);
 
-        verify(amazonS3, times(1))
-                .deleteObject(bucketName, "file-to-delete.txt");
+        ArgumentCaptor<DeleteObjectRequest> captor =
+                ArgumentCaptor.forClass(DeleteObjectRequest.class);
+
+        verify(s3Client, times(1))
+                .deleteObject(captor.capture());
+
+        DeleteObjectRequest request = captor.getValue();
+
+        assertEquals(bucketName, request.bucket());
+        assertEquals("file-to-delete.txt", request.key());
     }
 
     @Test
-    void uploadFileWithName_shouldUploadBytesToS3AndReturnUrl() throws Exception {
+    void uploadFileWithName_shouldUploadBytesToS3AndReturnUrl() {
+
         byte[] fileBytes = "Sample content".getBytes();
         String fileName = "test-file.webp";
         String bucketName = "test-bucket";
 
-        when(awsProperties.getS3BucketName()).thenReturn(bucketName);
-        when(amazonS3.getUrl(bucketName, fileName))
-                .thenReturn(new URL("https://s3.amazonaws.com/test-bucket/" + fileName));
-
         String url = s3Service.uploadFileWithName(fileBytes, fileName);
 
-        assertEquals("https://s3.amazonaws.com/test-bucket/test-file.webp", url);
-
-        ArgumentCaptor<InputStream> inputStreamCaptor = ArgumentCaptor.forClass(InputStream.class);
-        verify(amazonS3, times(1)).putObject(
-                eq(bucketName),
-                eq(fileName),
-                inputStreamCaptor.capture(),
-                eq(null)
+        assertEquals(
+                "https://test-bucket.s3.eu-north-1.amazonaws.com/test-file.webp",
+                url
         );
 
-        // Verify the InputStream contains the expected bytes
-        byte[] actualBytes = inputStreamCaptor.getValue().readAllBytes();
-        assertArrayEquals(fileBytes, actualBytes);
-    }
+        ArgumentCaptor<PutObjectRequest> requestCaptor =
+                ArgumentCaptor.forClass(PutObjectRequest.class);
 
+        ArgumentCaptor<RequestBody> bodyCaptor =
+                ArgumentCaptor.forClass(RequestBody.class);
+
+        verify(s3Client, times(1))
+                .putObject(
+                        requestCaptor.capture(),
+                        bodyCaptor.capture()
+                );
+
+        PutObjectRequest request = requestCaptor.getValue();
+
+        assertEquals(bucketName, request.bucket());
+        assertEquals(fileName, request.key());
+    }
 
     private MockMultipartFile createMockFile(String filename, String content) {
         return new MockMultipartFile(
                 "file", filename, "text/plain", content.getBytes());
     }
 
-    private void verifyPutObjectRequest(String expectedBucketName, String expectedFileNamePart) {
-        ArgumentCaptor<PutObjectRequest> requestCaptor = ArgumentCaptor.forClass(PutObjectRequest.class);
-        verify(amazonS3, times(1)).putObject(requestCaptor.capture());
-
-        PutObjectRequest actualRequest = requestCaptor.getValue();
-        assertEquals(expectedBucketName, actualRequest.getBucketName());
-        assert actualRequest.getKey().contains(expectedFileNamePart);
-    }
 }

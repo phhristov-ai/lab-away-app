@@ -11,6 +11,7 @@ import com.labaway.backend.entity.repository.blog.BlogRepository;
 import com.labaway.backend.entity.repository.blog.BlogTranslationRepository;
 import com.labaway.backend.entity.repository.category.CategoryRepository;
 import com.labaway.backend.enums.Language;
+import com.labaway.backend.exception.BlogNotFoundException;
 import com.labaway.backend.exception.ResourceNotFoundException;
 import com.labaway.backend.service.blog.BlogService;
 import com.labaway.backend.service.media.MediaService;
@@ -25,7 +26,6 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -140,12 +140,12 @@ class BlogServiceTest {
         String blogSlug = "std-post";
         mockFindBlogBySlug(Optional.empty(), blogSlug);
         assertThatThrownBy(() -> blogService.getBlogBySlug(blogSlug, Language.EN))
-                .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessage("Blog not found");
+                .isInstanceOf(BlogNotFoundException.class)
+                .hasMessage("Blog with slug 'Blog not found' was not found.");
     }
 
     @Test
-    void createBlog_savesAndReturnsMappedDto() throws IOException {
+    void createBlog_savesAndReturnsMappedDto() {
         MultipartFile file = createMockImageFile();
         Category category = createCategory();
         BlogDto blogDto = createBlogDto();
@@ -208,7 +208,7 @@ class BlogServiceTest {
     }
 
     @Test
-    void createBlog_withoutImage_setsNoImageUrls() throws IOException {
+    void createBlog_withoutImage_setsNoImageUrls() {
         BlogDto blogDto = createBlogDto();
         Category category = createCategory();
         BlogResponseDto blogResponseDto = createBlogResponseDto();
@@ -241,7 +241,7 @@ class BlogServiceTest {
     }
 
     @Test
-    void createBlog_withEmptyFile_doesNotUpload() throws IOException {
+    void createBlog_withEmptyFile_doesNotUpload() {
         BlogDto blogDto = createBlogDto();
         Category category = createCategory();
         BlogResponseDto blogResponseDto = createBlogResponseDto();
@@ -286,7 +286,7 @@ class BlogServiceTest {
     }
 
     @Test
-    void updateBlog_shouldUpdateAndReturnDto() throws IOException {
+    void updateBlog_shouldUpdateAndReturnDto() {
         String blogSlug = "std-post";
         Category category = createCategory();
 

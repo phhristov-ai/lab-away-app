@@ -1,4 +1,4 @@
-package com.labaway.backend.infrastructure.rest;
+package com.labaway.backend.infrastructure.web;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

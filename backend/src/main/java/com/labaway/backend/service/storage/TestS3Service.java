@@ -1,24 +1,9 @@
 package com.labaway.backend.service.storage;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
-import com.labaway.backend.properties.AwsProperties;
-import jakarta.annotation.PreDestroy;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 //@Service
 //@Profile("test")
 //@Primary
+/*
 public class TestS3Service extends S3Service {
     private final List<String> uploadedKeys = new ArrayList<>();
     private final Map<String, byte[]> cachedFiles = new HashMap<>();
@@ -63,7 +48,7 @@ public class TestS3Service extends S3Service {
             // Delete uploaded files
             for (String key : uploadedKeys) {
                 try {
-                    amazonS3.deleteObject(awsProperties.getS3BucketName(), key);
+                    amazonS3.deleteObject(awsProperties.s3BucketName(), key);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -88,3 +73,5 @@ public class TestS3Service extends S3Service {
 
 
 }
+
+ */

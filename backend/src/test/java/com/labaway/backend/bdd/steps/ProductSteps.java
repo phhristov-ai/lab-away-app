@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Arrays;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ProductSteps {
@@ -23,7 +25,8 @@ public class ProductSteps {
                         new HttpHeaders(),
                         ProductPreviewDto[].class);
 
-        System.out.println(res);
+        Arrays.stream(res.getBody())
+                .forEach(System.out::println);
         assertThat(res.getStatusCode().is2xxSuccessful()).isTrue();
     }
 }

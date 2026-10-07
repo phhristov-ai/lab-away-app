@@ -5,6 +5,8 @@ import com.labaway.backend.dto.image.ImageUrls;
 import com.labaway.backend.entity.blog.Blog;
 import com.labaway.backend.entity.category.Category;
 import com.labaway.backend.enums.Language;
+import com.labaway.backend.exception.BlogNotFoundException;
+import com.labaway.backend.exception.CategoryNotFoundException;
 import com.labaway.backend.exception.ResourceNotFoundException;
 import com.labaway.backend.entity.repository.blog.BlogRepository;
 import com.labaway.backend.entity.repository.category.CategoryRepository;
@@ -40,12 +42,12 @@ public class BlogService {
     @Transactional(readOnly = true)
     public BlogResponseDto getBlogBySlug(String slug, Language lang) {
         Blog blog = blogRepository.findBySlug(slug)
-                .orElseThrow(() -> new ResourceNotFoundException("Blog not found"));
+                .orElseThrow(() -> new BlogNotFoundException("Blog not found"));
         return blogTransformer.toDto(blog, lang);
     }
 
     @Transactional
-    public BlogResponseDto createBlog(BlogDto blogDto, MultipartFile file) throws IOException {
+    public BlogResponseDto createBlog(BlogDto blogDto, MultipartFile file) {
         TranslationDto translation = blogDto.translation();
         Language lang = translation.language();
         String title = translation.title().trim();
@@ -64,7 +66,7 @@ public class BlogService {
     }
 
     @Transactional
-    public BlogResponseDto updateBlog(String currentSlug, BlogDto blogDto, MultipartFile file) throws IOException {
+    public BlogResponseDto updateBlog(String currentSlug, BlogDto blogDto, MultipartFile file) {
         Blog blog = getBlogOrThrow(currentSlug);
         blogTransformer.updateEntity(blog, blogDto);
 
@@ -119,7 +121,7 @@ public class BlogService {
     private Set<Category> fetchAndValidateCategories(List<String> categorySlugs) {
         List<Category> categories = categoryRepository.findBySlugIn(categorySlugs);
         if (categories.size() != categorySlugs.size()) {
-            throw new ResourceNotFoundException("One or more categories not found");
+            throw new CategoryNotFoundException("One or more categories not found");
         }
         return new HashSet<>(categories);
     }
@@ -134,13 +136,13 @@ public class BlogService {
 
     private Blog getBlogOrThrow(String slug) {
         return blogRepository.findBySlug(slug)
-                .orElseThrow(() -> new ResourceNotFoundException("Blog not found with slug: " + slug));
+                .orElseThrow(() -> new BlogNotFoundException("Blog not found with slug: " + slug));
     }
 
     @Transactional
     public void deleteBlog(String slug) {
         Blog blog = blogRepository.findBySlug(slug)
-                .orElseThrow(() -> new ResourceNotFoundException("Blog not found with slug " + slug));
+                .orElseThrow(() -> new BlogNotFoundException("Blog not found with slug " + slug));
 
         if (blog.getImageUrlSmall() != null && !blog.getImageUrlSmall().isEmpty()) {
             s3Service.deleteFile(blog.getImageUrlSmall());
@@ -156,8 +158,6 @@ public class BlogService {
 
         blogRepository.delete(blog);
     }
-
-
 
     private String generateSlug(String name) {
         if (name == null || name.isBlank()) {

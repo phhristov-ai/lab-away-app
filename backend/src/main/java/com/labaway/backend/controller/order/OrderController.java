@@ -40,9 +40,7 @@ public class OrderController {
     @PostMapping("/express/confirm")
     public ResponseEntity<Void> confirmExpressOrder(
             @RequestBody @Valid ConfirmExpressOrderRequestDto dto) {
-
         orderService.confirmExpressOrder(dto);
-
         return ResponseEntity.ok().build();
     }
 

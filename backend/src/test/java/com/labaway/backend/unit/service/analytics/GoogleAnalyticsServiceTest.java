@@ -1,6 +1,6 @@
 package com.labaway.backend.unit.service.analytics;
 
-import com.labaway.backend.configuration.analytics.Ga4Config;
+import com.labaway.backend.configuration.properties.Ga4Properties;
 import com.labaway.backend.entity.category.Category;
 import com.labaway.backend.entity.category.CategoryTranslation;
 import com.labaway.backend.entity.order.Order;
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.*;
 class GoogleAnalyticsServiceTest {
 
     @Mock
-    private Ga4Config ga4Config;
+    private Ga4Properties ga4Properties;
 
     @Mock
     private RestTemplate restTemplate;
@@ -44,8 +44,8 @@ class GoogleAnalyticsServiceTest {
 
     @BeforeEach
     void setUp() {
-        when(ga4Config.getMeasurementId()).thenReturn("G-TEST123");
-        when(ga4Config.getApiSecret()).thenReturn("secret123");
+        when(ga4Properties.measurementId()).thenReturn("G-TEST123");
+        when(ga4Properties.apiSecret()).thenReturn("secret123");
 
         Product product = new Product();
         product.setSlug("test-product");

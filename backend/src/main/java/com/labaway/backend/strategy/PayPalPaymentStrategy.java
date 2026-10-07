@@ -1,6 +1,6 @@
 package com.labaway.backend.strategy;
 
-import com.labaway.backend.configuration.payment.PayPalConfig;
+import com.labaway.backend.configuration.properties.PaypalProperties;
 import com.labaway.backend.dto.payment.CreatePaymentRequestDto;
 import com.labaway.backend.dto.payment.CreatePaymentResponseDto;
 import com.labaway.backend.exception.PayPalServiceException;
@@ -19,10 +19,10 @@ public class PayPalPaymentStrategy implements PaymentStrategy {
 
     private final PayPalHttpClient payPalClient;
 
-    public PayPalPaymentStrategy(PayPalConfig payPalConfig) {
+    public PayPalPaymentStrategy(PaypalProperties paypalProperties) {
         PayPalEnvironment environment = new PayPalEnvironment.Sandbox(
-                payPalConfig.getClientId(),
-                payPalConfig.getClientSecret()
+                paypalProperties.clientId(),
+                paypalProperties.secret()
         );
 
         this.payPalClient = new PayPalHttpClient(environment);

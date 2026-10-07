@@ -15,12 +15,8 @@ public class NewsletterController {
 
     @PostMapping
     public ResponseEntity<String> subscribe(@RequestBody SubscriptionRequest request) {
-        try {
-            String message = newsletterService.subscribe(request.email());
-            return ResponseEntity.ok(message);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        String message = newsletterService.subscribe(request.email());
+        return ResponseEntity.ok(message);
     }
 
     @DeleteMapping

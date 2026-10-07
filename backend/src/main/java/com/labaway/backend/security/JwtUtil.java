@@ -1,41 +1,43 @@
 package com.labaway.backend.security;
 
-import com.labaway.backend.configuration.jwt.JwtSecretConfig;
+import com.labaway.backend.configuration.properties.JwtProperties;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
-import java.security.Key;
+import javax.crypto.SecretKey;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
 
-    private final String secret;
-
-    public JwtUtil(JwtSecretConfig jwtSecretConfig) {
-        this.secret = jwtSecretConfig.getJwtSecret();
-    }
-
+    private final SecretKey signingKey;
+    private final JwtParser jwtParser;
     private static final long JWT_EXPIRATION_MS = 3600000;
+
+    public JwtUtil(JwtProperties jwtProperties) {
+        byte[] keyBytes = Decoders.BASE64.decode(jwtProperties.secret());
+        this.signingKey = Keys.hmacShaKeyFor(keyBytes);
+
+        this.jwtParser = Jwts.parser()
+                .verifyWith(signingKey)
+                .build();
+    }
 
     public String generateToken(String username, String role) {
         return Jwts.builder()
-                .setSubject(username)
+                .subject(username)
                 .claim("role", role)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION_MS))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION_MS))
+                .signWith(signingKey)
                 .compact();
     }
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey())
-                    .build()
-                    .parseClaimsJws(token);
+            jwtParser.parseSignedClaims(token);
             return true;
         } catch (JwtException e) {
             return false;
@@ -43,25 +45,16 @@ public class JwtUtil {
     }
 
     public String getUsernameFromToken(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-        return claims.getSubject();
+        return jwtParser
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
     }
 
     public String getRoleFromToken(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-        return claims.get("role", String.class);
-    }
-
-    private Key getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secret);
-        return Keys.hmacShaKeyFor(keyBytes);
+        return jwtParser
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("role", String.class);
     }
 }

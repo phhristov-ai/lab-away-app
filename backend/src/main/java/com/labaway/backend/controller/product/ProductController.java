@@ -51,15 +51,11 @@ public class ProductController {
             @RequestPart(value = "product") String productJson,
             @RequestPart("files") MultipartFile[] files,
             @RequestPart(value = "banner", required = false) MultipartFile banner) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            ProductPayloadDto productPayloadDto = mapper.readValue(productJson, ProductPayloadDto.class);
-            ProductDto createdProduct = productService.createProduct(productPayloadDto, files, banner);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        ProductPayloadDto productPayloadDto = mapper.readValue(productJson, ProductPayloadDto.class);
+        ProductDto createdProduct = productService.createProduct(productPayloadDto, files, banner);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -70,7 +66,6 @@ public class ProductController {
             @RequestPart(value = "files", required = false) MultipartFile[] files,
             @RequestPart(value = "banner", required = false) MultipartFile banner) {
 
-        try {
             ObjectMapper mapper = new ObjectMapper();
             ProductPayloadDto updateProductDto = mapper.readValue(productJson, ProductPayloadDto.class);
 
@@ -79,10 +74,6 @@ public class ProductController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
             return ResponseEntity.ok(updatedProduct);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
     }
 
     @PreAuthorize("hasRole('ADMIN')")

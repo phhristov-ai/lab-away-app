@@ -1,6 +1,6 @@
 package com.labaway.backend.strategy;
 
-import com.labaway.backend.configuration.payment.StripeConfig;
+import com.labaway.backend.configuration.properties.StripeProperties;
 import com.labaway.backend.dto.payment.CreatePaymentRequestDto;
 import com.labaway.backend.dto.payment.CreatePaymentResponseDto;
 import com.labaway.backend.exception.PaymentException;
@@ -15,21 +15,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class StripePaymentStrategy implements PaymentStrategy {
 
-    private final StripeConfig stripeConfig;
+    private final StripeProperties stripeProperties;
 
     @Autowired
-    public StripePaymentStrategy(StripeConfig stripeConfig) {
-        this.stripeConfig = stripeConfig;
+    public StripePaymentStrategy(StripeProperties stripeProperties) {
+        this.stripeProperties = stripeProperties;
     }
 
     @PostConstruct
     public void init() {
-        System.out.println("=== STRIPE DEBUG ===");
-        System.out.println("PROFILE: " + System.getProperty("spring.profiles.active"));
-        System.out.println("KEY: " + stripeConfig.getSecretKey());
-
-        Stripe.apiKey = stripeConfig.getSecretKey();
-        Stripe.apiKey = stripeConfig.getSecretKey();
+        Stripe.apiKey = stripeProperties.secretKey();
     }
     @Override
     public PaymentProvider getProvider() {

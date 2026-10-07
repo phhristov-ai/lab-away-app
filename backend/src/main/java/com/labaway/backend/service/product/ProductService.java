@@ -26,7 +26,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -56,7 +55,7 @@ public class ProductService {
             ProductPayloadDto dto,
             MultipartFile[] files,
             MultipartFile banner
-    ) throws IOException {
+    ) {
 
         Product product = findProductBySlug(slug);
 
@@ -86,7 +85,7 @@ public class ProductService {
                 .orElseThrow(() -> new ProductNotFoundException("Product with slug '" + slug + "' not found"));
     }
 
-    private void updateProductImages(Product product, ProductPayloadDto dto, MultipartFile[] files) throws IOException {
+    private void updateProductImages(Product product, ProductPayloadDto dto, MultipartFile[] files) {
         Set<String> retainedUrls = extractRetainedImageKeys(dto);
 
         deleteRemovedImages(product, retainedUrls);
@@ -198,20 +197,20 @@ public class ProductService {
 
         for (ProductImage oldImage : product.getImages()) {
             try {
-                if (oldImage.getImageUrlSmall() != null && !oldImage.getImageUrlSmall().isEmpty()) {
-                    s3Service.deleteFile(oldImage.getImageUrlSmall());
-                }
-                if (oldImage.getImageUrlMedium() != null && !oldImage.getImageUrlMedium().isEmpty()) {
-                    s3Service.deleteFile(oldImage.getImageUrlMedium());
-                }
-                if (oldImage.getImageUrlLarge() != null && !oldImage.getImageUrlLarge().isEmpty()) {
-                    s3Service.deleteFile(oldImage.getImageUrlLarge());
-                }
+                deleteIfPresent(oldImage.getImageUrlSmall());
+                deleteIfPresent(oldImage.getImageUrlMedium());
+                deleteIfPresent(oldImage.getImageUrlLarge());
             } catch (Exception e) {
                 log.error("Failed to delete S3 file: " + oldImage + " - " + e.getMessage());
             }
         }
         productImageRepository.deleteAllByProductId(product.getId());
+    }
+
+    private void deleteIfPresent(String url) {
+        if (url != null && !url.isBlank()) {
+            s3Service.deleteFile(url);
+        }
     }
 
     private List<ProductImage> processImageFiles(MultipartFile[] files) {

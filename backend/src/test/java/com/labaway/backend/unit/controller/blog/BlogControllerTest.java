@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 class BlogControllerTest {
@@ -110,7 +111,7 @@ class BlogControllerTest {
     }
 
     @Test
-    void create_withNullFile_returnsCreatedBlogDto() throws IOException {
+    void create_withNullFile_returnsCreatedBlogDto() {
         when(blogService.createBlog(blogDto, null)).thenReturn(blogResponseDto);
 
         ResponseEntity<BlogResponseDto> response = blogController.createBlog(blogDto, null);
@@ -121,18 +122,18 @@ class BlogControllerTest {
     }
 
     @Test
-    void create_whenIOExceptionThrown_returnsInternalServerError() throws IOException {
+    void createBlog_whenServiceThrowsException_propagatesException() {
         MockMultipartFile file = createMockImageFile();
+
         when(blogService.createBlog(blogDto, file))
-                .thenThrow(new IOException("Upload failed"));
+                .thenThrow(new RuntimeException("Upload failed"));
 
-        ResponseEntity<BlogResponseDto> response = blogController.createBlog(blogDto, file);
+        assertThatThrownBy(() -> blogController.createBlog(blogDto, file))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("Upload failed");
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
-        assertThat(response.getBody()).isNull();
         verify(blogService).createBlog(blogDto, file);
     }
-
 
     @Test
     void delete_removesBlog() {
@@ -145,7 +146,7 @@ class BlogControllerTest {
     }
 
     @Test
-    void updateBlog_shouldReturnUpdatedBlogDto() throws IOException {
+    void updateBlog_shouldReturnUpdatedBlogDto() {
         String slug = "test-blog";
         BlogDto updateDto = createCreateBlogDto("Title", "Content");
         BlogResponseDto updatedBlogDto = createBlogResponseDto(slug, "New Title", "NEw Content");

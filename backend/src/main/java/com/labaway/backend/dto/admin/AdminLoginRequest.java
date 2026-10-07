@@ -1,11 +1,7 @@
 package com.labaway.backend.dto.admin;
 
-import lombok.Builder;
-import lombok.Data;
-
-@Data
-@Builder
-public class AdminLoginRequest {
-    private String username;
-    private String password;
+public record AdminLoginRequest(
+        String username,
+        String password
+) {
 }

@@ -26,7 +26,7 @@ public class AdminLoginController {
 
     @PostMapping
     public ResponseEntity<Object> login(@RequestBody AdminLoginRequest request) {
-        Optional<AdminUserDto> adminOpt = adminUserService.validateCredentials(request.getUsername(), request.getPassword());
+        Optional<AdminUserDto> adminOpt = adminUserService.validateCredentials(request.username(), request.password());
 
         if (adminOpt.isPresent()) {
             AdminUserDto admin = adminOpt.get();

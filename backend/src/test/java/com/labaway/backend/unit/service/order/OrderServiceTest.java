@@ -11,6 +11,7 @@ import com.labaway.backend.entity.repository.order.OrderRepository;
 import com.labaway.backend.entity.repository.product.ProductRepository;
 import com.labaway.backend.enums.Language;
 import com.labaway.backend.enums.OrderStatus;
+import com.labaway.backend.exception.OrderNotFoundException;
 import com.labaway.backend.service.analytics.GoogleAnalyticsService;
 import com.labaway.backend.service.communication.EmailService;
 import com.labaway.backend.service.order.OrderService;
@@ -221,7 +222,7 @@ class OrderServiceTest {
     void getOrderById_shouldThrowWhenNotFound() {
         sampleOrder = buildSampleOrder(PaymentProvider.STRIPE);
         when(orderRepository.findByOrderNumber(orderNumber)).thenReturn(Optional.empty());
-        assertThrows(IllegalArgumentException.class, () -> orderService.getOrderByOrderNumber(orderNumber));
+        assertThrows(OrderNotFoundException.class, () -> orderService.getOrderByOrderNumber(orderNumber));
     }
 
     @Test
@@ -251,7 +252,7 @@ class OrderServiceTest {
         sampleOrder = buildSampleOrder(PaymentProvider.STRIPE);
         when(orderRepository.existsByOrderNumber(orderNumber)).thenReturn(false);
 
-        assertThrows(IllegalArgumentException.class, () -> orderService.deleteOrder(orderNumber));
+        assertThrows(OrderNotFoundException.class, () -> orderService.deleteOrder(orderNumber));
     }
 
     @Test

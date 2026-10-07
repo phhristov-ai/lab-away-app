@@ -1,4 +1,4 @@
-package com.labaway.backend.infrastructure.web;
+package com.labaway.backend.infrastructure.openapi;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;

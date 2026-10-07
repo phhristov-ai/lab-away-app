@@ -1,55 +1,93 @@
 package com.labaway.backend.service.storage;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.labaway.backend.properties.AwsProperties;
+import com.labaway.backend.configuration.properties.AwsProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.UUID;
 
 @Service
 public class S3Service {
 
-    protected final AmazonS3 amazonS3;
-    protected final AwsProperties awsProperties;
+    private final S3Client s3Client;
+    private final AwsProperties awsProperties;
 
-    public S3Service(AmazonS3 amazonS3, AwsProperties awsProperties) {
-        this.amazonS3 = amazonS3;
+    public S3Service(S3Client s3Client, AwsProperties awsProperties) {
+        this.s3Client = s3Client;
         this.awsProperties = awsProperties;
     }
 
     public String uploadFile(MultipartFile file) throws IOException {
+
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-        InputStream inputStream = file.getInputStream();
 
-        amazonS3.putObject(new PutObjectRequest(
-                awsProperties.getS3BucketName(), fileName, inputStream, null));
+        PutObjectRequest request = PutObjectRequest.builder()
+                .bucket(awsProperties.s3().bucketName())
+                .key(fileName)
+                .contentType(file.getContentType())
+                .build();
 
-        return amazonS3.getUrl(awsProperties.getS3BucketName(), fileName).toString();
+        s3Client.putObject(
+                request,
+                RequestBody.fromInputStream(
+                        file.getInputStream(),
+                        file.getSize()
+                )
+        );
+
+        return buildS3Url(fileName);
     }
+
 
     public String uploadFileWithName(byte[] fileBytes, String fileName) {
-        InputStream inputStream = new ByteArrayInputStream(fileBytes);
-        amazonS3.putObject(awsProperties.getS3BucketName(), fileName, inputStream, null);
-        return amazonS3.getUrl(awsProperties.getS3BucketName(), fileName).toString();
 
+        PutObjectRequest request = PutObjectRequest.builder()
+                .bucket(awsProperties.s3().bucketName())
+                .key(fileName)
+                .build();
+
+        s3Client.putObject(
+                request,
+                RequestBody.fromBytes(fileBytes)
+        );
+
+        return buildS3Url(fileName);
     }
 
+
     public void deleteFile(String fileUrl) {
+
         if (fileUrl == null || fileUrl.isBlank()) {
             return;
         }
-        String bucketName = awsProperties.getS3BucketName();
+
         String fileKey = extractFileKey(fileUrl);
-        amazonS3.deleteObject(bucketName, fileKey);
+
+        DeleteObjectRequest request = DeleteObjectRequest.builder()
+                .bucket(awsProperties.s3().bucketName())
+                .key(fileKey)
+                .build();
+
+        s3Client.deleteObject(request);
     }
+
+
+    private String buildS3Url(String fileName) {
+        return String.format(
+                "https://%s.s3.%s.amazonaws.com/%s",
+                awsProperties.s3().bucketName(),
+                awsProperties.region(),
+                fileName
+        );
+    }
+
 
     private String extractFileKey(String fileUrl) {
         return fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
     }
-
 }

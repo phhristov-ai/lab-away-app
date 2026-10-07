@@ -1,4 +1,4 @@
-package com.labaway.backend.infrastructure.jwt;
+package com.labaway.backend.infrastructure.security;
 
 import com.labaway.backend.configuration.properties.JwtProperties;
 import io.jsonwebtoken.io.Decoders;
@@ -21,9 +21,14 @@ public class JwtConfig {
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        String secret = jwtProperties.secret();
-        byte[] keyBytes = Decoders.BASE64.decode(secret);
-        SecretKey key = Keys.hmacShaKeyFor(keyBytes);
+        if (jwtProperties.secret() == null || jwtProperties.secret().isBlank()) {
+            throw new IllegalStateException("JWT secret is missing");
+        }
+
+        SecretKey key = Keys.hmacShaKeyFor(
+                Decoders.BASE64.decode(jwtProperties.secret())
+        );
+
         return NimbusJwtDecoder.withSecretKey(key).build();
     }
 }

@@ -4,15 +4,17 @@ import com.labaway.backend.configuration.properties.DatabaseProperties;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import javax.sql.DataSource;
 
 @Configuration
-public class AwsMySQLConfig {
+@Profile("!test")
+public class MySQLDataSourceConfig {
 
     private final DatabaseProperties databaseProperties;
 
-    public AwsMySQLConfig(DatabaseProperties databaseProperties) {
+    public MySQLDataSourceConfig(DatabaseProperties databaseProperties) {
         this.databaseProperties = databaseProperties;
     }
 

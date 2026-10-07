@@ -1,6 +1,6 @@
 package com.labaway.backend.service.analytics;
 
-import com.labaway.backend.configuration.analytics.Ga4Config;
+import com.labaway.backend.configuration.properties.Ga4Properties;
 import com.labaway.backend.entity.order.Order;
 import com.labaway.backend.entity.order.OrderItem;
 import com.labaway.backend.enums.Language;
@@ -14,14 +14,12 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class GoogleAnalyticsService {
 
-    private final Ga4Config ga4Config;
+    private final Ga4Properties ga4Properties;
     private final RestTemplate restTemplate;
     private static final Logger log =
             LoggerFactory.getLogger(GoogleAnalyticsService.class);
@@ -96,8 +94,8 @@ public class GoogleAnalyticsService {
     private String buildGaUrl() {
         return String.format(
                 "https://www.google-analytics.com/mp/collect?measurement_id=%s&api_secret=%s",
-                ga4Config.getMeasurementId(),
-                ga4Config.getApiSecret()
+                ga4Properties.measurementId(),
+                ga4Properties.apiSecret()
         );
     }
 }

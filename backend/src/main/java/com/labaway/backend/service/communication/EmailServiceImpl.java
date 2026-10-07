@@ -1,12 +1,13 @@
 package com.labaway.backend.service.communication;
 
-import com.labaway.backend.configuration.mail.SmtpConfig;
+import com.labaway.backend.configuration.properties.EmailProperties;
+import com.labaway.backend.configuration.properties.SmtpProperties;
 import com.labaway.backend.dto.order.OrderEmailDto;
 import com.labaway.backend.dto.order.OrderItemEmailDto;
+import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -25,8 +26,7 @@ public class EmailServiceImpl implements EmailService {
     private String fromEmail;
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
-    @Value("${app.email.admins}")
-    private String[] adminEmails;
+    private final EmailProperties emailProperties;
     private static final Logger log =
             LoggerFactory.getLogger(EmailServiceImpl.class);
 
@@ -35,10 +35,11 @@ public class EmailServiceImpl implements EmailService {
             "de", "Ihre Bestellung wurde bestätigt"
     );
 
-    public EmailServiceImpl(SmtpConfig smtpConfig, JavaMailSender mailSender, TemplateEngine templateEngine) {
-        this.fromEmail = smtpConfig.getFromEmail();
+    public EmailServiceImpl(SmtpProperties smtpProperties, JavaMailSender mailSender, TemplateEngine templateEngine, EmailProperties emailProperties) {
+        this.fromEmail = smtpProperties.fromEmail();
         this.mailSender = mailSender;
         this.templateEngine = templateEngine;
+        this.emailProperties = emailProperties;
     }
 
     @Override
@@ -58,21 +59,20 @@ public class EmailServiceImpl implements EmailService {
             String lang = orderEmailDto.language().toLowerCase();
             String subject = subjects.getOrDefault(lang, subjects.get("en"));
             helper.setSubject(subject);
-            helper.setBcc(adminEmails);
+            helper.setBcc(emailProperties.admins().toArray(new String[0]));
 
             Context context = buildOrderConfirmationContext(orderEmailDto);
             String html = templateEngine.process("order-confirmation-" + orderEmailDto.language().toLowerCase(), context);
             helper.setText(html, true);
 
             mailSender.send(message);
-        } catch (Exception e) {
+        } catch (MessagingException e) {
             log.error(
                     "Failed to send order confirmation email for order {}",
                     orderEmailDto.orderNumber(),
                     e
             );
         }
-
     }
 
     private Context buildOrderConfirmationContext(OrderEmailDto orderEmailDto) {

@@ -33,7 +33,7 @@ public class MediaService {
 
             return new ImageUrls(smallImageUrl, mediumImageUrl, largeImageUrl);
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Error processing and uploading image", e);
         }

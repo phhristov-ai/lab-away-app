@@ -46,12 +46,8 @@ public class BlogController {
     public ResponseEntity<BlogResponseDto> createBlog(
             @RequestPart("blog") @Valid BlogDto blogDto,
             @RequestPart(value = "file", required = false) MultipartFile file) {
-        try {
-            BlogResponseDto createdBlog = blogService.createBlog(blogDto, file);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdBlog);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+        BlogResponseDto createdBlog = blogService.createBlog(blogDto, file);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdBlog);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -60,12 +56,9 @@ public class BlogController {
             @PathVariable String slug,
             @RequestPart("blog") @Valid BlogDto blogDto,
             @RequestPart(value = "file", required = false) MultipartFile file) {
-        try {
             BlogResponseDto updatedBlog = blogService.updateBlog(slug, blogDto, file);
             return ResponseEntity.ok(updatedBlog);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+
     }
 
     @PreAuthorize("hasRole('ADMIN')")

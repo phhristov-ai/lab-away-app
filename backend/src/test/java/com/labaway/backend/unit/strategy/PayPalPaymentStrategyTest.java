@@ -1,12 +1,11 @@
 package com.labaway.backend.unit.strategy;
 
-import com.labaway.backend.configuration.payment.PayPalConfig;
+import com.labaway.backend.configuration.properties.PaypalProperties;
 import com.labaway.backend.dto.payment.CreatePaymentRequestDto;
 import com.labaway.backend.dto.payment.CreatePaymentResponseDto;
 import com.labaway.backend.exception.PayPalServiceException;
 import com.labaway.backend.strategy.PayPalPaymentStrategy;
 import com.labaway.backend.strategy.PaymentProvider;
-import com.paypal.core.AuthorizationProvider;
 import com.paypal.core.PayPalHttpClient;
 import com.paypal.http.HttpRequest;
 import com.paypal.http.HttpResponse;
@@ -16,7 +15,6 @@ import com.paypal.orders.OrdersGetRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -37,7 +35,7 @@ class PayPalPaymentStrategyTest {
     @Mock
     private PayPalHttpClient mockPayPalClient;
     @Mock
-    private PayPalConfig payPalConfig;
+    private PaypalProperties paypalProperties;
     @Mock
     private HttpResponse<Order> mockResponse;
     @Mock
@@ -46,10 +44,10 @@ class PayPalPaymentStrategyTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        when(payPalConfig.getClientId()).thenReturn("test-client-id");
-        when(payPalConfig.getClientSecret()).thenReturn("test-client-secret");
+        when(paypalProperties.clientId()).thenReturn("test-client-id");
+        when(paypalProperties.secret()).thenReturn("test-client-secret");
 
-        payPalPaymentStrategy = new PayPalPaymentStrategy(payPalConfig);
+        payPalPaymentStrategy = new PayPalPaymentStrategy(paypalProperties);
     }
 
     @Test
@@ -79,7 +77,7 @@ class PayPalPaymentStrategyTest {
     void shouldThrowRuntimeExceptionWhenPayPalFails() throws Exception {
         CreatePaymentRequestDto request = createPaymentRequestDto();
 
-        PayPalPaymentStrategy strategy = new PayPalPaymentStrategy(payPalConfig);
+        PayPalPaymentStrategy strategy = new PayPalPaymentStrategy(paypalProperties);
         ReflectionTestUtils.setField(strategy, "payPalClient", mockPayPalClient);
 
         when(mockPayPalClient.execute(any(HttpRequest.class)))
@@ -103,7 +101,7 @@ class PayPalPaymentStrategyTest {
         when(mockResponse.result()).thenReturn(mockOrder);
         when(mockOrder.status()).thenReturn("COMPLETED");
 
-        PayPalPaymentStrategy payPalPaymentStrategy = new PayPalPaymentStrategy(payPalConfig);
+        PayPalPaymentStrategy payPalPaymentStrategy = new PayPalPaymentStrategy(paypalProperties);
         ReflectionTestUtils.setField(payPalPaymentStrategy, "payPalClient", mockPayPalHttpClient);
 
         boolean result = payPalPaymentStrategy.isPaymentCompleted(orderId);
@@ -125,7 +123,7 @@ class PayPalPaymentStrategyTest {
         when(mockOrder.status()).thenReturn("PENDING");
         when(mockPayPalHttpClient.execute(any(OrdersGetRequest.class))).thenReturn(mockResponse);
 
-        PayPalPaymentStrategy payPalPaymentStrategy = new PayPalPaymentStrategy(payPalConfig);
+        PayPalPaymentStrategy payPalPaymentStrategy = new PayPalPaymentStrategy(paypalProperties);
         ReflectionTestUtils.setField(payPalPaymentStrategy, "payPalClient", mockPayPalHttpClient);
 
         boolean result = payPalPaymentStrategy.isPaymentCompleted(orderId);

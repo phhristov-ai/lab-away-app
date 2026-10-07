@@ -43,7 +43,7 @@ class MediaServiceTest {
 
 
     @Test
-    void processAndUploadImage_shouldResizeAndUploadImages() throws IOException {
+    void processAndUploadImage_shouldResizeAndUploadImages() {
         Map<String, String> expectedUrls = Map.of(
                 "Gonorrhea-480.webp", "https://s3.amazonaws.com/bucket/Gonorrhea-480.webp",
                 "Gonorrhea-768.webp", "https://s3.amazonaws.com/bucket/Gonorrhea-768.webp",
@@ -67,7 +67,7 @@ class MediaServiceTest {
 
 
     @Test
-    void processAndUploadImage_shouldHandleEmptyFileNameGracefully() throws IOException {
+    void processAndUploadImage_shouldHandleEmptyFileNameGracefully() {
         when(file.getOriginalFilename()).thenReturn(null);
 
         String defaultFileName = "default_image";
@@ -118,7 +118,7 @@ class MediaServiceTest {
 
         RuntimeException thrown = assertThrows(RuntimeException.class, () -> mediaService.processAndUploadImage(file));
 
-        assertEquals("Error processing and uploading image", thrown.getMessage());
+        assertEquals("S3 upload failed", thrown.getMessage());
     }
 
     @Test

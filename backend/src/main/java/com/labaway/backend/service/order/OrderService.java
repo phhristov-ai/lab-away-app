@@ -11,6 +11,8 @@ import com.labaway.backend.entity.repository.order.OrderItemRepository;
 import com.labaway.backend.entity.repository.product.ProductRepository;
 import com.labaway.backend.enums.OrderStatus;
 import com.labaway.backend.entity.repository.order.OrderRepository;
+import com.labaway.backend.exception.OrderNotFoundException;
+import com.labaway.backend.exception.PaymentNotCompletedException;
 import com.labaway.backend.service.communication.EmailService;
 import com.labaway.backend.strategy.PaymentProvider;
 import com.labaway.backend.strategy.PaymentStrategy;
@@ -112,7 +114,7 @@ public class OrderService {
         List<OrderItem> orderItems = itemDtos.stream()
                 .map(itemDto -> {
                     Product product = productRepository.findBySlug(itemDto.slug())
-                            .orElseThrow(() -> new EntityNotFoundException(
+                            .orElseThrow(() -> new OrderNotFoundException(
                                     "Product not found with slug: " + itemDto.slug()));
 
                     return OrderItem.builder()
@@ -204,7 +206,7 @@ public class OrderService {
 
     private Order findOrder(String orderNumber) {
         return orderRepository.findByOrderNumber(orderNumber) .orElseThrow(() ->
-                new EntityNotFoundException("Order not found"));
+                new OrderNotFoundException("Order not found"));
     }
 
     private void completeOrder(Order order, String gaClientId) {
@@ -215,7 +217,7 @@ public class OrderService {
         String paymentId = getPaymentSessionId(order);
 
         if (!strategy.isPaymentCompleted(paymentId)) {
-            throw new IllegalStateException("Payment has not been completed.");
+            throw new PaymentNotCompletedException("Payment has not been completed.");
         }
 
         order.setStatus(OrderStatus.PAID);
@@ -237,7 +239,7 @@ public class OrderService {
 
     public OrderDto getOrderByOrderNumber(String orderNumber) {
         Order order = orderRepository.findByOrderNumber(orderNumber)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found: " + orderNumber));
+                .orElseThrow(() -> new OrderNotFoundException("Order not found: " + orderNumber));
         return orderTransformer.toDto(order);
     }
 
@@ -250,14 +252,14 @@ public class OrderService {
 
     public void deleteOrder(String orderNumber) {
         if (!orderRepository.existsByOrderNumber(orderNumber)) {
-            throw new IllegalArgumentException("Order not found: " + orderNumber);
+            throw new OrderNotFoundException ("Order not found: " + orderNumber);
         }
         orderRepository.deleteByOrderNumber(orderNumber);
     }
 
     public void updateOrderStatus(String orderNumber, OrderStatus status) {
         Order order = orderRepository.findByOrderNumber(orderNumber)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+                .orElseThrow(() -> new OrderNotFoundException("Order not found"));
         order.setStatus(status);
         orderRepository.save(order);
     }

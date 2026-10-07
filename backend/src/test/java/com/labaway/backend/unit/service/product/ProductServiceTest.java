@@ -27,7 +27,6 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -65,7 +64,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void shouldCreateProductSuccessfully() throws IOException {
+    void shouldCreateProductSuccessfully() {
 
         ProductPayloadDto createDto = createSampleCreateDto();
         List<Category> categories = createSampleCategories();
@@ -151,7 +150,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void shouldUpdateProductSuccessfully() throws IOException {
+    void shouldUpdateProductSuccessfully() {
         ProductPayloadDto createDto = createSampleCreateDto();
         String slug = "test-product";
 

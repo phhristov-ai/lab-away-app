@@ -1,6 +1,7 @@
 package com.labaway.backend.unit.service.communication;
 
-import com.labaway.backend.configuration.mail.SmtpConfig;
+import com.labaway.backend.configuration.properties.EmailProperties;
+import com.labaway.backend.configuration.properties.SmtpProperties;
 import com.labaway.backend.dto.order.AddressEmailDto;
 import com.labaway.backend.dto.order.OrderEmailDto;
 import com.labaway.backend.dto.order.OrderItemEmailDto;
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
@@ -31,28 +31,38 @@ class EmailServiceImplTest {
 
     @Mock
     private JavaMailSender mailSender;
-
     @Mock
     private TemplateEngine templateEngine;
-
-    @Mock
-    private SmtpConfig smtpConfig;
-
     @Mock
     private MimeMessage mimeMessage;
-
     private EmailServiceImpl emailService;
+    private SmtpProperties smtpProperties;
+    private EmailProperties emailProperties;
 
     @BeforeEach
-    void setUp() throws Exception {
-        when(smtpConfig.getFromEmail()).thenReturn("test@example.com");
-        when(mailSender.createMimeMessage()).thenReturn(mimeMessage);
-        emailService = new EmailServiceImpl(smtpConfig, mailSender, templateEngine);
+    void setUp() {
 
-        ReflectionTestUtils.setField(
-                emailService,
-                "adminEmails",
-                new String[]{"test-admin@example.com"}
+        smtpProperties = new SmtpProperties(
+                "test-user",
+                "test-password",
+                "test@example.com"
+        );
+
+        emailProperties = new EmailProperties(
+                List.of(
+                        "admin1@example.com",
+                        "admin2@example.com"
+                )
+        );
+
+        when(mailSender.createMimeMessage())
+                .thenReturn(mimeMessage);
+
+        emailService = new EmailServiceImpl(
+                smtpProperties,
+                mailSender,
+                templateEngine,
+                emailProperties
         );
     }
 

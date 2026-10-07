@@ -1,6 +1,6 @@
 package com.labaway.backend.unit.strategy;
 
-import com.labaway.backend.configuration.payment.StripeConfig;
+import com.labaway.backend.configuration.properties.StripeProperties;
 import com.labaway.backend.dto.payment.CreatePaymentRequestDto;
 import com.labaway.backend.dto.payment.CreatePaymentResponseDto;
 import com.labaway.backend.strategy.StripePaymentStrategy;
@@ -25,12 +25,12 @@ class StripePaymentServiceTest {
     private PaymentIntent paymentIntent;
 
     @Mock
-    private StripeConfig stripeConfig;
+    private StripeProperties stripeProperties;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        when(stripeConfig.getSecretKey()).thenReturn("sk_test_123");
+        when(stripeProperties.secretKey()).thenReturn("sk_test_123");
     }
 
     @Test
