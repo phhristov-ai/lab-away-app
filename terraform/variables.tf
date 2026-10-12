@@ -1,7 +1,7 @@
 variable "aws_region" {
   description = "AWS region for the application infrastructure"
   type        = string
-  default     = "eu-central-1"
+  default     = "eu-north-1"
 }
 
 variable "project_name" {
@@ -68,9 +68,20 @@ variable "rds_master_username" {
   default     = "labaway_admin"
 }
 
+variable "rds_name" {
+  description = "RDS name"
+  type        = string
+  default     = "labaway"
+}
+
 variable "rds_backup_retention_days" {
   description = "Number of days to retain automated RDS backups"
   type        = number
-  default     = 7
+  default     = 1
+}
+
+variable "billing_alert_email" {
+  description = "Email address for AWS budget alerts"
+  type        = string
 }
 

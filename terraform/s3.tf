@@ -87,3 +87,50 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "images" {
     }
   }
 }
+
+
+# Remove old frontend object versions after 30 days.
+resource "aws_s3_bucket_lifecycle_configuration" "frontend" {
+  bucket = aws_s3_bucket.frontend.id
+
+  rule {
+    id     = "expire-old-frontend-versions"
+    status = "Enabled"
+
+    filter {}
+
+    noncurrent_version_expiration {
+      noncurrent_days = 30
+    }
+
+    # Remove expired delete markers when they are no longer needed.
+    expiration {
+      expired_object_delete_marker = true
+    }
+  }
+}
+
+# Remove old image versions after 90 days.
+resource "aws_s3_bucket_lifecycle_configuration" "images" {
+  bucket = aws_s3_bucket.images.id
+
+  rule {
+    id     = "expire-old-image-versions"
+    status = "Enabled"
+
+    filter {}
+
+    noncurrent_version_expiration {
+      noncurrent_days = 90
+    }
+
+    expiration {
+      expired_object_delete_marker = true
+    }
+
+
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 7
+    }
+  }
+}

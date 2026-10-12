@@ -91,10 +91,9 @@ resource "aws_elastic_beanstalk_application" "backend" {
 # ============================================================
 
 resource "aws_elastic_beanstalk_environment" "backend" {
-  name                = "${local.name}-backend-env"
-  application         = aws_elastic_beanstalk_application.backend.name
-  solution_stack_name = "64bit Amazon Linux 2023 v4.8.0 running Corretto 21"
-
+  name         = "${local.name}-backend-env"
+  application  = aws_elastic_beanstalk_application.backend.name
+  platform_arn = "arn:aws:elasticbeanstalk:eu-north-1::platform/Corretto 21 running on 64bit Amazon Linux 2023/4.13.0"
   # ----------------------------------------------------------
   # Environment type
   # ----------------------------------------------------------
@@ -166,12 +165,6 @@ resource "aws_elastic_beanstalk_environment" "backend" {
   # ----------------------------------------------------------
 
   setting {
-    namespace = "aws:elasticbeanstalk:environment:proxy"
-    name      = "ProxyServer"
-    value     = "nginx"
-  }
-
-  setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "SERVER_PORT"
     value     = "5000"
@@ -184,7 +177,7 @@ resource "aws_elastic_beanstalk_environment" "backend" {
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "SPRING_PROFILES_ACTIVE"
-    value     = "production"
+    value     = "prod"
   }
 
   setting {
@@ -197,6 +190,18 @@ resource "aws_elastic_beanstalk_environment" "backend" {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "AWS_S3_BUCKET_NAME"
     value     = aws_s3_bucket.images.bucket
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "APP_SECRET_NAME"
+    value     = aws_secretsmanager_secret.application.name
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "APP_EMAIL_FROM"
+    value     = "sales@lab-away.com"
   }
 
   # ----------------------------------------------------------
@@ -231,12 +236,19 @@ resource "aws_elastic_beanstalk_environment" "backend" {
     value     = "minor"
   }
 
+  setting {
+    namespace = "aws:elasticbeanstalk:environment"
+    name      = "ServiceRole"
+    value     = aws_iam_role.elastic_beanstalk_service.name
+  }
+
   tags = {
     Name = "${local.name}-backend-env"
   }
 
   depends_on = [
     aws_iam_role_policy_attachment.elastic_beanstalk_enhanced_health,
-    aws_iam_role_policy_attachment.application_web_tier
+    aws_iam_role_policy_attachment.application_web_tier,
+    aws_iam_role_policy_attachment.elastic_beanstalk_managed_updates
   ]
 }

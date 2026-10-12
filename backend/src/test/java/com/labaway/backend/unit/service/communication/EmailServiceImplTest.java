@@ -1,21 +1,20 @@
 package com.labaway.backend.unit.service.communication;
 
 import com.labaway.backend.configuration.properties.EmailProperties;
-import com.labaway.backend.configuration.properties.SmtpProperties;
 import com.labaway.backend.dto.order.AddressEmailDto;
 import com.labaway.backend.dto.order.OrderEmailDto;
 import com.labaway.backend.dto.order.OrderItemEmailDto;
 import com.labaway.backend.service.communication.EmailServiceImpl;
 import com.labaway.backend.strategy.PaymentProvider;
-import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import software.amazon.awssdk.services.sesv2.SesV2Client;
+import software.amazon.awssdk.services.sesv2.model.SendEmailRequest;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -30,37 +29,25 @@ import static org.mockito.Mockito.when;
 class EmailServiceImplTest {
 
     @Mock
-    private JavaMailSender mailSender;
+    private SesV2Client sesClient;
     @Mock
     private TemplateEngine templateEngine;
-    @Mock
-    private MimeMessage mimeMessage;
+
     private EmailServiceImpl emailService;
-    private SmtpProperties smtpProperties;
     private EmailProperties emailProperties;
 
     @BeforeEach
     void setUp() {
-
-        smtpProperties = new SmtpProperties(
-                "test-user",
-                "test-password",
-                "test@example.com"
-        );
-
         emailProperties = new EmailProperties(
+                "sales@lab-away.com",
                 List.of(
                         "admin1@example.com",
                         "admin2@example.com"
                 )
         );
 
-        when(mailSender.createMimeMessage())
-                .thenReturn(mimeMessage);
-
         emailService = new EmailServiceImpl(
-                smtpProperties,
-                mailSender,
+                sesClient,
                 templateEngine,
                 emailProperties
         );
@@ -73,7 +60,7 @@ class EmailServiceImplTest {
 
         emailService.sendOrderConfirmationEmail(orderEmailDto);
 
-        verify(mailSender).send(any(MimeMessage.class));
+        verify(sesClient).sendEmail(any(SendEmailRequest.class));
         verify(templateEngine).process(eq("order-confirmation-en"), any(Context.class));
     }
 

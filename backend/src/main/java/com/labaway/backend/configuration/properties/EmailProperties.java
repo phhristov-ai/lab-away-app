@@ -6,6 +6,6 @@ import java.util.List;
 
 @ConfigurationProperties(prefix = "app.email")
 public record EmailProperties(
+        String from,
         List<String> admins
-) {
-}
+) {}

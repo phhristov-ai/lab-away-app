@@ -93,4 +93,29 @@ output "rds_instance_identifier" {
   value       = aws_db_instance.mysql.identifier
 }
 
+output "cloudfront_domain_name" {
+  description = "CloudFront distribution domain name"
+  value       = aws_cloudfront_distribution.frontend.domain_name
+}
+
+output "ses_domain_identity_arn" {
+  description = "SES identity ARN for lab-away.com"
+  value       = aws_sesv2_email_identity.domain.arn
+}
+
+output "ses_dkim_tokens" {
+  description = "DKIM tokens to publish in DNS"
+  value       = aws_sesv2_email_identity.domain.dkim_signing_attributes[0].tokens
+}
+
+output "route53_name_servers" {
+  description = "Name servers to configure at your domain registrar"
+  value       = aws_route53_zone.main.name_servers
+}
+
+output "route53_zone_id" {
+  description = "Route 53 hosted zone ID"
+  value       = aws_route53_zone.main.zone_id
+}
+
 

@@ -4,3 +4,11 @@
 *.tfplan
 crash.log
 terraform.tfvars
+
+# Local environment secrets
+.env
+.env.*
+!.env.example
+
+# Terraform crash dumps
+crash.*.log

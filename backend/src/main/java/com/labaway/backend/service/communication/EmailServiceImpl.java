@@ -1,19 +1,16 @@
 package com.labaway.backend.service.communication;
 
 import com.labaway.backend.configuration.properties.EmailProperties;
-import com.labaway.backend.configuration.properties.SmtpProperties;
 import com.labaway.backend.dto.order.OrderEmailDto;
 import com.labaway.backend.dto.order.OrderItemEmailDto;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import software.amazon.awssdk.services.sesv2.SesV2Client;
+import software.amazon.awssdk.services.sesv2.model.*;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -23,10 +20,7 @@ import java.util.*;
 
 @Service
 public class EmailServiceImpl implements EmailService {
-    private String fromEmail;
-    private final JavaMailSender mailSender;
-    private final TemplateEngine templateEngine;
-    private final EmailProperties emailProperties;
+
     private static final Logger log =
             LoggerFactory.getLogger(EmailServiceImpl.class);
 
@@ -35,9 +29,15 @@ public class EmailServiceImpl implements EmailService {
             "de", "Ihre Bestellung wurde bestätigt"
     );
 
-    public EmailServiceImpl(SmtpProperties smtpProperties, JavaMailSender mailSender, TemplateEngine templateEngine, EmailProperties emailProperties) {
-        this.fromEmail = smtpProperties.fromEmail();
-        this.mailSender = mailSender;
+    private final SesV2Client sesClient;
+    private final TemplateEngine templateEngine;
+    private final EmailProperties emailProperties;
+
+    public EmailServiceImpl(
+            SesV2Client sesClient,
+            TemplateEngine templateEngine,
+            EmailProperties emailProperties) {
+        this.sesClient = sesClient;
         this.templateEngine = templateEngine;
         this.emailProperties = emailProperties;
     }
@@ -46,27 +46,58 @@ public class EmailServiceImpl implements EmailService {
     @Async("taskExecutor")
     public void sendOrderConfirmationEmail(OrderEmailDto orderEmailDto) {
         try {
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(
-                    message,
-                    MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
-                    "UTF-8"
+            String lang = orderEmailDto.language()
+                    .toLowerCase(Locale.ROOT);
+
+            String subject = subjects.getOrDefault(
+                    lang,
+                    subjects.get("en")
             );
 
-            helper.setTo(orderEmailDto.customerEmail());
-            helper.setFrom(fromEmail);
-
-            String lang = orderEmailDto.language().toLowerCase();
-            String subject = subjects.getOrDefault(lang, subjects.get("en"));
-            helper.setSubject(subject);
-            helper.setBcc(emailProperties.admins().toArray(new String[0]));
-
             Context context = buildOrderConfirmationContext(orderEmailDto);
-            String html = templateEngine.process("order-confirmation-" + orderEmailDto.language().toLowerCase(), context);
-            helper.setText(html, true);
 
-            mailSender.send(message);
-        } catch (MessagingException e) {
+            String html = templateEngine.process(
+                    "order-confirmation-" + lang,
+                    context
+            );
+
+            List<String> admins = emailProperties.admins() == null
+                    ? List.of()
+                    : emailProperties.admins();
+
+            Destination destination = Destination.builder()
+                    .toAddresses(orderEmailDto.customerEmail())
+                    .bccAddresses(admins)
+                    .build();
+
+            Message message = Message.builder()
+                    .subject(Content.builder()
+                            .data(subject)
+                            .charset("UTF-8")
+                            .build())
+                    .body(Body.builder()
+                            .html(Content.builder()
+                                    .data(html)
+                                    .charset("UTF-8")
+                                    .build())
+                            .build())
+                    .build();
+
+            SendEmailRequest request = SendEmailRequest.builder()
+                    .fromEmailAddress(emailProperties.from())
+                    .destination(destination)
+                    .content(EmailContent.builder()
+                            .simple(message)
+                            .build())
+                    .build();
+
+            sesClient.sendEmail(request);
+
+            log.info(
+                    "Order confirmation email submitted to SES for order {}",
+                    orderEmailDto.orderNumber()
+            );
+        } catch (RuntimeException e) {
             log.error(
                     "Failed to send order confirmation email for order {}",
                     orderEmailDto.orderNumber(),

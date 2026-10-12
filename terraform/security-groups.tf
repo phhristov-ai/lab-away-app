@@ -39,18 +39,6 @@ resource "aws_vpc_security_group_ingress_rule" "application_http" {
   description = "HTTP traffic"
 }
 
-resource "aws_vpc_security_group_ingress_rule" "application_https" {
-  security_group_id = aws_security_group.application.id
-
-  cidr_ipv4   = "0.0.0.0/0"
-  from_port   = 443
-  to_port     = 443
-  ip_protocol = "tcp"
-
-  description = "HTTPS traffic"
-}
-
-
 # ============================================================
 # Application port
 #
@@ -59,8 +47,6 @@ resource "aws_vpc_security_group_ingress_rule" "application_https" {
 # We allow traffic from within the VPC rather than exposing
 # port 5000 directly to the internet.
 #
-# The Elastic Beanstalk load balancer can therefore forward
-# traffic to the application on port 5000.
 # ============================================================
 
 resource "aws_vpc_security_group_ingress_rule" "application_5000" {

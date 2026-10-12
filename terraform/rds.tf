@@ -59,13 +59,10 @@ resource "aws_db_instance" "mysql" {
   storage_type          = "gp3"
   storage_encrypted     = true
 
-  db_name  = var.rds_database_name
+  db_name  = var.rds_name
   username = var.rds_master_username
 
-  # Password is generated separately and stored in Terraform
-  # state as a sensitive value. We will improve this later
-  # if we want the database password managed entirely by AWS.
-  password = random_password.rds.result
+  manage_master_user_password = true
 
   port = 3306
 
@@ -84,7 +81,7 @@ resource "aws_db_instance" "mysql" {
 
   auto_minor_version_upgrade = true
 
-  deletion_protection = false
+  deletion_protection = true
   skip_final_snapshot = true
 
   copy_tags_to_snapshot = true
@@ -96,17 +93,4 @@ resource "aws_db_instance" "mysql" {
   tags = {
     Name = "${local.name}-mysql"
   }
-}
-
-
-# ============================================================
-# Database password
-#
-# Terraform generates a strong random password.
-# The value is marked sensitive and is NOT exposed as an output.
-# ============================================================
-
-resource "random_password" "rds" {
-  length  = 32
-  special = true
 }
