@@ -41,6 +41,14 @@ resource "aws_iam_role_policy" "github_actions_deploy" {
         ]
       },
       {
+        Sid      = "ElasticBeanstalkStorageBucket"
+        Effect   = "Allow"
+        Action   = ["s3:CreateBucket"]
+        Resource = [
+          "arn:aws:s3:::elasticbeanstalk-eu-north-1-447839931482"
+        ]
+      },
+      {
         Sid    = "CloudFrontInvalidation"
         Effect = "Allow"
         Action = [

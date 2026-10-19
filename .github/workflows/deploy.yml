@@ -95,13 +95,27 @@ jobs:
           aws s3 cp "$RUNNER_TEMP/backend.zip" \
             "s3://${EB_SOURCE_BUCKET}/lab-away-deployments/${GITHUB_SHA}.zip"
 
-      - name: Create Elastic Beanstalk application version
+
+      - name: Create or reuse Elastic Beanstalk application version
+        shell: bash
         run: |
-          aws elasticbeanstalk create-application-version \
+          set -euo pipefail
+
+          if aws elasticbeanstalk describe-application-versions \
             --application-name "$EB_APPLICATION" \
             --version-label "$GITHUB_SHA" \
-            --source-bundle \
-              S3Bucket="$EB_SOURCE_BUCKET",S3Key="lab-away-deployments/${GITHUB_SHA}.zip" \
+            --region "$AWS_REGION" \
+            --query 'ApplicationVersions[0].VersionLabel' \
+            --output text | grep -qx "$GITHUB_SHA"; then
+            echo "Application version $GITHUB_SHA already exists; reusing it."
+          else
+            aws elasticbeanstalk create-application-version \
+              --application-name "$EB_APPLICATION" \
+              --version-label "$GITHUB_SHA" \
+              --source-bundle \
+                "S3Bucket=$EB_SOURCE_BUCKET,S3Key=lab-away-deployments/${GITHUB_SHA}.zip" \
+              --region "$AWS_REGION"
+          fi
 
       - name: Deploy backend
         run: |
