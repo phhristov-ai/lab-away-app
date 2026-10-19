@@ -102,7 +102,6 @@ jobs:
             --version-label "$GITHUB_SHA" \
             --source-bundle \
               S3Bucket="$EB_SOURCE_BUCKET",S3Key="lab-away-deployments/${GITHUB_SHA}.zip" \
-            --process
 
       - name: Deploy backend
         run: |
