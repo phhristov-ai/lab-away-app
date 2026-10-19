@@ -41,6 +41,16 @@ resource "aws_iam_role_policy" "github_actions_deploy" {
         ]
       },
       {
+        Sid    = "ElasticBeanstalkBucketOwnershipControls"
+        Effect = "Allow"
+        Action = [
+          "s3:PutBucketOwnershipControls"
+        ]
+        Resource = [
+          "arn:aws:s3:::elasticbeanstalk-eu-north-1-447839931482"
+        ]
+      },
+      {
         Sid      = "ElasticBeanstalkStorageBucket"
         Effect   = "Allow"
         Action   = ["s3:CreateBucket"]
