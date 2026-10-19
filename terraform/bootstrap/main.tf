@@ -22,7 +22,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "lab-away-terraform-state-20261007"
+  bucket = "lab-away-terraform-state-447839931482"
 
   lifecycle {
     prevent_destroy = true

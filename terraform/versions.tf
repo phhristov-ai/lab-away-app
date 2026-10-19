@@ -10,7 +10,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket       = "lab-away-terraform-state-20261007"
+    bucket       = "lab-away-terraform-state-447839931482"
     key          = "lab-away/production/terraform.tfstate"
     region       = "eu-north-1"
     encrypt      = true

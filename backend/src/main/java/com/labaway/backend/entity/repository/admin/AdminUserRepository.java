@@ -7,6 +7,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface AdminUserRepository extends JpaRepository<AdminUser, UUID> {
+
     Optional<AdminUser> findByUsername(String username);
 
+    Optional<AdminUser> findByEmailIgnoreCase(String email);
+
+    boolean existsByRoleIgnoreCase(String role);
 }

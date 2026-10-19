@@ -28,7 +28,6 @@ public class MySQLDataSourceConfig {
 
         String port = String.valueOf(databaseProperties.port());
         String url = String.format("jdbc:mysql://%s:%s/%s", host, port, dbname);
-
         HikariDataSource dataSource = new HikariDataSource();
         dataSource.setJdbcUrl(url);
         dataSource.setUsername(username);

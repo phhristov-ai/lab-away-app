@@ -1,3 +1,4 @@
+
 resource "aws_cloudfront_origin_access_control" "frontend" {
   name                              = "${local.name}-frontend-oac"
   description                       = "Secure access to the Lab-Away frontend bucket"
@@ -13,6 +14,11 @@ resource "aws_cloudfront_distribution" "frontend" {
   price_class         = "PriceClass_100"
   http_version        = "http2and3"
 
+  aliases = [
+    "lab-away.com",
+    "www.lab-away.com"
+  ]
+
   origin {
     domain_name              = aws_s3_bucket.frontend.bucket_regional_domain_name
     origin_id                = "frontend-s3-origin"
@@ -26,8 +32,6 @@ resource "aws_cloudfront_distribution" "frontend" {
     cached_methods         = ["GET", "HEAD"]
     compress               = true
 
-    # Suitable for a static SPA that does not vary content by query string
-    # or cookies. Revisit if your frontend needs either.
     forwarded_values {
       query_string = false
 
@@ -37,7 +41,7 @@ resource "aws_cloudfront_distribution" "frontend" {
     }
   }
 
-  # Support client-side routes in a single-page application.
+  # Support client-side routes in the React SPA.
   custom_error_response {
     error_code            = 403
     response_code         = 200
@@ -59,8 +63,9 @@ resource "aws_cloudfront_distribution" "frontend" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
-    minimum_protocol_version       = "TLSv1.2_2021"
+    acm_certificate_arn      = "arn:aws:acm:us-east-1:447839931482:certificate/745d4789-5a52-4a4b-9dd2-720f7376ea84"
+    ssl_support_method       = "sni-only"
+    minimum_protocol_version = "TLSv1.2_2021"
   }
 
   tags = {
@@ -73,15 +78,19 @@ resource "aws_s3_bucket_policy" "frontend_cloudfront" {
 
   policy = jsonencode({
     Version = "2012-10-17"
+
     Statement = [
       {
         Sid    = "AllowCloudFrontReadOnly"
         Effect = "Allow"
+
         Principal = {
           Service = "cloudfront.amazonaws.com"
         }
+
         Action   = ["s3:GetObject"]
         Resource = "${aws_s3_bucket.frontend.arn}/*"
+
         Condition = {
           StringEquals = {
             "AWS:SourceArn" = aws_cloudfront_distribution.frontend.arn

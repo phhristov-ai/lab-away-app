@@ -1,11 +1,8 @@
-aws_region = "eu-north-1
-project_name = "lab-away"
-environment  = "production"
-
-domain_name = "lab-away.com"
-
-frontend_bucket_name = "lab-away-production-frontend-20261007"
-images_bucket_name   = "lab-away-production-images-20261007"
+aws_region          = "eu-north-1"
+project_name        = "lab-away"
+environment         = "production"
+domain_name         = "lab-away.com"
+frontend_bucket_name = "lab-away-frontend"
+images_bucket_name   = "lab-away-images"
 eb_instance_type     = "t3.micro"
-
-billing_alert_email = "phhristov@gmail.com"
+billing_alert_email  = "phhristov@gmail.com"
